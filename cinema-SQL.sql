@@ -99,12 +99,12 @@ CREATE TABLE IF NOT EXISTS `film` (
 
 -- Listage des données de la table cinema.film : ~0 rows (environ)
 INSERT INTO `film` (`id_film`, `titre`, `dateDeSortie`, `duree`, `realisateur_id`, `affiche`) VALUES
-	(1, 'Star wars : epidsode IV', '1997-10-12 11:56:20', '02:01:26', 1, 'indisponible.jpg'),
-	(2, 'Star wars : epidsode III', '2005-01-01 14:07:40', '02:20:42', 1, 'indisponible.jpg'),
-	(3, 'The Dark Knight', '2008-01-01 14:09:42', '02:32:42', 2, 'indisponible.jpg'),
-	(4, 'Interstellar', '2014-01-01 14:10:11', '02:49:12', 2, 'indisponible.jpg'),
-	(5, 'Kill Bill : Volume 1', '2003-10-10 00:00:00', '01:51:00', 4, 'indisponible.jpg'),
-	(6, 'Indina jones and the temple of doom', '1984-01-01 14:15:18', '01:58:18', 1, 'indisponible.jpg');
+	(1, 'Star wars : epidsode IV', '1997-10-12 11:56:20', '02:01:26', 1, 'Star_Wars_4'),
+	(2, 'Star wars : episode III', '2005-01-01 14:07:40', '02:20:42', 1, 'Star_Wars_3'),
+	(3, 'The Dark Knight', '2008-01-01 14:09:42', '02:32:42', 2, 'The_Dark_Knight'),
+	(4, 'Interstellar', '2014-01-01 14:10:11', '02:49:12', 2, 'Interstellar'),
+	(5, 'Kill Bill : Volume 1', '2003-10-10 00:00:00', '01:51:00', 4, 'Kill_Bill'),
+	(6, 'Indina jones and the temple of doom', '1984-01-01 14:15:18', '01:58:18', 1, 'Indiana_Jones');
 
 -- Listage de la structure de table cinema. genre
 CREATE TABLE IF NOT EXISTS `genre` (
