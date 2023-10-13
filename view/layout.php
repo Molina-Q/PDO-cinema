@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./public/css/style.css">
     <title><?= $title ?></title>
 </head>
 <body>
@@ -16,10 +16,11 @@
                 </form>
             </div>
             <ul>
-                <li><a href="">Currently showing</a></li>
-                <li><a href="">Coming soon</a></li>
-                <li><a href="">Movies by director</a></li>
-                <li><a href="">Best movies</a></li>
+                <li><a href="index.php?action=homePage">Home</a></li>
+                <li><a href="index.php?action=listFilms">List movies</a></li>
+                <li><a href="index.php?action=filmsByDirector">Movie by director</a></li>
+                <li><a href="index.php?action=listActors">All actors</a></li>
+                <li><a href="index.php?action=everyGenres">Every genres</a></li>
             </ul>
         </nav>
     </header>
@@ -29,6 +30,8 @@
     </main>
 
     <footer>
+        <h2>mon footer</h2>
+
         <ul>
             <li>Contact</li>
             <li>Recruit</li>

@@ -1,0 +1,41 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: aqua;
+
+    
+}
+
+main {
+    padding: 0 10%;
+
+}
+/***** header ****/
+header {
+    background-color: bisque;
+
+}
+
+/* nav {
+    display: flex;
+    flex-direction: row;
+} */
+
+nav ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+nav ul li {
+    list-style: none;
+}
+
+footer {
+    background-color: bisque;
+
+}

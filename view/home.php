@@ -1,8 +1,5 @@
-
-
 <?php
-
-
+// démarre la temporisation
 ob_start();
 ?>
 
@@ -24,15 +21,6 @@ ob_start();
 <div id="bestMovies">
     <h2>Best movies</h2>
 
-    <div id="movieFilters">
-        <div id="filterByGenres">
-
-        </div>
-        <div id="filterByReleaseDate">
-
-        </div>
-    </div>
-
     <div>
         <figure><img src="" alt=""></figure>
         <h3><a href="">$movieName</a></h3>
@@ -46,12 +34,15 @@ ob_start();
 </div>
 
 <?php 
-
+// termine la temporisation, et initie la var title et content, content qui aura tout le contenu de cette page
+$title = "Allocine";
 $content = ob_get_clean(); 
-require "./view/layout.php";?>
+require "./view/layout.php";
+?>
 <!-- 
     temporisation de sortie PHP :
     débute avec ob_start() et se termine avec ob_get_clean()
+    ob_get_clean() return le tampon de sortie et le supprime, donc il faut stocker le tampon dans une var pour ne pas le perdre
     met en tampon les functions comme echo et le code PHP entre le début et la fin de la temporisation
     peut également être copié dans une string avec ob_get_contents()
     la temporisation n'affecte pas header() et setcookie()

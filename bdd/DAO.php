@@ -4,8 +4,14 @@ DAO : Objet d'accès aux données (data access object)
 la communication entre php et la database se fait en classe DAO
 
 PDO : PHP Data Objects
+extension pour me connecter à une BDD
 interface permettant d'accéder a une BDD depuis PHP
 est une couche abstraite qui intervient entre PHP et les SGBD
+
+query() : exécute la requête présente en paramètre (fonctionne pour les single cell results)
+et return un object PDOStatement
+prepare() et execute() : prepare() prépare la requête à exécuter (fonctionne pour plusieurs cell results)
+execute() return le resultat de la requête chaque ligne à besoin d'un paramètre unique (primary key) 
 -->
 
 <?php
@@ -14,7 +20,7 @@ class DAO{
     private $bdd;
 
     public function __construct(){
-        $this->bdd = new PDO('mysql:host=localhost;dbname=cinema;charset=utf8', 'root', ''); //dbname = le nom de ma database
+        $this->bdd = new \PDO('mysql:host=localhost;dbname=cinema;charset=utf8', 'root', ''); //dbname = le nom de ma database
     }
 
     function getBDD(){
@@ -32,3 +38,5 @@ class DAO{
 
     }
 }
+
+//2:35
