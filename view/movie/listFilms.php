@@ -8,17 +8,17 @@ ob_start();
 <!-- <?=$films->rowCount() ?> -->
 
 <?php
+echo "<div class='listFilms'>";
 while ($film = $films->fetch()) {
-    echo "<div>",
-            "<p>".$film["id_film"].") ".$film["titre"]."</p>",
-        "</div>";
+    echo "<div class='blocFilms'>",
+            "<p>".$film["id_film"].". ".$film["titre"]."</p>";
 ?>
-    <a href="index.php?action=detailsFilm&id=<?=$film['id_film']?>">Detail film</a>
-
+    <a href="index.php?action=detailsFilm&id=<?=$film['id_film']?>">En savoir plus</a>
 <?php
+    echo "</div>";
 
 }
-
+    echo "</div>";
 ?>
 
 <?php 

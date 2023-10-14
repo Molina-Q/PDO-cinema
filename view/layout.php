@@ -18,7 +18,7 @@
             <ul>
                 <li><a href="index.php?action=homePage">Home</a></li>
                 <li><a href="index.php?action=listFilms">List movies</a></li>
-                <li><a href="index.php?action=filmsByDirector">Movie by director</a></li>
+                <li><a href="index.php?action=listDirectors">Directors</a></li>
                 <li><a href="index.php?action=listActors">All actors</a></li>
                 <li><a href="index.php?action=everyGenres">Every genres</a></li>
             </ul>
