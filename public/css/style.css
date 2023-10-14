@@ -1,3 +1,4 @@
+
 * {
     margin: 0;
     padding: 0;
@@ -5,25 +6,24 @@
 }
 
 body {
-    background-color: aqua;
-
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
     
 }
 
 main {
+
     padding: 0 10%;
 
 }
+
+
 /***** header ****/
+
 header {
     background-color: bisque;
 
 }
 
-/* nav {
-    display: flex;
-    flex-direction: row;
-} */
 
 nav ul {
     display: flex;
@@ -35,7 +35,57 @@ nav ul li {
     list-style: none;
 }
 
+/***** film ****/
+span {
+    color: gray;
+}
+
+.listFilms {
+    text-align: center;
+}
+
+.blocFilms {
+    padding: 15px 0;
+    border-bottom: 1px solid gray;
+}
+
+.blocDetailsFilm {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    padding: 15px 0;
+}
+
+.blocDetailsFilm h3 {
+    font-size: 3em;
+}
+
+.blocDetailsFilm ul {
+    font-size: 1em;
+}
+
+.blocDetailsFilm ul li {
+    font-size: 1.5em;
+    list-style: none;
+}
+
+/***** afficheFilm *****/
+.afficheFilm {
+    width: 200px;
+    margin-right: 25px;
+}
+
+.afficheFilm img {
+    width: 100%
+}
+
+/***** *****/
+.textDetailsFilm {
+
+}
+
 footer {
     background-color: bisque;
 
-}
+} 

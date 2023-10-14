@@ -33,7 +33,10 @@ On fait appel aux fichiers physiques  -->
 
             // les cases en lien avec actor
             case "listActors" : $actorController->findAll(); break;
-            case "detailsActeur" : $actorController->infosActeur($_GET["id"]); break;
+            case "detailsActor" : $actorController->infosActeur($_GET["id"]); break;
+
+            case "listDirectors" : $directorController->findAll(); break;
+
         }
 
     } else {
