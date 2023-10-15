@@ -11,8 +11,8 @@
     <header>
         <nav>
             <div id="searchBar">
-                <form action="" method="post">
-                    <input type="search" name="" id="">
+                <form action="something.php" method="post">
+                    <input type="search" name="search" placeholder="Rechercher un film, un acteur, etc...">
                 </form>
             </div>
             <ul>
@@ -30,19 +30,21 @@
     </main>
 
     <footer>
-        <h2>mon footer</h2>
 
         <ul>
             <li>Contact</li>
+            <li>|</li>
             <li>Recruit</li>
+            <li>|</li>
             <li>Personal data</li>
+            <li>|</li>
             <li>Who are we</li>
         </ul>
         <div id="footerSocials">
-            <i></i>
-            <i></i>
-            <i></i>
-            <i></i>
+            <i>FB</i>
+            <i>Tweet</i>
+            <i>Linkd</i>
+            <i>Insta</i>
         </div>
     </footer>
 </body>

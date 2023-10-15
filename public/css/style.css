@@ -1,4 +1,8 @@
+:root {
+    --primary-background-color: rgb(93, 123, 187) ;
+}
 
+/***** general *****/
 * {
     margin: 0;
     padding: 0;
@@ -11,41 +15,97 @@ body {
 }
 
 main {
-
     padding: 0 10%;
 
 }
 
-
-/***** header ****/
-
-header {
-    background-color: bisque;
-
+.titrePage {
+    padding: 15px 0;
+    font-size: 2.5em;
+    text-align: center;
 }
 
 
+/***** header ****/
+header {
+    height: 120px;
+    background-color: var(--primary-background-color);
+}
+
+nav {
+    padding: 0 10%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#searchBar {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+#searchBar form input {
+    width: 350px;
+    height: 35px;
+    font-size: 1.2em;
+    border: 0;
+    padding: 0 5px;
+}
+
 nav ul {
+    flex: 1;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    align-items: flex-end;
 }
 
 nav ul li {
     list-style: none;
+    text-transform: none;
+    transition: 0.1s;
+    margin: 5px;
+    font-size: 1.2em;
 }
 
-/***** film ****/
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    transition: 0.3s;
+}
+
+nav ul li a:hover {
+    color: rgb(236, 184, 11);
+    transition: 0.3s;
+}
+
+/***** homePage *****/
+#homePage {
+    padding: 15px 0;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+
+/***** film *****/
 span {
     color: gray;
 }
 
-.listFilms {
-    text-align: center;
+#listFilms {
+    margin: 0 20% 15px;
+    background-color: rgb(223, 221, 218);
+    border-radius: 15px;
 }
 
 .blocFilms {
     padding: 15px 0;
+    text-align: center;
+}
+
+.blocFilms:not(:last-child) {
     border-bottom: 1px solid gray;
 }
 
@@ -53,7 +113,6 @@ span {
     display: flex;
     flex-direction: row;
     align-items: center;
-
     padding: 15px 0;
 }
 
@@ -80,12 +139,64 @@ span {
     width: 100%
 }
 
-/***** *****/
-.textDetailsFilm {
-
+/***** actor *****/
+.blocDetailsActor {
+    padding: 15px 0;
 }
 
+.blocDetailsActor h3 {
+    font-size: 3em;
+}
+
+.blocDetailsActor ul {
+    font-size: 1em;
+}
+
+.blocDetailsActor ul li {
+    font-size: 1.5em;
+    list-style: none;
+}
+
+/***** director *****/
+.blocDetailsDirector {
+    padding: 15px 0;
+}
+
+.blocDetailsDirector h3 {
+    font-size: 3em;
+}
+
+.blocDetailsDirector ul {
+    font-size: 1em;
+}
+
+.blocDetailsDirector ul li {
+    font-size: 1.5em;
+    list-style: none;
+}
+
+/***** footer *****/
+
 footer {
-    background-color: bisque;
+    background-color:var(--primary-background-color);
+} 
+
+footer ul {
+    padding: 0 20%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
 
 } 
+
+footer ul li {
+    list-style: none;
+    color: white;
+} 
+
+#footerSocials {
+    padding: 0 20%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}

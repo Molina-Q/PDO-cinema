@@ -29,13 +29,18 @@ On fait appel aux fichiers physiques  -->
             case "homePage" : $homeController->homePage(); break;
             // les cases en lien avec movie
             case "listFilms" : $movieController->findAll(); break;
-            case "detailsFilm" : $movieController->infosFilm($_GET["id"]); break;
+            case "detailsFilm": $movieController->infosFilm($_GET["id"]);break;
 
             // les cases en lien avec actor
             case "listActors" : $actorController->findAll(); break;
             case "detailsActor" : $actorController->infosActeur($_GET["id"]); break;
 
+            // les cases en lien avec director
             case "listDirectors" : $directorController->findAll(); break;
+            case "detailsDirector" : $directorController->infosRealisateur($_GET["id"]); break;
+
+            //cass en lien avec genre
+            case "everyGenres" : $genreController->findAll(); break;
 
         }
 

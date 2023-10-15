@@ -3,36 +3,19 @@
 ob_start();
 ?>
 
-<div id="listCurrentlyShowing">
-    <h2>Currently showing</h2>
-    <div>
-        <figure><img src="" alt=""></figure>
-        <h3><a href="">$movieName</a></h3>
-        <ul>
-            <li><p>$releaseDate / $duration / <a href="">$genres</a></p></li>
-            <li><p>Made by : <a href="">$director</a></p></li>
-            <li><p>With : <a href="">$actors</a></p></li>
-        </ul>
-        <li><p>$synopsis</p></li>
-    </div>
+<h2 class="titrePage">Informations base de données</h2>
 
-</div>
-
-<div id="bestMovies">
-    <h2>Best movies</h2>
-
-    <div>
-        <figure><img src="" alt=""></figure>
-        <h3><a href="">$movieName</a></h3>
-        <ul>
-        <li><p>$releaseDate / $duration / <a href="">$genres</a></p></li>
-            <li><p>Made by : <a href="">$director</a></p></li>
-            <li><p>With : <a href="">$actors</a></p></li>
-        </ul>
-        <li><p>$synopsis</p></li>
-    </div>
-</div>
-
+<?php
+echo "<div id='homePage'>";
+while ($count = $countBDD->fetch()) {
+    echo "<div>",
+            "<p>Le site contient ".$count["nb_films"]." films</p>",
+            "<p>".$count["nb_realisateurs"]." réalisateurs</p>",
+            "<p>".$count["nb_acteurs"]." acteurs</p>",
+        "</div>";
+}
+echo "</div>";
+?>
 <?php 
 // termine la temporisation, et initie la var title et content, content qui aura tout le contenu de cette page
 $title = "Allocine";

@@ -3,12 +3,12 @@
 ob_start();
 ?>
 
-<h2>Liste des films</h2>
+<h2 class="titrePage">Liste des films</h2>
 
 <!-- <?=$films->rowCount() ?> -->
 
 <?php
-echo "<div class='listFilms'>";
+echo "<div id='listFilms'>";
 while ($film = $films->fetch()) {
     echo "<div class='blocFilms'>",
             "<p>".$film["id_film"].". ".$film["titre"]."</p>";
@@ -16,9 +16,9 @@ while ($film = $films->fetch()) {
     <a href="index.php?action=detailsFilm&id=<?=$film['id_film']?>">En savoir plus</a>
 <?php
     echo "</div>";
-
 }
-    echo "</div>";
+
+echo "</div>";
 ?>
 
 <?php 

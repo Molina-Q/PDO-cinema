@@ -3,7 +3,7 @@
 ob_start();
 ?>
 
-<h2>Liste de réalisateurs</h2>
+<h2 class="titrePage">Liste de réalisateurs</h2>
 
 
 <?php

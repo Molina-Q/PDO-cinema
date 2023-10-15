@@ -3,13 +3,13 @@
 ob_start();
 ?>
 
-<h2 class="titrePage">Liste d'acteurs</h2>
+<h2 class="titrePage">Genres</h2>
 
 
 <?php
-while ($acteur = $acteurs->fetch()) {
-    $acteurId = $acteur["id_acteur"];
-    echo "<h3><a href='index.php?action=detailsActor&id=$acteurId'>".$acteur["full_name"]."</a></h3>";
+while ($genre = $genres->fetch()) {
+    $genreId = $genre["id_genre"];
+    echo "<h3><a href='index.php?action=detailsGenre&id=$genreId'>".$genre["libelle"]."</a></h3>";
 ?>
 
 <?php
@@ -20,7 +20,7 @@ while ($acteur = $acteurs->fetch()) {
 
 <?php 
 // termine la temporisation, et initie les variables title et content, content qui aura tous le contenu de cette page
-$title = "Les acteurs";
+$title = "Genres";
 $content = ob_get_clean(); 
 require "./view/layout.php";
 ?>
