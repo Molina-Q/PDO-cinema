@@ -10,7 +10,8 @@ est une couche abstraite qui intervient entre PHP et les SGBD
 
 query() : exécute la requête présente en paramètre (fonctionne pour les single cell results)
 et return un object PDOStatement
-prepare() et execute() : prepare() prépare la requête à exécuter (fonctionne pour plusieurs cell results)
+
+prepare() prépare la requête à exécuter (fonctionne pour plusieurs cell results)
 execute() return le resultat de la requête chaque ligne à besoin d'un paramètre unique (primary key) 
 -->
 

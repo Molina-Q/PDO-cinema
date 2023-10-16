@@ -5,17 +5,15 @@ ob_start();
 
 <h2 class="titrePage">Liste de réalisateurs</h2>
 
-
 <?php
+echo "<div id=listRealisateurs>"; 
+
 while ($realisateur = $realisateurs->fetch()) {
     $realisateurId = $realisateur["id_realisateur"];
     echo "<h3><a href='index.php?action=detailsDirector&id=$realisateurId'>".$realisateur["full_name"]."</a></h3>";
-?>
-
-<?php
-
 }
 
+echo "</div>";
 ?>
 
 <?php 

@@ -20,7 +20,8 @@
                 <li><a href="index.php?action=listFilms">List movies</a></li>
                 <li><a href="index.php?action=listDirectors">Directors</a></li>
                 <li><a href="index.php?action=listActors">All actors</a></li>
-                <li><a href="index.php?action=everyGenres">Every genres</a></li>
+                <li><a href="index.php?action=listRoles">All roles</a></li>
+                <li><a href="index.php?action=listGenres">Every genres</a></li>
             </ul>
         </nav>
     </header>

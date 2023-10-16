@@ -20,27 +20,39 @@ On fait appel aux fichiers physiques  -->
     $genreController = new GenreController();
     $homeController = new HomeController();
 
-    // si j'ai une "action "dans l'URL , cette action donnera accès à un controlleur et à la fonction demandée (si elle existe)
+    // si j'ai une "action "dans l'URL, cette action donnera accès à un controlleur et à la fonction demandée (si elle existe)
     if(isset($_GET['action'])){
     
-        $id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_FULL_SPECIAL_CHARS ); // car possible d'injecter du code malveillant dans l'URL
+        // $id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_FULL_SPECIAL_CHARS ); // car possible d'injecter du code malveillant dans l'URL
+        $id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT); // car possible d'injecter du code malveillant dans l'URL
         
         switch($_GET['action']){
+            // cases en lien avec homePage
             case "homePage" : $homeController->homePage(); break;
-            // les cases en lien avec movie
-            case "listFilms" : $movieController->findAll(); break;
-            case "detailsFilm": $movieController->infosFilm($_GET["id"]);break;
 
-            // les cases en lien avec actor
-            case "listActors" : $actorController->findAll(); break;
-            case "detailsActor" : $actorController->infosActeur($_GET["id"]); break;
+            // cases en lien avec movie
+            case "listFilms" : $movieController->listFilms(); break;
+            case "detailsFilm": $movieController->detailsFilm($id); break;
 
-            // les cases en lien avec director
-            case "listDirectors" : $directorController->findAll(); break;
-            case "detailsDirector" : $directorController->infosRealisateur($_GET["id"]); break;
+            // cases en lien avec actor
+            case "listActors" : $actorController->listActors(); break;
+            case "detailsActor" : $actorController->detailsActor($id); break;
 
-            //cass en lien avec genre
-            case "everyGenres" : $genreController->findAll(); break;
+            // cases en lien avec director
+            case "listDirectors" : $directorController->listDirectors(); break;
+            case "detailsDirector" : $directorController->detailsDirector($id); break;
+
+            // cases role
+            case "listRoles" : $roleController->listRoles(); break;
+            case "detailsRole" : $roleController->detailsRole($id); break;
+
+            // cases en lien avec genre
+            case "listGenres" : $genreController->listGenres(); break;
+            case "detailsGenre" : $genreController->detailsGenre($id); break;
+            
+
+            // si l'action n'est pas reconnu redirige vers homePage
+            default : $homeController->homePage(); break;
 
         }
 

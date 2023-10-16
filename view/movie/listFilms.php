@@ -7,19 +7,18 @@ ob_start();
 
 <!-- <?=$films->rowCount() ?> -->
 
+    <div id='listFilms'>
 <?php
-echo "<div id='listFilms'>";
-while ($film = $films->fetch()) {
-    echo "<div class='blocFilms'>",
-            "<p>".$film["id_film"].". ".$film["titre"]."</p>";
+    while ($film = $films->fetch()) {
 ?>
-    <a href="index.php?action=detailsFilm&id=<?=$film['id_film']?>">En savoir plus</a>
+        <div class='blocFilms'>
+            <p><?=$film["id_film"]?><?=$film["titre"]?></p>
+            <a href="index.php?action=detailsFilm&id=<?=$film['id_film']?>">En savoir plus</a>
+        </div>
 <?php
-    echo "</div>";
-}
-
-echo "</div>";
+    }
 ?>
+    </div>
 
 <?php 
 // termine la temporisation, et initie les variables title et content, content qui aura tous le contenu de cette page

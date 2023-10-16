@@ -3,11 +3,11 @@ require_once "./bdd/DAO.php";
 
 class ActorController {
 
-    public function findAll() {
+    public function listActors() {
 
         $dao = new DAO();
         $sql = 
-        "SELECT  a.id_acteur, CONCAT(a.prenom ,' ', a.nom) AS full_name, a.sexe
+        "SELECT a.id_acteur, CONCAT(a.prenom ,' ', a.nom) AS full_name
         FROM acteur a
         ";
 
@@ -15,21 +15,44 @@ class ActorController {
         require "./view/actor/listActors.php";
     }
 
-    public function infosActeur($GET_id) {
+    public function detailsActor($idActor) {
 
         $dao = new DAO();
-        $sql = 
-        "SELECT CONCAT(a.prenom, ' ', a.nom) AS full_name, a.sexe, DATE_FORMAT(a.dateDeNaissance, '%d/%m/%Y') AS dateNaissance, a.dateDeNaissance, group_CONCAT(' ',ro.libelle,'(',f.titre,')') AS roles, GROUP_CONCAT(f.titre) AS titreFilm
+
+        $paramsActeur = [
+            "idActor" => $idActor
+        ];
+
+        $sqlActeur = 
+        "SELECT 
+            a.id_acteur,
+            a.prenom,
+            a.nom, 
+            a.sexe, 
+            a.dateDeNaissance, 
+            DATE_FORMAT(a.dateDeNaissance, '%d/%m/%Y') AS formatedDateDeNaissance,
+            a.dateDeDeces,
+            DATE_FORMAT(a.dateDeDeces, '%d/%m/%Y') AS formatedDateDeDeces
         FROM acteur a
-        INNER JOIN casting c ON a.id_acteur = c.acteur_id
-        INNER JOIN role ro ON c.role_id = ro.id_role
-        INNER JOIN film f ON c.film_id = f.id_film
-        WHERE a.id_acteur = $GET_id
+        WHERE a.id_acteur = :idActor
         GROUP BY a.id_acteur
         ";
-        
 
-        $detailsActeur = $dao->executerRequete($sql);
+        $sqlCasting =  
+        "SELECT 
+            ro.libelle,
+            c.film_id,
+            c.role_id,
+            f.titre
+
+        FROM casting c
+        INNER JOIN role ro ON c.role_id = ro.id_role
+        INNER JOIN film f ON c.film_id = f.id_film
+        WHERE c.acteur_id = :idActor
+        ";
+
+        $detailsActeur = $dao->executerRequete($sqlActeur, $paramsActeur);
+        $castings = $dao->executerRequete($sqlCasting, $paramsActeur);
         require "./view/actor/detailsActor.php";
     }
 

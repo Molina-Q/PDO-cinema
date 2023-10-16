@@ -7,25 +7,50 @@ ob_start();
 
 
 <?php
-function showAge($dateTimeReal) {
+function showAge($dateTimeDirector) {
     $dateTimeNow = new \DateTime("now");
-    $dateTimeNaissance = new \DateTime($dateTimeReal);
-    $agePersonne = date_diff($dateTimeNaissance, $dateTimeNow)->format("%Y ans");
+    $dateTimeInterval = new \DateTime($dateTimeDirector);
+    $agePersonne = date_diff($dateTimeInterval, $dateTimeNow)->format("%Y ans");
     return $agePersonne;
 }
 
-while ($realisateur = $detailsRealisateur->fetch()) {
-    echo "<div class='blocDetailsDirector'>",
-            "<h3>".$realisateur["full_name"]."</h3>",
-            "<ul>",
-                "<li>".$realisateur["sexe"]."</li>",
-                "<li><span>Date de naissance</span> : ".$realisateur["dateNaissance"]."</li>",
-                "<li><span>Age</span> :".showAge($realisateur["dateDeNaissance"])."</li>",
-                "<li>Nombres de film réalisé : ".$realisateur["movieDirected"]."</li>",
-            "</ul>",
-        "</div>";
-        // afficher tous les attributs et voire pour mettre le nb de film ou ils ont joués et l'age
+function showAgeDecede($dateTimeNaissance, $dateTimeDeces) {
+    $newTimeNaissance = new \DateTime($dateTimeNaissance);
+    $newTimeDeces = new \DateTime($dateTimeDeces);
+    $agePersonne = date_diff($newTimeDeces, $newTimeNaissance)->format("%Y ans");
+    return $agePersonne;
+}
+
+while ($realisateur = $detailsDirector->fetch()) {
 ?>
+   <div class='blocDetailsDirector'>
+          <h3><?=$realisateur["prenom"]?> <?=$realisateur["nom"]?></h3>
+          <ul>
+              <li><?=$realisateur["sexe"]?></li>
+              <li><span>Date de naissance</span> : <?=$realisateur["formatedDateDeNaissance"]?></li>
+<?php
+                if($realisateur["formatedDateDeDeces"]) {
+?>
+                    <li><span>Date de décès</span> : <?=$realisateur["formatedDateDeDeces"]?> (<?=showAgeDecede($realisateur["dateDeNaissance"], $realisateur["dateDeDeces"])?>) </li>
+<?php
+                } else {
+?>
+                    <li><span>Age</span> : <?=showAge($realisateur["dateDeNaissance"])?></li>   
+<?php
+                }
+?>
+                <li>film(s) réalisé(s) : 
+<?php
+                while ($film = $films->fetch()) {
+?>
+                    <a href="index.php?action=detailsFilm&id=<?=$film["id_film"]?>"><?=$film["titre"]?><a>, 
+<?php
+                }
+?>
+                </li>
+                    
+          </ul>
+      </div>
 
 <?php
 
