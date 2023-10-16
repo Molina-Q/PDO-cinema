@@ -11,20 +11,17 @@
 
 body {
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
-    
 }
 
 main {
-    padding: 0 10%;
+    padding: 25px 10%;
 
 }
 
 .titrePage {
-    padding: 15px 0;
-    font-size: 2.5em;
+    font-size: 3em;
     text-align: center;
 }
-
 
 /***** header ****/
 header {
@@ -81,7 +78,7 @@ nav ul li a:hover {
     transition: 0.3s;
 }
 
-/***** homePage *****/
+/*************** homePage ***************/
 #homePage {
     padding: 15px 0;
     text-align: center;
@@ -89,11 +86,16 @@ nav ul li a:hover {
 }
 
 
-/***** film *****/
+/*************** film ***************/
 span {
     color: gray;
 }
 
+/***** list *****/
+[id*="list"] {
+    text-align: center;
+
+}
 #listFilms {
     margin: 0 20% 15px;
     background-color: rgb(223, 221, 218);
@@ -109,15 +111,17 @@ span {
     border-bottom: 1px solid gray;
 }
 
+/*************** details ***************/
+/**** film ****/
 .blocDetailsFilm {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 15px 0;
+    padding: 20px 0;
 }
 
 .blocDetailsFilm h3 {
-    font-size: 3em;
+    font-size: 2.5em;
 }
 
 .blocDetailsFilm ul {
@@ -127,6 +131,19 @@ span {
 .blocDetailsFilm ul li {
     font-size: 1.5em;
     list-style: none;
+}
+
+/**** role ****/
+.blocDetailsRole h3 {
+    padding: 20px 0;
+}
+
+.blocDetailsRole h3 {
+    font-size: 2em;
+}
+
+.blocDetailsRole p {
+    font-size: 1.5em;
 }
 
 /***** afficheFilm *****/
@@ -139,7 +156,7 @@ span {
     width: 100%
 }
 
-/***** actor *****/
+/*************** actor ***************/
 .blocDetailsActor {
     padding: 15px 0;
 }
@@ -157,7 +174,7 @@ span {
     list-style: none;
 }
 
-/***** director *****/
+/***************director ***************/
 .blocDetailsDirector {
     padding: 15px 0;
 }
@@ -175,8 +192,7 @@ span {
     list-style: none;
 }
 
-/***** footer *****/
-
+/*************** footer ***************/
 footer {
     background-color:var(--primary-background-color);
 } 
@@ -186,7 +202,6 @@ footer ul {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-
 } 
 
 footer ul li {
