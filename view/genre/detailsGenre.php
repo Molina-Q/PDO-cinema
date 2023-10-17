@@ -6,30 +6,35 @@ ob_start();
 <h2 class="titrePage">Details d'un genre</h2>
 <?php
 
-while ($genre = $detailsGenre->fetch()) {
-?>
-       <div class='blocDetailsGenre'>
+if ($genre = $genre->fetch()) {
+    ?>
+        <a href="index.php?action=updateGenreForm&id=<?= $genre["id_genre"] ?>">
+            <p>Update</p>
+        </a>
+        <div class='blocDetailsGenre'>
            <h3><?= $genre["libelle"] ?> : </h3>
-
+           
 <?php
 }
 ?>
             <p>
 <?php
-            while ($film = $films->fetch()) {
-                // if($film["film_id"] == null) {
+                if($films->rowCount() == 0) {
                     ?>
-                    Aucun film dans ce genre.
+                        <p>Aucun film dans ce genre.</p>
                     <?php
-                // } else {
+                } else {
+
+                    while ($film = $films->fetch()) {
 ?>
-                    <a href="index.php?action=detailsFilm&id=<?=$film["film_id"]?>"><?= $film["titre"] ?></a>, 
-<?php
-                // }
+                        <a href="index.php?action=detailsFilm&id=<?=$film["film_id"]?>"><?= $film["titre"] ?></a> 
+                    
+                    <?php
+                    }
+                }
 ?>
                 
 <?php
-            }
 ?>          </p>
           
         </div>

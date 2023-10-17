@@ -6,17 +6,34 @@ class HomeController{
     public function homePage() {
 
         $dao = new DAO();
-        $sql = 
-        "SELECT COUNT(DISTINCT f.id_film) AS nb_films, COUNT(DISTINCT a.id_acteur) AS nb_acteurs, COUNT(DISTINCT r.id_realisateur) AS nb_realisateurs
-        FROM casting c
-        INNER JOIN acteur a ON c.acteur_id = a.id_acteur
-        INNER JOIN film f  ON c.film_id = f.id_film
-        INNER JOIN realisateur r ON f.realisateur_id = r.id_realisateur
+        $sqlFilms = 
+        "SELECT 
+            COUNT(f.id_film) AS nb_films
+        FROM 
+            film f
         ";
 
-        $countBDD = $dao->executerRequete($sql);  
+        $sqlDirectors = 
+        "SELECT 
+            COUNT(r.id_realisateur) AS nb_realisateurs
+        FROM 
+            realisateur r
+        ";
+
+        $sqlActors = 
+        "SELECT 
+            COUNT(a.id_acteur) AS nb_acteurs
+        FROM 
+            acteur a
+        ";
+
+        $films = $dao->executerRequete($sqlFilms);  
+        $directors = $dao->executerRequete($sqlDirectors);  
+        $actors = $dao->executerRequete($sqlActors);  
         require "./view/home.php";
     }
+
+
 
 }
 

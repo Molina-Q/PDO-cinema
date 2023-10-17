@@ -4,7 +4,7 @@ ob_start();
 ?>
 
 <h2 class="titrePage">Roles</h2>
-
+<p><a href="index.php?action=addRoleForm"><span class="link-within-text">Create</span></a> a role!</p>
 
     <div id='listRoles'>
 <?php

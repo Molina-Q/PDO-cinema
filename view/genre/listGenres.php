@@ -4,13 +4,15 @@ ob_start();
 ?>
 
 <h2 class="titrePage">Genres</h2>
-
+<p><a href="index.php?action=addGenreForm"><span class="link-within-text">Create</span></a> a genre!</p>
 
     <div id='listGenres'>
 <?php
     while ($genre = $genres->fetch()) {
 ?>
-        <p><a href='index.php?action=detailsGenre&id=<?=$genre["id_genre"]?>'><?=$genre["libelle"]?></a></p>
+        <a href='index.php?action=detailsGenre&id=<?=$genre["id_genre"]?>'>
+            <p><?=$genre["libelle"]?></p>
+        </a>
 <?php
     }
 ?>

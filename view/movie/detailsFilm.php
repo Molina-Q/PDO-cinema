@@ -11,7 +11,7 @@ ob_start();
 <div id='detailsFilm'>
 <?php
     //fetch le resultat de la requête SQL contenu dans $film
-    while ($film = $detailsFilm->fetch()) {
+    if ($film = $film->fetch()) {
 ?>
         <div class='blocDetailsFilm'>
             <figure class='afficheFilm'>

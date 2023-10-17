@@ -4,6 +4,7 @@ ob_start();
 ?>
 
 <h2 class="titrePage">Liste d'acteurs</h2>
+<p><a href="index.php?action=addActorForm"><span class="link-within-text">Add</span></a> an actor!</p>
 
 <?php
 echo "<div id='listActeurs'>";

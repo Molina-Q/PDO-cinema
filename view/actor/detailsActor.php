@@ -50,7 +50,7 @@ while ($acteur = $detailsActeur->fetch()) {
  
 <?php
             }
-?>           
+?>
                 </li>
             </ul>
         </div>

@@ -4,6 +4,7 @@ ob_start();
 ?>
 
 <h2 class="titrePage">Liste de réalisateurs</h2>
+<p><a href="index.php?action=addDirectorForm"><span class="link-within-text">Add</span></a> a director!</p>
 
 <?php
 echo "<div id=listRealisateurs>"; 
