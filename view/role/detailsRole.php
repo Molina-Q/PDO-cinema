@@ -6,17 +6,22 @@ ob_start();
 <h2 class="titrePage">Details des roles</h2>
 <?php
 
-while ($role = $detailsRole->fetch()) {
+if ($role = $detailsRole->fetch()) {
 ?>
+    <div class="interactUpdate">
+        <a href="index.php?action=updateRoleForm&id=<?= $role["id_role"] ?>">
+            <p>Update</p>
+        </a>
+    </div>
        <div class='blocDetailsRole'>
-           <h3><?= $role["libelle"] ?></h3>
+        <h3><?= $role["libelle"] ?></h3>
 
 <?php
 }
 ?>
             <p><span>Joué par</span> : 
 <?php
-            while ($casting = $castings->fetch()) {
+        while ($casting = $castings->fetch()) {
 ?>
                <a href="index.php?action=detailsActor&id=<?=$casting["acteur_id"]?>"><?=$casting["prenom"]?> <?=$casting["nom"]?></a>(<a href="index.php?action=detailsFilm&id=<?=$casting["film_id"]?>"><?=$casting["titre"]?></a>),
 <?php

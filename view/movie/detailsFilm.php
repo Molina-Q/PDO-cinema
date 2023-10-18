@@ -13,6 +13,11 @@ ob_start();
     //fetch le resultat de la requête SQL contenu dans $film
     if ($film = $film->fetch()) {
 ?>
+    <div class="interactUpdate">
+        <a href="index.php?action=updateFilmForm&id=<?= $film["id_film"] ?>">
+            <p>Update</p>
+        </a>
+    </div>
         <div class='blocDetailsFilm'>
             <figure class='afficheFilm'>
                <img src='./public/img/<?=$film["affiche"]?>.jpg' alt='<?=$film["affiche"]?>'>

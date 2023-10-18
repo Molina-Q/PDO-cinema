@@ -7,31 +7,35 @@ ob_start();
 
 
 <?php
-function showAge($dateTimeDirector) {
-    $dateTimeNow = new \DateTime("now");
-    $dateTimeInterval = new \DateTime($dateTimeDirector);
-    $agePersonne = date_diff($dateTimeInterval, $dateTimeNow)->format("%Y ans");
+function showAge($dateTimeNaissance,  $dateTimeDeces = null) {
+    if(isset($dateTimeDeces)) {
+        $dateTimeInterval = new \DateTime($dateTimeDeces);
+    } else {
+        $dateTimeInterval = new \DateTime("now");
+    }
+
+    $newTimeNaissance = new \DateTime($dateTimeNaissance);
+    $agePersonne = date_diff($newTimeNaissance, $dateTimeInterval)->format("%Y ans");
     return $agePersonne;
 }
 
-function showAgeDecede($dateTimeNaissance, $dateTimeDeces) {
-    $newTimeNaissance = new \DateTime($dateTimeNaissance);
-    $newTimeDeces = new \DateTime($dateTimeDeces);
-    $agePersonne = date_diff($newTimeDeces, $newTimeNaissance)->format("%Y ans");
-    return $agePersonne;
-}
 
 while ($realisateur = $detailsDirector->fetch()) {
 ?>
+    <div class="interactUpdate">
+        <a href="index.php?action=updateDirectorForm&id=<?= $realisateur["id_realisateur"] ?>">
+            <p>Update</p>
+        </a>
+    </div>
    <div class='blocDetailsDirector'>
-          <h3><?=$realisateur["prenom"]?> <?=$realisateur["nom"]?></h3>
-          <ul>
+            <h3><?=$realisateur["prenom"]?> <?=$realisateur["nom"]?></h3>
+            <ul>
               <li><?=$realisateur["sexe"]?></li>
               <li><span>Date de naissance</span> : <?=$realisateur["formatedDateDeNaissance"]?></li>
 <?php
                 if($realisateur["formatedDateDeDeces"]) {
 ?>
-                    <li><span>Date de décès</span> : <?=$realisateur["formatedDateDeDeces"]?> (<?=showAgeDecede($realisateur["dateDeNaissance"], $realisateur["dateDeDeces"])?>) </li>
+                    <li><span>Date de décès</span> : <?=$realisateur["formatedDateDeDeces"]?> (<?=showAge($realisateur["dateDeNaissance"], $realisateur["dateDeDeces"])?>) </li>
 <?php
                 } else {
 ?>

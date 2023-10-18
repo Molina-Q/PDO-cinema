@@ -4,18 +4,24 @@ ob_start();
 ?>
 
 <h2 class="titrePage">Liste d'acteurs</h2>
-<p><a href="index.php?action=addActorForm"><span class="link-within-text">Add</span></a> an actor!</p>
-
+<div class="interactAdd">
+    <a  href="index.php?action=addActorForm">
+        <p>Add an actor!</p>
+    </a>
+</div>
+    
+<div id='listActeurs'>
 <?php
-echo "<div id='listActeurs'>";
-
 while ($acteur = $acteurs->fetch()) {
     $acteurId = $acteur["id_acteur"];
-    echo "<h3><a href='index.php?action=detailsActor&id=$acteurId'>".$acteur["full_name"]."</a></h3>";
-}
-
-echo "</div>";
 ?>
+    <a class="linkEntities" href='index.php?action=detailsActor&id=<?= $acteur["id_acteur"] ?>'>
+        <p class="listEntities"><?= $acteur["full_name"] ?></p>
+    </a>
+<?php
+}
+?>
+</div>
 
 
 <?php 

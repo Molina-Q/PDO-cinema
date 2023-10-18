@@ -23,7 +23,12 @@ function showAgeDecede($dateTimeNaissance, $dateTimeDeces) {
 
 
 while ($acteur = $detailsActeur->fetch()) {
-?>
+?>          
+        <div class="interactUpdate">
+            <a href="index.php?action=updateActorForm&id=<?= $acteur["id_acteur"] ?>">
+                <p>Update</p>
+            </a>
+        </div>
        <div class='blocDetailsActor'>
            <h3><?= $acteur["prenom"] ?> <?= $acteur["nom"] ?></h3>
 

@@ -61,33 +61,13 @@ class GenreController {
 
         $titrePage = "Add Genre";
         $tableToFocus = "Genre";
-        $submitInput = "submit";
         $actionForm = "addGenre";
         $placeholder = "Aventure";
+        $entity = null;
 
         require "./view/commonForm.php";
     }
 
-    // function addGenreForm() {
-    //     // $dao = new DAO();
-    //     // $sql =
-    //     // "SELECT 
-    //     //     g.id_genre,
-    //     //     g.libelle
-    //     // FROM 
-    //     //     genre g
-    //     // GROUP BY 
-    //     //     g.id_genre
-    //     // ";
-    //     $titrePage = "Create genre";
-    //     $tableToFocus = "Genre";
-    //     $submitInput = "submitCreate";
-
-    //     // $form = $dao->executerRequete($sql);
-    //     require_once "./view/commonForm.php";
-    // }
-
-    
     function addGenre() {
         
         // filtrer / nettoyer les données reçues en POST
@@ -103,7 +83,7 @@ class GenreController {
 
         // le champ libelle est obligatoire
         if (empty($libelle)) {
-            $formErrors["error"][] = "This field is mandatory";
+            $formErrors["libelle"] = "This field is mandatory";
         }
 
         // autre règle métier / de validation du formulaire
@@ -158,46 +138,109 @@ class GenreController {
         }
 
     }
-
-    function updateGenre($idGenre) {
-        $titrePage = "Update genre";
-        $tableToFocus = "Genre";
-        
+    
+    function updateGenreForm($idGenre, $formData = [], $globalErrorMessage = null, $formErrors = []) {
+        $fieldNames = ["libelle"];
         $dao = new DAO();
-        $sql =
+
+        $titrePage = "Update Genre";
+        $tableToFocus = "Genre";
+        $actionForm = "updateGenre&id=$idGenre";
+        $placeholder = "Aventure";
+
+        // $libelle = "";
+
+        $sql = 
         "SELECT 
             g.id_genre,
             g.libelle
         FROM 
             genre g
-        GROUP BY 
-            g.id_genre
-        WHERE 
+        WHERE
             g.id_genre = :idGenre
         ";
-
+        
         $params = [
             "idGenre" => $idGenre
         ];
-
-        $form = $dao->executerRequete($sql, $params);
-        require_once "./view/commonForm.php";
-    }    
-    
-    function updateGenreForm($idGenre) {
-        $fieldNames = ["libelle"];
-
-        $titrePage = "Update genre";
-        $tableToFocus = "Genre";
-        $submitInput = "submitUpdate";
-
+        
+        $entity = $dao->executerRequete($sql, $params);
         require "./view/commonForm.php";
     }
-    
-    
+
+    function updateGenre($idGenre) {
+        
+        // filtrer / nettoyer les données reçues en POST
+        $libelle = filter_input(INPUT_POST, "libelle", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        // init vars
+        $formErrors = [];
+        $isSuccess = true;
+        $sqlError = null;       
+        
+        // validation des règles métier (valider les données saisies dans le formulaire soumis)
+
+        // le champ libelle est obligatoire
+        if (empty($libelle)) {
+            $formErrors["libelle"] = "This field is mandatory";
+        }
+
+        // autre règle métier / de validation du formulaire
+        // if
+
+        // si le formulaire est valide
+        if (empty($formErrors)) {
+
+            $dao = new DAO();
+
+            $sql =
+            "UPDATE 
+                genre g 
+            SET 
+                g.libelle = :libelle
+            WHERE 
+                g.id_genre = :idGenre
+            ";
+
+            $params = [
+                "libelle" => $libelle,
+                "idGenre" => $idGenre
+            ];
+
+            try {
+
+                $isSuccess = $dao->executerRequete($sql, $params);
+
+            } catch (\Throwable $error) {
+
+                $sqlError = $error;
+                $isSuccess = false;
+            }
+
+        } else {
+            $isSuccess = false;
+        }
+
+        // si tout s'est bien déroulé (requêtes SQL incluse)
+        if ($isSuccess) {
+
+            // on redirige vers le détail du nouveau Genre
+            $this->detailsGenre($idGenre); // contient toute la logique, jusqu'à la vue
+
+        } else {
+            // il y a eu un souci
+
+            // préparation au renvoi des données saisies dans le formulaire
+            $formData = [
+                "libelle" => $libelle
+            ];
+
+            // on renvoie vers le même formulaire, en donnant les infos nécessaires à l'affichage
+            $this->updateGenreForm($idGenre, $formData, $sqlError, $formErrors);
+        }    
+    }
+
+
 }
 
 
-
-
-?>

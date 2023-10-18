@@ -17,26 +17,6 @@ class MovieController {
 
         $dao = new DAO();
 
-        // $sql = 
-        // "SELECT DISTINCT f.titre, f.duree, DATE_FORMAT(f.dateDeSortie, '%d/%m/%Y') AS  release_date, r.id_realisateur,
-        // CONCAT( r.prenom, ' ', r.nom) AS full_name,  
-        // GROUP_CONCAT(DISTINCT a.id_acteur) AS idActeurs, -- acteur_ids
-        // GROUP_CONCAT(DISTINCT a.prenom,' ', a.nom ORDER BY a.id_acteur) AS acteurs,
-        // GROUP_CONCAT(DISTINCT ' ',g.libelle) AS genres,
-        // f.affiche 
-        // FROM film f
-        // INNER JOIN casting c  ON f.id_film = c.film_id
-        // INNER JOIN acteur a ON c.acteur_id = a.id_acteur
-        // INNER JOIN role ro ON c.role_id = ro.id_role
-        // INNER JOIN realisateur r ON f.realisateur_id = r.id_realisateur
-        // INNER JOIN genre_film gf ON f.id_film = gf.film_id
-        // INNER JOIN genre g ON gf.genre_id = g.id_genre
-        // WHERE f.id_film = $idFilm
-        // GROUP BY f.id_film
-        // ";
-
-        // $detailsFilm = $dao->executerRequete($sql);
-
         $paramsFilm = [
             "idFilm" => $idFilm
         ];
@@ -44,6 +24,7 @@ class MovieController {
         // film
         $sqlFilm = 
             "SELECT
+                f.id_film,
                 f.titre,
                 f.duree,
                 DATE_FORMAT(f.dateDeSortie, '%d/%m/%Y') AS release_date,
@@ -104,8 +85,8 @@ class MovieController {
 
         $titrePage = "Add Movie";
         $tableToFocus = "Movie";
-        $submitInput = "submit";
         $actionForm = "addFilm";
+        $entity = null;
         
         $sqlFilms = 
         "SELECT

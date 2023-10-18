@@ -4,18 +4,23 @@ ob_start();
 ?>
 
 <h2 class="titrePage">Liste de réalisateurs</h2>
-<p><a href="index.php?action=addDirectorForm"><span class="link-within-text">Add</span></a> a director!</p>
-
+<div class="interactAdd">
+    <a href="index.php?action=addDirectorForm">
+        <p>Add a director!</p>
+    </a>
+</div>
+    
+<div id=listRealisateurs>
 <?php
-echo "<div id=listRealisateurs>"; 
-
 while ($realisateur = $realisateurs->fetch()) {
-    $realisateurId = $realisateur["id_realisateur"];
-    echo "<h3><a href='index.php?action=detailsDirector&id=$realisateurId'>".$realisateur["full_name"]."</a></h3>";
-}
-
-echo "</div>";
 ?>
+    <a class="linkEntities" href='index.php?action=detailsDirector&id=<?= $realisateur["id_realisateur"] ?>'>
+        <p class="listEntities"><?= $realisateur["full_name"] ?></p>
+    </a>
+<?php
+}
+?>
+</div>
 
 <?php 
 // termine la temporisation, et initie les variables title et content, content qui aura tous le contenu de cette page

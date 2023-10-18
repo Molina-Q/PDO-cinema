@@ -8,9 +8,11 @@ ob_start();
 
 if ($genre = $genre->fetch()) {
     ?>
+    <div class="interactUpdate">
         <a href="index.php?action=updateGenreForm&id=<?= $genre["id_genre"] ?>">
             <p>Update</p>
         </a>
+    </div>
         <div class='blocDetailsGenre'>
            <h3><?= $genre["libelle"] ?> : </h3>
            

@@ -4,13 +4,19 @@ ob_start();
 ?>
 
 <h2 class="titrePage">Roles</h2>
-<p><a href="index.php?action=addRoleForm"><span class="link-within-text">Create</span></a> a role!</p>
+<div class="interactAdd">
+    <a href="index.php?action=addRoleForm">    
+        <p>Create a role!</p>
+    </a> 
+</div>
 
     <div id='listRoles'>
 <?php
     while ($role = $roles->fetch()) {
 ?>
-        <p><a href='index.php?action=detailsRole&id=<?= $role["id_role"] ?>'><?= $role["libelle"] ?></a></p>
+    <a class="linkEntities" href='index.php?action=detailsRole&id=<?= $role["id_role"] ?>'>
+        <p class="listEntities"><?= $role["libelle"] ?></p>
+    </a>
 <?php
     }
 ?>

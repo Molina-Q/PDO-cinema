@@ -4,15 +4,18 @@ ob_start();
 ?>
 
 <h2 class="titrePage">Liste des films</h2>
-<p><a href="index.php?action=addFilmForm"><span class="link-within-text">Add</span></a> a movie!</p>
-
-
+<div class="interactAdd">
+    <a href="index.php?action=addFilmForm">
+        <p>Add a movie!</p>
+    </a>
+</div>
+    
     <div id='listFilms'>
 <?php
     while ($film = $films->fetch()) {
 ?>
         <div class='blocFilms'>
-            <p><?=$film["id_film"]?>. <?=$film["titre"]?></p>
+            <p class="listEntities"><?=$film["id_film"]?>. <?=$film["titre"]?></p>
             <a href="index.php?action=detailsFilm&id=<?=$film['id_film']?>">En savoir plus</a>
         </div>
 <?php

@@ -63,10 +63,9 @@ class RoleController {
 
         $titrePage = "Add Role";
         $tableToFocus = "Role";
-        $submitInput = "submit";
         $actionForm = "addRole";
         $placeholder = "Darth Vader";
-
+        $entity = null;
 
         require "./view/commonForm.php";
     }
@@ -75,7 +74,6 @@ class RoleController {
         
         // filtrer / nettoyer les données reçues en POST
         $libelle = filter_input(INPUT_POST, "libelle", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-
 
         // init vars
         $formErrors = [];
@@ -87,7 +85,7 @@ class RoleController {
 
         // le champ libelle est obligatoire
         if (empty($libelle)) {
-            $formErrors["error"][] = "This field is mandatory";
+            $formErrors["libelle"] = "This field is mandatory";
         }
 
         // autre règle métier / de validation du formulaire
@@ -141,6 +139,107 @@ class RoleController {
             $this->addRoleForm($formData, $sqlError, $formErrors);
         }
 
+    }
+
+    function updateRoleForm($idRole, $formData = [], $globalErrorMessage = null, $formErrors = []) {
+        $fieldNames = ["libelle"];
+        $dao = new DAO();
+
+        $titrePage = "Update Role";
+        $tableToFocus = "Role";
+        $actionForm = "updateRole&id=$idRole";
+        $placeholder = "Darth Vader";
+
+        $libelle = "";
+
+        $sql = 
+        "SELECT 
+            id_role,
+            libelle
+        FROM 
+            role
+        WHERE
+            id_role = :idRole
+        ";
+        
+        $params = [
+            "idRole" => $idRole
+        ];
+        
+        $entity = $dao->executerRequete($sql, $params);
+        require "./view/commonForm.php";
+    }
+
+    function updateRole($idRole) {
+        
+        // filtrer / nettoyer les données reçues en POST
+        $libelle = filter_input(INPUT_POST, "libelle", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        // init vars
+        $formErrors = [];
+        $isSuccess = true;
+        $sqlError = null;       
+        
+        // validation des règles métier (valider les données saisies dans le formulaire soumis)
+
+        // le champ libelle est obligatoire
+        if (empty($libelle)) {
+            $formErrors["libelle"] = "This field is mandatory";
+        }
+
+        // autre règle métier / de validation du formulaire
+        // if
+
+        // si le formulaire est valide
+        if (empty($formErrors)) {
+
+            $dao = new DAO();
+
+            $sql =
+            "UPDATE 
+                role
+            SET 
+                libelle = :libelle
+            WHERE 
+                id_role = :idRole
+            ";
+
+            $params = [
+                "libelle" => $libelle,
+                "idRole" => $idRole
+            ];
+
+            try {
+
+                $isSuccess = $dao->executerRequete($sql, $params);
+
+            } catch (\Throwable $error) {
+
+                $sqlError = $error;
+                $isSuccess = false;
+            }
+
+        } else {
+            $isSuccess = false;
+        }
+
+        // si tout s'est bien déroulé (requêtes SQL incluse)
+        if ($isSuccess) {
+
+            // on redirige vers le détail du nouveau Genre
+            $this->detailsRole($idRole); // contient toute la logique, jusqu'à la vue
+
+        } else {
+            // il y a eu un souci
+
+            // préparation au renvoi des données saisies dans le formulaire
+            $formData = [
+                "libelle" => $libelle
+            ];
+
+            // on renvoie vers le même formulaire, en donnant les infos nécessaires à l'affichage
+            $this->updateRoleForm($idRole, $formData, $sqlError, $formErrors);
+        }    
     }
 }
 ?>
