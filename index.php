@@ -37,6 +37,14 @@ On fait appel aux fichiers physiques  -->
             case "addFilm" : $movieController->addFilm(); break;
             case "updateFilmForm" : $movieController->updateFilmForm($id); break;
             case "updateFilm" : $movieController->updateFilm($id); break;
+            case "addGenreFilmForm" : $movieController->addGenreFilmForm(); break;
+            case "addGenreFilm" : $movieController->addGenreFilm(); break;
+            case "addCastingFilmForm" : $movieController->addCastingFilmForm(); break;
+            case "addCastingFilm" : $movieController->addCastingFilm(); break;
+            // case "updateGenreFilmForm" : $movieController->updateGenreFilmForm($id); break;
+            // case "updateGenreFilm" : $movieController->updateGenreFilm($id); break;
+            // case "updateCastingFilmForm" : $movieController->updateCastingFilmForm($id); break;
+            // case "updateCastingFilm" : $movieController->updateCastingFilm($id); break;
 
             // cases en lien avec actor
             case "listActors" : $actorController->listActors(); break;

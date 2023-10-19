@@ -1,6 +1,12 @@
 <?php
 // démarre la temporisation
 ob_start();
+// count le nb de boucle effectué dans genre et casting pour ne pas avoir de virgule aux derniers mots
+$countG = 1;
+$countC = 1;
+$nbRowC = $castings->rowCount();
+$nbRowG = $genres->rowCount();
+$separator = ", ";
 ?>
 
 <h2 class="titrePage">Details du film</h2>
@@ -8,16 +14,25 @@ ob_start();
 <?php
 ?>
 
-<div id='detailsFilm'>
+
 <?php
     //fetch le resultat de la requête SQL contenu dans $film
     if ($film = $film->fetch()) {
 ?>
-    <div class="interactUpdate">
+    <div class="interactUpdateFilm">
         <a href="index.php?action=updateFilmForm&id=<?= $film["id_film"] ?>">
-            <p>Update</p>
+            <p>Update Movie</p>
+        </a>
+
+        <a href="index.php?action=updateGenreForm&id=<?= $film["id_film"] ?>">
+            <p><s>Update Genre</s></p>
+        </a>
+
+        <a href="index.php?action=updateCastingForm&id=<?= $film["id_film"] ?>">
+            <p><s>Update Casting</s></p>
         </a>
     </div>
+
         <div class='blocDetailsFilm'>
             <figure class='afficheFilm'>
                <img src='./public/img/<?=$film["affiche"]?>.jpg' alt='<?=$film["affiche"]?>'>
@@ -32,10 +47,15 @@ ob_start();
                     
                     <li><span>Genre(s)</span> :
 <?php
+    }
                     while ($genre = $genres->fetch()) {
+                        if ($countG == $nbRowG) {
+                            $separator = "";
+                        }
 ?>
-                         <a href="index.php?action=detailsGenre&id=<?= $genre["id_genre"] ?>"><?=$genre["libelle"]?></a>,
+                        <a href="index.php?action=detailsGenre&id=<?= $genre["id_genre"] ?>"><?=$genre["libelle"]?></a><?= $separator ?>
 <?php
+                        $countG++;
                     }
 ?>
                     <li><span>Réalisé par </span><a href='index.php?action=detailsDirector&id=<?=$film["id_realisateur"]?>'><?= $film["prenom"]?> <?=$film["nom"]?></a></li>
@@ -44,11 +64,15 @@ ob_start();
                     
                     <li><span>Avec</span> :
 <?php
+                    $separator = ", ";
                     while ($casting = $castings->fetch()) {
-
+                        if ($countC == $nbRowC) {
+                            $separator = "";
+                        }
 ?>
-                        <a href='index.php?action=detailsActor&id=<?=$casting["id_acteur"]?>'><?= $casting["prenom"] ?> <?= $casting["nom"] ?></a>(<a href="index.php?action=detailsRole&id=<?= $casting["id_role"] ?>"><?= $casting["libelle"] ?></a>),
+                        <a href='index.php?action=detailsActor&id=<?=$casting["id_acteur"]?>'><?= $casting["prenom"] ?> <?= $casting["nom"] ?></a>(<a href="index.php?action=detailsRole&id=<?= $casting["id_role"] ?>"><?= $casting["libelle"] ?></a>)<?= $separator ?>
 <?php
+                        $countC++;
                     }
 ?>
                     </li>
@@ -59,7 +83,7 @@ ob_start();
 </div>
 
 <?php 
-}
+
 // termine la temporisation, et initie les variables title et content, content qui aura tous le contenu de cette page
 $title = "Details du film";
 $content = ob_get_clean(); 

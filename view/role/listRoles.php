@@ -6,7 +6,7 @@ ob_start();
 <h2 class="titrePage">Roles</h2>
 <div class="interactAdd">
     <a href="index.php?action=addRoleForm">    
-        <p>Create a role!</p>
+        <p>Add a role!</p>
     </a> 
 </div>
 

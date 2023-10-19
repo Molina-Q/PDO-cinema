@@ -1,6 +1,9 @@
 <?php
 // démarre la temporisation
 ob_start();
+$count = 1;
+$nbRow = $films->rowCount();
+$separator = ", ";
 ?>
 
 <h2 class="titrePage">Details du réalisateur</h2>
@@ -46,9 +49,13 @@ while ($realisateur = $detailsDirector->fetch()) {
                 <li>film(s) réalisé(s) : 
 <?php
                 while ($film = $films->fetch()) {
+                    if ($count == $nbRow) {
+                        $separator = "";
+                    }
 ?>
-                    <a href="index.php?action=detailsFilm&id=<?=$film["id_film"]?>"><?=$film["titre"]?><a>, 
+                    <a href="index.php?action=detailsFilm&id=<?=$film["id_film"]?>"><?=$film["titre"]?><a><?=  $separator ?>
 <?php
+                    $count++;
                 }
 ?>
                 </li>
