@@ -1,5 +1,6 @@
 :root {
     --primary-background-color: rgb(93, 123, 187);
+    --secondary-background-color: rgb(77, 111, 185);
     --hover-color: rgb(236, 184, 11);
 }
 
@@ -38,96 +39,12 @@ main {
     border-radius: 25px;
 }
 
-.linkEntities { /* a */
-    height: 70px;
-    color: white;
-    text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.linkEntities:hover {
-    color: rgb(236, 184, 11);
-}
-
-.linkEntities:not(:last-child) { /* a */
-    border-bottom: 1px solid black;
-}
-
-.listEntities { /* p */
-    text-align: center;
-    font-size: 1.5em;
-}
-
-.interactAdd { /* div */
-    position: absolute;
-    width: 160px;
-    height: 50px;
-    text-align: center;
-    background-color: var(--primary-background-color);
-    border-radius: 10px;
-}
-
-.interactAdd a { /* a */
-    width: 100%;
-    height: 100%;
-
-    color: white;
-    font-size: 1.2em;
-    text-decoration: none;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.interactAdd a:hover { /* div */
-    color: var(--hover-color);
-}
-
-.interactUpdate { /* div */
-    width: 160px;
-    height: 50px;
-    position: absolute;
-
-    text-align: center;
-    background-color: var(--primary-background-color);
-    border-radius: 10px;
-
-    top: calc(12px + 25px);
-}
-
-.interactUpdate a { /* a */
-    width: 100%;
-    height: 100%;
-
-    color: white;
-    font-size: 1.2em;
-    text-decoration: none;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.interactUpdate a:hover { /* div */
-    color: var(--hover-color);
-}
-
 
 
 /***** header ****/
 header {
     height: 120px;
     background-color: var(--primary-background-color);
-}
-
-nav {
-    padding: 0 10%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
 }
 
 #searchBar {
@@ -143,6 +60,13 @@ nav {
     font-size: 1.2em;
     border: 0;
     padding: 0 5px;
+}
+
+nav {
+    padding: 0 10%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 nav ul {
@@ -168,7 +92,7 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    color: var(--backgound-color);
+    color: var(--hover-color);
     transition: 0.3s;
 }
 
@@ -178,35 +102,185 @@ nav ul li a:hover {
     text-align: center;
     font-size: 1.5em;
 }
+/********** <a> from all lists **********/
+.linkEntities {
+    height: 70px;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.linkEntities:hover {
+    color: rgb(236, 184, 11);
+}
 
-/*************** film ***************/
+.linkEntities:not(:last-child) { 
+    border-bottom: 1px solid black;
+}
+
+/********** <p> from all lists **********/
+.listEntities { /* p */
+    text-align: center;
+    font-size: 1.5em;
+}
+
+/*************** Add something - general ***************/
+.interactAdd { /* div */
+    width: 160px;
+    height: 50px;
+
+    position: absolute;
+
+    background-color: var(--primary-background-color);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.interactAdd a { /* a */
+    width: 100%;
+    height: 100%;
+
+    color: white;
+    font-size: 1.2em;
+    text-decoration: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.interactAdd a:hover { /* div */
+    color: var(--hover-color);
+}
+
+/*************** Add something - film ***************/
+.interactAddFilm { /* div */
+    width: 180px;
+    height: 400px;
+
+    position: absolute;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.interactAddFilm a { /* <a> add casting  */
+    width: 100%;
+    height: 90px;
+    padding: 15px;
+
+    color: white;
+    font-size: 1.2em;
+    text-decoration: none;
+    background-color: var(--primary-background-color);
+    border-radius: 10px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*************** Update something - general ***************/
+.interactUpdate { /* div */
+    width: 160px;
+    height: 50px;
+    position: absolute;
+
+    text-align: center;
+    background-color: var(--primary-background-color);
+    border-radius: 10px;
+
+    top: calc(12px + 25px ); /*25px car c'est le padding utilisé*/
+}
+
+.interactUpdate a { /* a */
+    width: 100%;
+    height: 100%;
+
+    color: white;
+    font-size: 1.2em;
+    text-decoration: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.interactUpdate a:hover { /* div */
+    color: var(--hover-color);
+}
+
+/*************** Update something - film ***************/
+.interactUpdateFilm { /* div */
+    position: absolute;
+    top: calc(12px + 25px );
+    left: 10%;
+    
+    display: flex;
+    flex-direction: row;
+}
+
+.interactUpdateFilm a { /* <a> add casting  */
+    width: 150px;
+    height: 50px;
+    margin: 0 10px ;
+
+    color: white;
+    font-size: 1.2em;
+    text-decoration: none;
+    background-color: var(--primary-background-color);
+    border-radius: 10px;
+
+    /*aligne verticalement et horizontalement le text au centre de la div*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/********** blocDetails - general **********/
+.blocDetailsFilm a, .blocDetailsDirector a, .blocDetailsActor a, .blocDetailsRole a, .blocDetailsGenre a{
+    text-decoration: none;
+    color: rgb(0, 0, 145);
+}
+
 span {
     color: gray;
 }
 
-
-/***** list *****/
+/*************** Film ***************/
 #listFilms {
     margin: 0 20% 15px;
-    padding: 15px 0;
     border-radius: 15px;
 }
 
 .blocFilms {
-    padding: 15px 0;
+    padding: 12px 0;
     text-align: center;
+}
+
+.blocFilms a {
+    color: white;
+    text-decoration: none;
+}
+
+.blocFilms a:hover {
+    color: var(--hover-color);
+    background-color: var(--secondary-background-color);
 }
 
 .blocFilms:not(:last-child) {
     border-bottom: 1px solid black;
 }
 
-.blocFilms p {
+.blocFilms p:first-child {
     color: white;
-}
+} 
 
-/**** details ****/
+/********** details **********/
 .blocDetailsFilm {
     display: flex;
     flex-direction: row;
@@ -227,7 +301,7 @@ span {
     list-style: none;
 }
 
-/***** afficheFilm *****/
+/********** afficheFilm **********/
 .afficheFilm {
     width: 200px;
     margin-right: 25px;
@@ -237,18 +311,41 @@ span {
     width: 100%
 }
 
-/*************** details ***************/
+/***************director ***************/
+.blocDetailsDirector {
+    padding: 15px 0;
+}
+
+.blocDetailsDirector h3 {
+    font-size: 3em;
+}
+
+.blocDetailsDirector ul {
+    font-size: 1em;
+}
+
+.blocDetailsDirector ul li {
+    font-size: 1.5em;
+    list-style: none;
+}
 
 /**** role ****/
 .blocDetailsRole h3 {
-    padding: 20px 0;
-}
-
-.blocDetailsRole h3 {
+    padding: 20px 0; 
     font-size: 2em;
 }
 
 .blocDetailsRole p {
+    font-size: 1.5em;
+}
+
+/**** genre ****/
+.blocDetailsGenre h3 {
+    padding: 20px 0; 
+    font-size: 2em;
+}
+
+.blocDetailsGenre p {
     font-size: 1.5em;
 }
 
@@ -271,23 +368,7 @@ span {
     list-style: none;
 }
 
-/***************director ***************/
-.blocDetailsDirector {
-    padding: 15px 0;
-}
 
-.blocDetailsDirector h3 {
-    font-size: 3em;
-}
-
-.blocDetailsDirector ul {
-    font-size: 1em;
-}
-
-.blocDetailsDirector ul li {
-    font-size: 1.5em;
-    list-style: none;
-}
 
 /*************** form ***************/
 #bloc-form { /* form */
@@ -314,33 +395,42 @@ span {
     font-size: 1.8em;
 }
 
-
-#bloc-form input[type=text] {
-    text-align: center;
-    font-size: 1.3em;
-    height: 35px;
-
-    border-radius: 15px;
-}
-
-#bloc-form input[type=date] { 
+#bloc-form input, #bloc-form select { /* all input */
     width: 230px;
     height: 35px;
 
-    text-align: center;
-    font-size: 1.3em;
+    border:none;
     border-radius: 15px;
+    text-align: center;
 
 }
+#bloc-form option {
+    overflow: scroll;
+} 
+#bloc-form input:focus-visible { /* nativ outline */
+    outline-style:none;
+}
 
-#bloc-form input[type=time] { 
-    width: 230px;
-    height: 35px;
-
-    text-align: center;
+#bloc-form input[type=text] { /* input text */
+    width: 250px;
     font-size: 1.3em;
-    border-radius: 15px;
+}
 
+#bloc-form input[type=date] { /* input date */
+    font-size: 1.3em;
+}
+
+#bloc-form input[type=time] { /* input time */
+    font-size: 1.3em;
+}
+
+#bloc-form select{  /* select > option */
+    font-size: 1em;
+    border-radius: 5px;
+}
+
+#bloc-form option{  /* select > option */
+    border-radius: 25px;
 }
 
 #bloc-form button {
@@ -378,3 +468,81 @@ footer ul li {
     flex-direction: row;
     justify-content: space-evenly;
 }
+
+/******************** custom select dropdown menu ********************/
+/* div qui entoure select */
+.custom-select {
+    position: relative;
+}
+
+/*cache le visuel du select natif*/
+.custom-select select {
+    display: none; 
+}
+
+/* le visuel du select avec le menu fermé */ 
+.select-selected { 
+    background-color: white;
+    border-radius: 15px;
+}
+  
+/* flèche quand elle est tournée vers le bas  */
+.select-selected:after {
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+
+    border: 6px solid transparent;
+    border-color: black transparent transparent transparent;
+    content: ""; /* permet d'afficher la flèche */
+}
+
+/* la flèche quand elle pointé vers le haut */
+.select-selected.select-arrow-active:after {
+    border-color: transparent transparent black transparent;
+    top: 10px;
+}
+
+/* le menu déroulant d'options */
+.select-items {
+    height: 200px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+
+    background-color: white;
+    border-radius: 15px;
+    border: 1px solid gray;    
+    
+    overflow-y: scroll; /* applique une bar de scroll sur l'axe y */ 
+    scrollbar-width: none;  /* cache la bar de scroll tout en la gardant fonctionnelle (compatible uniquement avec firefox) */
+}
+
+/* select et le menu d'options */
+.select-items div,.select-selected {
+    color: black;
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+/* similaire à scrollbar-width mais compatible avec chrome */
+.select-items::-webkit-scrollbar  { 
+    display: none;
+}
+
+/* applique un hover sur chaque option individuelle de la liste */
+.select-items div:hover{
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* est appliqué sur .select-items quand on ferme le menu pour tout cacher */
+.select-hide {
+    display: none;
+}
+
+
