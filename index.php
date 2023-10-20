@@ -25,7 +25,6 @@ On fait appel aux fichiers physiques  -->
         // $id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_FULL_SPECIAL_CHARS ); // car possible d'injecter du code malveillant dans l'URL
         $id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT); // car possible d'injecter du code malveillant dans l'URL
         
-    
         switch($_GET['action']){
             // cases en lien avec homePage
             case "homePage" : $homeController->homePage(); break;
@@ -78,10 +77,8 @@ On fait appel aux fichiers physiques  -->
             case "updateGenreForm" : $genreController->updateGenreForm($id); break;
             case "updateGenre" : $genreController->updateGenre($id); break;
             
-
-            // si l'action n'est pas reconnu redirige vers homePage
+            // si action n'est pas reconnu redirige vers homePage
             default : $homeController->homePage(); break;
-
         } 
         
     } else {

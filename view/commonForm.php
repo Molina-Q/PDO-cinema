@@ -16,7 +16,7 @@ function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entit
     if($entity) {
         // stock la valeur de la colonne actuelle
         $entityName = $entity[$columnName];
-        // l'utilise pour la placer dans le formData (et afficher les données dans les input)
+        // l'utilise pour placer l'entity dans le formData (et afficher les données dans les input)
         $formData = [$columnName => $entityName];
     }
 
@@ -24,11 +24,13 @@ function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entit
     <div class="div-label-input">
         <label for="<?= $columnName ?>" class="form-label"><?= $labelName ?></label>
 <?php
+    // si l'input type est time step sera modifié
     if(in_array($inputType, $inputs)) {
         if($inputType == "time") {
             $stepValue = 1;
         }
 ?>
+        <!-- la ternaire verifie si formData est initialisé, si c'est le cas une value sera écrite sinon ce sera vide, utilisé lors d'une erreur ou d'une update pour afficher la value de columnName -->
         <input type="<?= $inputType ?>" id="<?= $columnName ?>" name="<?= $columnName ?>" step="<?= $stepValue ?>" placeholder="<?= $placeholder ?>" value="<?= isset($formData[$columnName]) ? $formData[$columnName] : ''?>">
     </div>
     <?php
@@ -39,8 +41,10 @@ function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entit
             <select name="<?= $columnName ?>" id="<?= $columnName ?>">
                 <option value="<?= isset($formData[$columnName]) ? $formData[$columnName] : $inputType ?>"><?=$placeholder?></option>
 <?php 
+                // génère le select > option
                 while($option = $options->fetch()) {
                     $selected = "";
+                    // si le nom de la colonne et l'id de l'option match, selected sera appliqué sur option
                     if($formData[$columnName] == $option["id_option"]) {
                         $selected = "selected";
                     }
@@ -56,7 +60,7 @@ function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entit
 <?php
     }
 }
-
+// function qui affiche les messages d'erreur de toutes les colonnes nécessaire en fonction du controller qui appel le form
 function messageErrors($formErrors, $columnName) {
     if (isset($formErrors[$columnName])) {
         ?>
@@ -106,7 +110,7 @@ function messageErrors($formErrors, $columnName) {
 
             }
             
-            if (in_array("dateDeDeces", $fieldNames)) { // mon entité a un fields date de naissance
+            if (in_array("dateDeDeces", $fieldNames)) { // mon entité a un fields date de deces
                 makeHtmlGroup("Date of death", "date", "dateDeDeces", "2023-01-20", $entity); 
                 messageErrors($formErrors, "dateDeDeces");  
             }
@@ -136,24 +140,24 @@ function messageErrors($formErrors, $columnName) {
             }
 
             /***** genre_film *****/
-            if (in_array("genre_id", $fieldNames)) { // mon entité a un fields id realisateur (foreign key)
+            if (in_array("genre_id", $fieldNames)) { // mon entité a un fields id genre (foreign key)
                 makeHtmlGroup("Genre", "select", "genre_id", "--Choose a genre--", $entity, $optionsGenre);  
                 messageErrors($formErrors, "genre_id");  
             }
 
             /***** commun genre_film/casting *****/
-            if (in_array("film_id", $fieldNames)) { // mon entité a un fields id realisateur (foreign key)
+            if (in_array("film_id", $fieldNames)) { // mon entité a un fields id casting (foreign key)
                 makeHtmlGroup("Film", "select", "film_id", "--Choose a movie--", $entity, $optionsFilm);  
                 messageErrors($formErrors, "film_id");  
             }
 
             /***** casting *****/
-            if (in_array("acteur_id", $fieldNames)) { // mon entité a un fields id realisateur (foreign key)
+            if (in_array("acteur_id", $fieldNames)) { // mon entité a un fields id acteur (foreign key)
                 makeHtmlGroup("Actor", "select", "acteur_id", "--Choose an actor--", $entity, $optionsActor);  
                 messageErrors($formErrors, "acteur_id");  
             }
 
-            if (in_array("role_id", $fieldNames)) { // mon entité a un fields id realisateur (foreign key)
+            if (in_array("role_id", $fieldNames)) { // mon entité a un fields id role (foreign key)
                 makeHtmlGroup("Role", "select", "role_id", "--Choose a role--", $entity, $optionsRole);  
                 messageErrors($formErrors, "role_id");  
             }
@@ -163,9 +167,10 @@ function messageErrors($formErrors, $columnName) {
             
         </form>
     </div>
-    <script src="./public/app/app.js"></script>
-    <?php 
-  
+<!-- script js est utilisé par les select option pour styliser le dropdown menu -->
+<script src="./public/app/app.js"></script>
+
+<?php 
 // termine la temporisation, et initie les variables title et content, content qui aura tous le contenu de cette page
 $title = $titrePage;
 $content = ob_get_clean(); 
