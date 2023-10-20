@@ -1,16 +1,20 @@
+// ferme tous les select ouvert
 function closeAllSelect(elmnt) {
-    // A function that will close all select boxes in the document, except the current select box:
+    // initialisations variable
     let selectItems, selectSelected, itemsLength, selectedLength, arrNo = [];
-
+    //reçoit les elements de classe select-items
     selectItems = document.getElementsByClassName("select-items");
-
-    selectSelected = document.getElementsByClassName("select-selected");
-
+    // stock le nombre d'elements avec cette class
     itemsLength = selectItems.length;
 
+    //reçoit les elements de classe select-selected
+    selectSelected = document.getElementsByClassName("select-selected");
+    // stock le nombre d'elements avec cette class
     selectedLength = selectSelected.length;
 
+    // boucle avec la nombres d'elements avec la class select-selected
     for (let i = 0; i < selectedLength; i++) {
+        // elmnt est equivalent au select-selected, la valeur est push dans arrNo sinon la class active lui est donné
         if (elmnt == selectSelected[i]) {
             arrNo.push(i)
         } else {
@@ -20,16 +24,17 @@ function closeAllSelect(elmnt) {
 
     for (let i = 0; i < itemsLength; i++) {
         if (arrNo.indexOf(i)) {
+            //recupère l'index de arrNo est l'utilise pour cacher le selectItems
             selectItems[i].classList.add("select-hide");
         }
     }
 }
 
-let customSelect, customSelectLength, lengthSelElem, selElem, newDiv, selectHide, optionItems;
-
-// Look for any elements with the class "custom-select"
+// initialisations variable
+let customSelect, customSelectLength, lengthSelElem, selElem, newDiv, selectHide, optionItems; 
+//reçoit les elements de classe select-items
 customSelect = document.getElementsByClassName("custom-select");
-// stock le nombre de de balise avec cette class
+// stock le nombre d'elements avec cette class
 customSelectLength = customSelect.length;
 
 for (let i = 0; i < customSelectLength; i++) {
@@ -38,28 +43,28 @@ for (let i = 0; i < customSelectLength; i++) {
 
     lengthSelElem = selElem.length;
 
-    /* For each element, create a new DIV that will act as the selected item: */
+    /* pour option une nouvelle div sera crée qui interagira comme option */
     newDiv = document.createElement("DIV");
     newDiv.setAttribute("class", "select-selected");
     newDiv.innerHTML = selElem.options[selElem.selectedIndex].innerHTML; // options récupère l'innerHTML des options de mon/mes selects 
     customSelect[i].appendChild(newDiv);
 
-    /* For each element, create a new DIV that will contain the option list: */
+    /* crée une div qui contient la liste option en tant que groupe */
     selectHide = document.createElement("DIV");
     selectHide.setAttribute("class", "select-items select-hide");
 
     for (let j = 1; j < lengthSelElem; j++) {
 
-    // For each option in the original select element, create a new DIV that will act as an option item:
+    // pour chaque elements individuelle dans option, crée une div et recupère leurs inner html
         
         optionItems = document.createElement("DIV");
         optionItems.innerHTML = selElem.options[j].innerHTML;
         optionItems.addEventListener("click", function(e) {
 
-            /* change selected items: */
+            /* permet de changer l'elements affiché après avoir cliqué sur un elements de la liste*/
             let y, select, previousSelect, selectLength, yl;
 
-            select = this.parentNode.parentNode.getElementsByTagName("select")[0];
+            select = this.parentNode.parentNode.getElementsByTagName("select")[0]; // permet de stocker l'HTMLElement select du group dont il fait partie
             selectLength = select.length;
             previousSelect = this.parentNode.previousSibling;
 
@@ -69,11 +74,11 @@ for (let i = 0; i < customSelectLength; i++) {
 
                     select.selectedIndex = i;
                     previousSelect.innerHTML = this.innerHTML;
-                    y = this.parentNode.getElementsByClassName("same-as-selected");
-                    yl = y.length;
+                    sameSelected = this.parentNode.getElementsByClassName("same-as-selected");
+                    sameSelLength = sameSelected.length;
 
-                    for (let k = 0; k < yl; k++) {
-                        y[k].removeAttribute("class");
+                    for (let k = 0; k < sameSelLength; k++) {
+                        sameSelected[k].removeAttribute("class");
                     }
 
                     this.setAttribute("class", "same-as-selected");
@@ -87,19 +92,20 @@ for (let i = 0; i < customSelectLength; i++) {
 
     customSelect[i].appendChild(selectHide);
 
-    newDiv.addEventListener("click", function(e) {
+    newDiv.addEventListener("click", function(e) { // agis sur un mouseEvent 
 
-        /* When the select box is clicked, close any other select boxes,and open/close the current select box */
+        /* lorsque l'on ouvre un select les autres select ouvert se ferme */
 
-        e.stopPropagation();
+        e.stopPropagation(); // agis sur un mouseEvent (click)
 
         closeAllSelect(this);
-
+        // this. - ici this. est le HTMLElement newDiv
+        // toggle select-hide - cache celui qui est visible et rends visible celui qui est caché
         this.nextSibling.classList.toggle("select-hide");
-
+        // puis change les positions des flèches 
         this.classList.toggle("select-arrow-active");
     });
 }
 
-/* If the user clicks anywhere outside the select box, then close all select boxes*/
-window.addEventListener("click", () => closeAllSelect); 
+// appel la function pour tout fermer lors d'un clic dans la fenetre
+window.addEventListener("click", closeAllSelect); 
