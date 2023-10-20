@@ -2,10 +2,11 @@
 require_once "./bdd/DAO.php";
 
 class HomeController{
-
+    // homePage affiche uniquement le compteur des films, realisateurs et acteurs présents dans la bdd
     public function homePage() {
 
         $dao = new DAO();
+        // 3 requêtes pour ne pas faire de doublons lors de la requçtes sql (les real ont fait plusieurs films, les acteurs ont joués dans plusieurs film, etc...) 
         $sqlFilms = 
         "SELECT 
             COUNT(f.id_film) AS nb_films

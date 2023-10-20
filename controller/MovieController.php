@@ -7,7 +7,12 @@ class MovieController {
     public function listFilms() {
 
         $dao = new DAO();
-        $sql = "SELECT f.id_film, f.titre FROM film f";
+        $sql = 
+
+        "SELECT 
+            f.id_film, f.titre 
+        FROM 
+            film f";
 
         $films = $dao->executerRequete($sql);
         require "./view/movie/listFilms.php";
@@ -17,11 +22,9 @@ class MovieController {
 
         $dao = new DAO();
 
-        $paramsFilm = [
-            "idFilm" => $idFilm
-        ];
 
-        // film
+        // tous les elements à afficher pour detailsFilm
+        // un film, n'a qu'un realisateur donc il n'y qu'une requête pour ceci
         $sqlFilm = 
             "SELECT
                 f.id_film,
@@ -39,8 +42,7 @@ class MovieController {
             GROUP BY f.id_film
         ";
 
-
-        // genres
+        // mais un film peut avoir plusieurs genres...
         $sqlGenres = 
             "SELECT
                 g.libelle,
@@ -52,7 +54,7 @@ class MovieController {
                 gf.film_id = :idFilm
         ";
 
-        // castings
+        // et généralement plusieurs castings
         $sqlCastings = 
             "SELECT
                 a.id_acteur,
@@ -68,7 +70,11 @@ class MovieController {
                 c.film_id = :idFilm
         ";
 
-        // exécution
+        $paramsFilm = [
+            "idFilm" => $idFilm // film_id et id_film utilisent le même idFilm car ils sont tous liés au même film
+        ];
+
+        // exécution - toujours une executions par requête
         $film = $dao->executerRequete($sqlFilm, $paramsFilm);
 
         $genres = $dao->executerRequete($sqlGenres, $paramsFilm);
@@ -78,26 +84,29 @@ class MovieController {
         require "./view/movie/detailsFilm.php";
     }
 
+    // var opt pour les erreurs
     function addFilmForm($formData = [], $globalErrorMessage = null, $formErrors = []) {
         $dao = new DAO();
 
+        //fields nécessaire pour le form
         $fieldNames = ["titre", "dateDeSortie", "duree", "realisateur_id"];
 
         $titrePage = "Add Movie";
         $tableToFocus = "Movie";
         $actionForm = "addFilm";
         $entity = null;
-        
+
+        // id_option et complete_label sont des alias peu précis car ils sont utilisés pour afficher des données déjà existante dans les select > options des form
         $sqlFilms = 
         "SELECT
-            id_realisateur AS id_option,
+            id_realisateur AS id_option, 
             CONCAT(prenom, ' ',nom) AS complete_label
         FROM 
             realisateur
         ";
 
+        //options sera utilise pour la liste d'option dans le select du form qui sera crée
         $options = $dao->executerRequete($sqlFilms); 
-
         require "./view/commonForm.php";
     }
 
@@ -129,7 +138,7 @@ class MovieController {
         if (empty($duree)) {
             $formErrors["duree"] = "This field is mandatory";
         }
-
+        // si le select > option du form n'est pas touché sa valeur sera select, dans ce cas il est considéré comme vide 
         if ($realisateur_id == "select") {
             $formErrors["realisateur_id"] = "This field is mandatory";
         } 
@@ -141,12 +150,13 @@ class MovieController {
         if (empty($formErrors)) {
 
             $dao = new DAO();
-    
-            $sql =
-            "INSERT INTO film (titre, dateDeSortie, duree, realisateur_id)
-            VALUES (:titre,:dateDeSortie,:duree,:realisateur_id)
-            ";
 
+            $sql =
+            "INSERT INTO 
+                film (titre, dateDeSortie, duree, realisateur_id)
+            VALUES 
+                (:titre,:dateDeSortie,:duree,:realisateur_id)
+            ";
 
             $params = [
                 "titre" => $titre,
@@ -155,11 +165,11 @@ class MovieController {
                 "realisateur_id" => $realisateur_id
             ];
 
-    
+            //si des erreurs arrivent après mes règles métiers
             try {
-
                 $isSuccess = $dao->executerRequete($sql, $params);
 
+                //me permettra de passer sur le detailsFilm modifié avec son id
                 $idFilm = $dao->getBDD()->lastInsertId();
 
             } catch (\Throwable $error) {
@@ -186,7 +196,7 @@ class MovieController {
                 "titre" => $titre,
                 "dateDeSortie" => $dateDeSortie,
                 "duree" => $duree,
-                "realisateur_id" => $realisateur_id
+                "realisateur_id" => $realisateur_id // l'id permet de renvoyer dans le bon option du select
             ];
 
             // on renvoie vers le même formulaire, en donnant les infos nécessaires à l'affichage
@@ -335,6 +345,7 @@ class MovieController {
     function addGenreFilmForm($formData = [], $globalErrorMessage = null, $formErrors = []) {
         $dao = new DAO();
 
+        // genre_film est composé de l'id d'un film et de l'id d'un genre
         $fieldNames = ["film_id", "genre_id"];
 
         $titrePage = "Add Genre to a Movie ";
@@ -342,6 +353,7 @@ class MovieController {
         $actionForm = "addGenreFilm";
         $entity = null;
         
+        //id_option et complete_label pour select > option
         $sqlGenres = 
         "SELECT
             id_genre AS id_option,
@@ -399,10 +411,11 @@ class MovieController {
             $dao = new DAO();
     
             $sql =
-            "INSERT INTO genre_film (film_id, genre_id)
-            VALUES (:film_id,:genre_id)
+            "INSERT INTO 
+                genre_film (film_id, genre_id)
+            VALUES 
+                (:film_id,:genre_id)
             ";
-
 
             $params = [
                 "film_id" => $film_id,
@@ -446,17 +459,17 @@ class MovieController {
 
     }
 
-
     function addCastingFilmForm($formData = [], $globalErrorMessage = null, $formErrors = []) {
         $dao = new DAO();
-
+        // casting est composé de ces trois id
         $fieldNames = ["film_id", "acteur_id", "role_id"];
 
-        $titrePage = "Add a Casting to a Movie ";
+        $titrePage = "Add a Casting to a Movie";
         $tableToFocus = "Movie";
         $actionForm = "addCastingFilm";
         $entity = null;
         
+        // 3 requête pour qu'il n'y ai aucun doublons
         $sqlFilms = 
         "SELECT
             id_film AS id_option,
@@ -503,7 +516,7 @@ class MovieController {
 
         // validation des règles métier (valider les données saisies dans le formulaire soumis)
 
-        // le champ est obligatoire
+        // le champ est obligatoire, ils n'utilisent pas empty() car ce sont des select>optino
         if ($film_id == "select") {
             $formErrors["film_id"] = "This field is mandatory";
         } 
@@ -528,8 +541,10 @@ class MovieController {
             $dao = new DAO();
 
             $sql =
-            "INSERT INTO casting (film_id, acteur_id, role_id)
-            VALUES (:film_id,:acteur_id,:role_id)
+            "INSERT INTO 
+                casting (film_id, acteur_id, role_id)
+            VALUES 
+                (:film_id,:acteur_id,:role_id)
             ";
 
             $params = [
@@ -574,6 +589,9 @@ class MovieController {
         }
 
     }
+
+
+    //WIP fonctionnalités qui seront peut être ajoutés dans le futur
 
     // function updateGenreFilmForm($idFilm, $formData = [], $globalErrorMessage = null, $formErrors = []) {
     //     $dao = new DAO();

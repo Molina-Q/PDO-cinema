@@ -1,13 +1,16 @@
 <?php
 require_once "./bdd/DAO.php";
+// pour plus d'infos la seule différence avec ActorController est le nom des var, les commentaires sont dans ActorController.php
 class DirectorController {
 
     public function listDirectors() {
 
         $dao = new DAO();
         $sql = 
-        "SELECT r.id_realisateur, CONCAT(r.prenom ,' ', r.nom) AS full_name
-        FROM realisateur r
+        "SELECT 
+            r.id_realisateur, CONCAT(r.prenom ,' ', r.nom) AS full_name
+        FROM 
+            realisateur r
         ";
 
         $realisateurs = $dao->executerRequete($sql);
@@ -50,21 +53,17 @@ class DirectorController {
         ";
 
         $detailsDirector = $dao->executerRequete($sqlDirector, $paramsDirector);
-
         $films = $dao->executerRequete($sqlFilm, $paramsDirector);
-
         require "./view/director/detailsDirector.php";
     }
 
     function addDirectorForm($formData = [], $globalErrorMessage = null, $formErrors = []) {
-
         $fieldNames = ["nom", "prenom", "sexe", "dateDeNaissance", "dateDeDeces"];
 
         $titrePage = "Add Director";
         $tableToFocus = "Director";
         $actionForm = "addDirector";
         $entity = null;
-
 
         require "./view/commonForm.php";
     }
@@ -300,13 +299,10 @@ class DirectorController {
                 "dateDeNaissance" => $dateDeNaissance,
                 "dateDeDeces" => $dateDeDeces
             ];
-
             // on renvoie vers le même formulaire, en donnant les infos nécessaires à l'affichage
             $this->updateDirectorForm($idDirector, $formData, $sqlError, $formErrors);
         }    
-    }
-
-    
+    } 
 }
 
 ?>

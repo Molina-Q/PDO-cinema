@@ -8,8 +8,10 @@ class GenreController {
 
         $dao = new DAO();
         $sql =
-        "SELECT g.id_genre, g.libelle 
-        FROM genre g";
+        "SELECT 
+            g.id_genre, g.libelle 
+        FROM 
+            genre g";
 
         $genres = $dao->executerRequete($sql);
         require "./view/genre/listGenres.php";
@@ -50,26 +52,20 @@ class GenreController {
         require "./view/genre/detailsGenre.php";
     }
 
-    // function addGenreForm($formData = [], $globalErrorMessage = null, $formErrors = []) {
-
-    //     require "./view/genre/genreForm.php";
-    // }
-
+    //var optionnels pour les erreurs
     function addGenreForm($formData = [], $globalErrorMessage = null, $formErrors = []) {
-
-        $fieldNames = ["libelle"];
+        $fieldNames = ["libelle"]; // uniqument besoin d'un libelle
 
         $titrePage = "Add Genre";
         $tableToFocus = "Genre";
         $actionForm = "addGenre";
-        $placeholder = "Aventure";
-        $entity = null;
+        $placeholder = "Aventure"; //Role et Genre utilisent le field libelle donc ils ont besoin d'un placeholder différents
+        $entity = null; // idem actor
 
         require "./view/commonForm.php";
     }
 
     function addGenre() {
-        
         // filtrer / nettoyer les données reçues en POST
         $libelle = filter_input(INPUT_POST, "libelle", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 

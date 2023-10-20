@@ -1,8 +1,8 @@
 <?php
 require_once "./bdd/DAO.php";
+// identique à genre aller dans GenreController.php pour des commentaires plus précis
 class RoleController {
     public function listRoles() {
-
         $dao = new DAO();
         $sql = 
         "SELECT 
@@ -17,12 +17,7 @@ class RoleController {
     }
 
     public function detailsRole($idRole) {
-
         $dao = new DAO();
-
-        $paramsRole = [
-            "idRole" => $idRole
-        ];
 
         $sqlRole = 
         "SELECT
@@ -52,6 +47,12 @@ class RoleController {
         WHERE 
             c.role_id = :idRole
         ";
+
+        
+        $paramsRole = [
+            "idRole" => $idRole
+        ];
+
         $detailsRole = $dao->executerRequete($sqlRole, $paramsRole);
         $castings = $dao->executerRequete($sqlCasting, $paramsRole);
         require "./view/role/detailsRole.php";
@@ -64,7 +65,7 @@ class RoleController {
         $titrePage = "Add Role";
         $tableToFocus = "Role";
         $actionForm = "addRole";
-        $placeholder = "Darth Vader";
+        $placeholder = "Darth Vader"; // placeholder car fieldNames[libelle] est aussi présent dans genre
         $entity = null;
 
         require "./view/commonForm.php";
@@ -97,8 +98,10 @@ class RoleController {
             $dao = new DAO();
     
             $sql =
-            "INSERT INTO role (libelle)
-            VALUES (:libelle)
+            "INSERT INTO role 
+                (libelle)
+            VALUES 
+                (:libelle)
             ";
     
             $params = [
@@ -147,10 +150,10 @@ class RoleController {
 
         $titrePage = "Update Role";
         $tableToFocus = "Role";
-        $actionForm = "updateRole&id=$idRole";
+        $actionForm = "updateRole&id=$idRole"; // id car c'est une update, il faut afficher les valeurs existantes 
         $placeholder = "Darth Vader";
 
-        $libelle = "";
+        // si y'a une erreur j'ai delete une $libelle = ""; tout seul qui trainait
 
         $sql = 
         "SELECT 

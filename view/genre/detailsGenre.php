@@ -2,10 +2,10 @@
 // démarre la temporisation
 ob_start();
 $count = 1;
-$nbRow = $films->rowCount();
+$nbRow = $films->rowCount(); // placement virgule
 $separator = ", ";
-?>
 
+?>
 <h2 class="titrePage">Details d'un genre</h2>
 <?php
 
@@ -15,8 +15,8 @@ if ($genre = $genre->fetch()) {
         <a href="index.php?action=updateGenreForm&id=<?= $genre["id_genre"] ?>">
             <p>Update</p>
         </a>
-
     </div>
+
     <div class='blocDetailsGenre'>
         <h3><?= $genre["libelle"] ?></h3>
 <?php
@@ -25,9 +25,9 @@ if ($genre = $genre->fetch()) {
         <p>
 <?php
             if($films->rowCount() == 0) {
-                ?>
+?>
                     <p>Aucun film dans ce genre.</p>
-                <?php
+<?php
             } else {
 
                 while ($film = $films->fetch()) {

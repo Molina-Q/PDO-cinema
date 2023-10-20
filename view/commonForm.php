@@ -6,7 +6,7 @@ if ($entity) {
     $entity = $entity ->fetch();
 }
 
-//function qui crée les balises html du form: labelName = nom du label, $inputType = type d'input demandé, columnName est le nom de la colonne voulu dans la bdd
+//function qui crée les balises html qui form le formulaire(label, inputn optio, select): labelName = libelle de l'info demandé, $inputType = type d'input demandé, columnName est le nom de la colonne voulu dans la bdd
 function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entity, $options = null) {
     $inputs = ["text", "number", "date", "time"]; 
     $stepValue = 0; // step = 1 permet d'afficher "time" en h:m:s sans affecter le reste des "date", il est initié sur zéro et switch sur 1 lors du tour de time
@@ -21,7 +21,6 @@ function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entit
     }
 
 ?>
-    <!--  -->
     <div class="div-label-input">
         <label for="<?= $columnName ?>" class="form-label"><?= $labelName ?></label>
 <?php
@@ -81,7 +80,7 @@ function messageErrors($formErrors, $columnName) {
             if (in_array("libelle", $fieldNames)) { // mon entité a un fields libelle
                 makeHtmlGroup("Label", "text", "libelle", $placeholder, $entity); // le field "libelle" : a un label "Label"(c'est un nom pour décrire l'input), un input de type text, le nom de la colonne de la bdd que je veux modifier/créer, name et dataForm l'utilise, placeholder, entity contient l'id et le nom de la colonne de l'entity que je veux modifier(entity est utilisé uniquement durant une update) 
                 messageErrors($formErrors, "libelle");  
-            }            
+            }
             
             /***** acteur, realisateur *****/
             if (in_array("nom", $fieldNames)) { // mon entité a un fields nom      
