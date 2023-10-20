@@ -3,7 +3,7 @@
 require_once "./bdd/DAO.php";
 
 class MovieController {
-
+    // donne tous les films
     public function listFilms() {
 
         $dao = new DAO();
@@ -18,10 +18,9 @@ class MovieController {
         require "./view/movie/listFilms.php";
     }
 
+    // donne tous les details d'un
     public function detailsFilm($idFilm) {
-
         $dao = new DAO();
-
 
         // tous les elements à afficher pour detailsFilm
         // un film, n'a qu'un realisateur donc il n'y qu'une requête pour ceci
@@ -84,7 +83,7 @@ class MovieController {
         require "./view/movie/detailsFilm.php";
     }
 
-    // var opt pour les erreurs
+    // affiche le visuelle du Form et les envoie via POST - var opt pour les erreurs
     function addFilmForm($formData = [], $globalErrorMessage = null, $formErrors = []) {
         $dao = new DAO();
 
@@ -110,6 +109,7 @@ class MovieController {
         require "./view/commonForm.php";
     }
 
+    // receptionne le post de la fonction plus haut
     function addFilm() {
         
         // filtrer / nettoyer les données reçues en POST
