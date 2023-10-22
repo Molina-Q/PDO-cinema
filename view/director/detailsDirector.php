@@ -1,6 +1,5 @@
 <?php
 // démarre la temporisation
-// commentaires dans detailsActor.php
 ob_start();
 $count = 1;
 $nbRow = $films->rowCount();
@@ -24,37 +23,37 @@ function showAge($dateTimeNaissance,  $dateTimeDeces = null) {
 }
 
 
-if ($director = $detailsDirector->fetch()) {
+while ($realisateur = $detailsDirector->fetch()) {
 ?>
     <div class="interactUpdate">
-        <a href="index.php?action=updateDirectorForm&id=<?= $director["id_realisateur"] ?>">
+        <a href="index.php?action=updateDirectorForm&id=<?= $realisateur["id_realisateur"] ?>">
             <p>Update</p>
         </a>
     </div>
    <div class='blocDetailsDirector'>
-            <h3><?= $director["prenom"] ?> <?= $director["nom"] ?></h3>
+            <h3><?=$realisateur["prenom"]?> <?=$realisateur["nom"]?></h3>
             <ul>
-              <li><?= $director["sexe"] ?></li>
-              <li><span>Date de naissance</span> : <?= $director["formatedDateDeNaissance"] ?></li>
+              <li><?=$realisateur["sexe"]?></li>
+              <li><span>Date de naissance</span> : <?=$realisateur["formatedDateDeNaissance"]?></li>
 <?php
-                if($director["formatedDateDeDeces"]) {
+                if($realisateur["formatedDateDeDeces"]) {
 ?>
-                    <li><span>Date de décès</span> : <?= $director["formatedDateDeDeces"] ?> (<?= showAge($director["dateDeNaissance"], $director["dateDeDeces"]) ?>) </li>
+                    <li><span>Date de décès</span> : <?=$realisateur["formatedDateDeDeces"]?> (<?=showAge($realisateur["dateDeNaissance"], $realisateur["dateDeDeces"])?>) </li>
 <?php
                 } else {
 ?>
-                    <li><span>Age</span> : <?= showAge($director["dateDeNaissance"]) ?></li>   
+                    <li><span>Age</span> : <?=showAge($realisateur["dateDeNaissance"])?></li>   
 <?php
                 }
 ?>
-                <li><span>film(s) réalisé(s) : </span> 
+                <li>film(s) réalisé(s) : 
 <?php
                 while ($film = $films->fetch()) {
                     if ($count == $nbRow) {
                         $separator = "";
                     }
 ?>
-                    <a href="index.php?action=detailsFilm&id=<?= $film["id_film"] ?>"><?= $film["titre"] ?><a><?=  $separator ?>
+                    <a href="index.php?action=detailsFilm&id=<?=$film["id_film"]?>"><?=$film["titre"]?><a><?=  $separator ?>
 <?php
                     $count++;
                 }

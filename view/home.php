@@ -7,21 +7,18 @@ ob_start();
 
 <div id='homePage'>
 <?php
-
-if ($film = $films->fetch()) {
+while ($film = $films->fetch()) {
 ?>
     <div>
         <p>Le site contient <?=$film["nb_films"]?> films</p>
-<?php
+        <?php
 }
-
-if ($director = $directors->fetch()) {
+while ($director = $directors->fetch()) {
 ?>
     <p><?=$director["nb_realisateurs"]?> réalisateurs</p>
 <?php
 }
-
-if ($actor = $actors->fetch()) {
+while ($actor = $actors->fetch()) {
 ?>
         <p><?=$actor["nb_acteurs"]?> acteurs</p>
     </div>

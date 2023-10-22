@@ -10,11 +10,7 @@
 <body>
     <header>
         <nav>
-            <div id="searchBar">
-                <form action="something.php" method="post">
-                    <input type="search" name="search" placeholder="Rechercher un film, un acteur, etc...">
-                </form>
-            </div>
+            <?php require_once "./view/searchBar.php" ?>
             <ul>
                 <li><a href="index.php?action=homePage">Home</a></li>
                 <li><a href="index.php?action=listFilms">Movies</a></li>
@@ -28,6 +24,7 @@
 
     <main>
         <?= $content ?>
+        <script src="./public/app/app.js"></script>
     </main>
 
     <footer>

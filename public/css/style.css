@@ -41,27 +41,14 @@ main {
 
 
 
-/***** header ****/
+/********** header **********/
 header {
     height: 120px;
     background-color: var(--primary-background-color);
 }
 
-#searchBar {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-}
 
-#searchBar form input {
-    width: 350px;
-    height: 35px;
-    font-size: 1.2em;
-    border: 0;
-    padding: 0 5px;
-}
-
+/********** nav **********/
 nav {
     padding: 0 10%;
     height: 100%;
@@ -94,6 +81,57 @@ nav ul li a {
 nav ul li a:hover {
     color: var(--hover-color);
     transition: 0.3s;
+}
+
+/******************** searchBar ********************/
+#searchBar { /* div */
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+#searchBar form {
+    position: relative;
+}
+
+#searchInput { /* input type search */
+    width: 350px;
+    height: 40px;
+    font-size: 1.2em;
+    border: 0;
+    border-radius: 10px;
+    padding: 0 5px;
+
+    padding-left: 11px ;
+}
+
+#searchInput:focus-visible {
+    outline: none;
+}
+
+#textHint { /* div */
+    color: black;
+}
+
+#textHint a {
+    text-decoration: none;
+}
+
+.dropDownMenuHint {
+    width: 100%;
+    padding: 5px 10px ;
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid black;
+    z-index: 99;
+    position: absolute;
+    top: 35;
+    left: 0;
+}
+
+.dropDownMenuHint a p {
+    margin: 10px 0;
 }
 
 /*************** homePage ***************/

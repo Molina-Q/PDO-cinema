@@ -1,3 +1,4 @@
+/////////////////////////////////////// custom le style du menu dropdown de select > option ///////////////////////////////////////
 // ferme tous les select ouvert
 function closeAllSelect(elmnt) {
     // initialisations variable
@@ -12,7 +13,7 @@ function closeAllSelect(elmnt) {
     // stock le nombre d'elements avec cette class
     selectedLength = selectSelected.length;
 
-    // boucle avec la nombres d'elements avec la class select-selected
+    // boucle sur le nombres d'elements avec la class select-selected
     for (let i = 0; i < selectedLength; i++) {
         // elmnt est equivalent au select-selected, la valeur est push dans arrNo sinon la class active lui est donné
         if (elmnt == selectSelected[i]) {
@@ -22,6 +23,7 @@ function closeAllSelect(elmnt) {
         }
     }
 
+    // boucle sur le nombres d'items dans options
     for (let i = 0; i < itemsLength; i++) {
         if (arrNo.indexOf(i)) {
             //recupère l'index de arrNo est l'utilise pour cacher le selectItems
@@ -109,3 +111,43 @@ for (let i = 0; i < customSelectLength; i++) {
 
 // appel la function pour tout fermer lors d'un clic dans la fenetre
 window.addEventListener("click", closeAllSelect); 
+
+
+/////////////////////////////////////// search bar dynamique (AJAX) ///////////////////////////////////////
+
+// la function est appelé avec comme parametre le contenu de la search bar
+function showHint(srch) {
+    if (srch.length == 0) {
+        // si la search bar est vide, le menu n'est pas affiché 
+        textHint.innerHTML = "";    
+        textHint.classList.remove("dropDownMenuHint");
+        
+    } else {
+        // si la search bar a du contenu, une requête XML est faite et stocké comme object dans une variable
+        const xmlhttp = new XMLHttpRequest();
+
+        // quand la requête à terminé de charger, textHint(la div ou le resultat de la recherche est affiché) aura comme contenu le resultat de la requête
+        xmlhttp.onload = function() {
+            textHint.innerHTML = this.responseText;
+        }
+        
+        // une requête GET est crée dans le xml, elle renvoie vers une action "search" et le contenu de la search bar
+        xmlhttp.open("GET", "index.php?action=search&srch=" + srch);
+
+        // envoie la requête qui sera intercepté par l'index
+        xmlhttp.send();
+
+        // et le menu sera affiché 
+        textHint.classList.add("dropDownMenuHint");
+    }
+}
+
+// div qui contient le resultat de la recherche
+const textHint = document.getElementById("textHint");
+
+// id de la search bar
+const searchBar = document.getElementById("searchInput");
+
+// la function est appelé à chaque fois qu'une touche est 'up' après avoir appuyé dessus
+searchBar.addEventListener("keyup", () => showHint(searchBar.value));
+

@@ -503,7 +503,7 @@ class MovieController {
 
     function addCastingFilm() {
 
-        // filtrer / nettoyer les données reçues en POST
+        // filtrer / nettoyer les données reçues en POST / le INPUT_POST permet de récuperer les infos du $_POST
         $film_id = filter_input(INPUT_POST, "film_id", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $acteur_id = filter_input(INPUT_POST, "acteur_id", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $role_id = filter_input(INPUT_POST, "role_id", FILTER_SANITIZE_FULL_SPECIAL_CHARS);

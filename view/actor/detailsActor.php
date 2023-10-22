@@ -1,19 +1,15 @@
 <?php
 // démarre la temporisation
 ob_start();
-// count est utilisé pour avoir le bon nombre de virgule
 $count = 1;
-// utilisé pour connaitre le nombre de row que je vais recevoir de la request castoings
 $nbRow = $castings->rowCount();
-// le separateur utilisé
 $separator = ", ";
 
 ?>
 <h2 class="titrePage">Details de l'acteur</h2>
 <?php
-// me permet d'avoir l'age de la personne ou sont ages de mort avec les date de naissance et de decès (si decès il y a)
+
 function showAge($dateTimeNaissance,  $dateTimeDeces = null) {
-    // si deces est dans les paramètres
     if(isset($dateTimeDeces)) {
         $dateTimeInterval = new \DateTime($dateTimeDeces);
     } else {
@@ -25,9 +21,9 @@ function showAge($dateTimeNaissance,  $dateTimeDeces = null) {
     return $agePersonne;
 }
 
-// fetch les valeurs d'acteur - if car il n'y qu'un acteur
+
 if ($acteur = $detailsActeur->fetch()) {
-    ?>
+    ?>          
     <div class="interactUpdate">
         <a href="index.php?action=updateActorForm&id=<?= $acteur["id_acteur"] ?>">
             <p>Update</p>
@@ -41,7 +37,7 @@ if ($acteur = $detailsActeur->fetch()) {
             <li><?= $acteur["sexe"] ?></li>
             <li><span>Date de naissance</span> : <?=$acteur["formatedDateDeNaissance"]?></li>
 <?php
-            if ($acteur["formatedDateDeDeces"]) { /* check si la personne à une date de decès non null et ensuite affiche le nécessaire */
+            if($acteur["formatedDateDeDeces"]) { /* check si la personne à une date de decès et ensuite afficher le nécessaire */
 ?>
                 <li><span>Date de décès</span> : <?=$acteur["formatedDateDeDeces"]?> (<?=showAge($acteur["dateDeNaissance"], $acteur["dateDeDeces"])?>) </li>
 <?php
@@ -54,10 +50,8 @@ if ($acteur = $detailsActeur->fetch()) {
             <li><span>Rôle(s)</span> : 
 <?php
 }
-        
         while ($casting = $castings->fetch()) {
             if ($count == $nbRow) {
-                //lorsque $count est égale au nb row du fetch, le separator est mis vide
                 $separator = "";
             }
 ?>

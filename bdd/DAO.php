@@ -1,4 +1,5 @@
-<!--
+<?php
+/*
 DAO : Objet d'accès aux données (data access object)
 > est un design pattern
 la communication entre php et la database se fait en classe DAO
@@ -13,9 +14,7 @@ et return un object PDOStatement
 
 prepare() prépare la requête à exécuter
 execute() return le resultat de la requête preparé en incluant les valeurs données pour les :qqch
--->
-
-<?php
+*/
 //permet la comm entre php et la bdd
 class DAO{
     private $bdd;
