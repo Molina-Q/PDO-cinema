@@ -1,6 +1,9 @@
 # PDO-cinema
 
-PHP - MySQL
+PHP - MySQL 
+JS - AJAX
+HTML - CSS 
 
-a movie theater as movies, actors, roles, genres and directors, those are all showed as a list or in details
-it is also possible to add or update the database directly using the app
+Simulate a movie theater's website.
+You can browse throughout lists of every movies, actors, directors, present in the database, or see them in details
+it is also possible to modify the content of the database directly using the app
