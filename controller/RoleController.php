@@ -244,5 +244,24 @@ class RoleController {
             $this->updateRoleForm($idRole, $formData, $sqlError, $formErrors);
         }    
     }
+
+    public function deleteRole($idRole) {
+        $dao = new DAO ();
+
+        $sql =
+        "DELETE FROM 
+            role
+        WHERE 
+            id_role = :idRole
+        ";
+
+        $params = [
+            "idRole" => $idRole
+        ];
+
+        $dao->executerRequete($sql, $params);
+
+        $this->listRoles();
+    }
 }
 ?>

@@ -326,5 +326,25 @@ class ActorController {
         }    
     }
 
+    public function deleteActor($idActor) {
+        $dao = new DAO ();
+
+        $sql =
+        "DELETE FROM 
+            acteur
+        WHERE 
+            id_acteur = :idActor
+        ";
+
+        $params = [
+            "idActor" => $idActor
+        ];
+
+        $dao->executerRequete($sql, $params);
+
+        $this->listActors();
+    }
+
+
 }
 ?>

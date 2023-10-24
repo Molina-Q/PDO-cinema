@@ -11,9 +11,9 @@ $separator = ", ";
 
 <h2 class="titrePage">Details du film</h2>
 
+<!-- href="index.php?action=updateGenreForm&id=$film["id_film"] ?>" -->
 <?php
 ?>
-
 
 <?php
     //fetch le resultat de la requête SQL contenu dans $film
@@ -24,7 +24,7 @@ $separator = ", ";
             <p>Update Movie</p>
         </a>
 
-        <a href="index.php?action=updateGenreForm&id=<?= $film["id_film"] ?>">
+        <a id="updateGenre" >
             <p><s>Update Genre</s></p>
         </a>
 
@@ -53,7 +53,7 @@ $separator = ", ";
                             $separator = "";
                         }
 ?>
-                        <a href="index.php?action=detailsGenre&id=<?= $genre["id_genre"] ?>"><?=$genre["libelle"]?></a><?= $separator ?>
+                        <a class="genreFilm" href="index.php?action=detailsGenre&id=<?= $genre["id_genre"] ?>"><?=$genre["libelle"]?></a><?= $separator ?>
 <?php
                         $countG++;
                     }

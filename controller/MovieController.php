@@ -88,7 +88,7 @@ class MovieController {
         $dao = new DAO();
 
         //fields nécessaire pour le form
-        $fieldNames = ["titre", "dateDeSortie", "duree", "realisateur_id"];
+        $fieldNames = ["titre", "dateDeSortie", "duree", "realisateur_id", "genre_id"];
 
         $titrePage = "Add Movie";
         $tableToFocus = "Movie";
@@ -104,8 +104,18 @@ class MovieController {
             realisateur
         ";
 
+        $sqlGenres = 
+        "SELECT
+            id_genre AS id_option, 
+            libelle AS complete_label
+        FROM 
+            genre
+        ";
+
         //options sera utilise pour la liste d'option dans le select du form qui sera crée
+        $optionsGenre = $dao->executerRequete($sqlGenres); 
         $options = $dao->executerRequete($sqlFilms); 
+
         require "./view/commonForm.php";
     }
 
@@ -117,6 +127,7 @@ class MovieController {
         $dateDeSortie = filter_input(INPUT_POST, "dateDeSortie", FILTER_SANITIZE_NUMBER_INT);
         $duree = filter_input(INPUT_POST, "duree", FILTER_SANITIZE_NUMBER_INT);
         $realisateur_id = filter_input(INPUT_POST, "realisateur_id", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $genre_id = filter_input(INPUT_POST, "genre_id", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
         // init vars
         $formErrors = [];
@@ -143,6 +154,10 @@ class MovieController {
             $formErrors["realisateur_id"] = "This field is mandatory";
         } 
 
+        if ($genre_id == "select") {
+            $formErrors["genre_id"] = "This field is mandatory";
+        } 
+
         // autre règle métier / de validation du formulaire
         // if
 
@@ -151,11 +166,18 @@ class MovieController {
 
             $dao = new DAO();
 
-            $sql =
+            $sqlFilm =
             "INSERT INTO 
                 film (titre, dateDeSortie, duree, realisateur_id)
             VALUES 
                 (:titre,:dateDeSortie,:duree,:realisateur_id)
+            ";
+
+            $sqlGenre = 
+            "INSERT INTO
+                genre_film (genre_id, film_id)
+            VALUES 
+                (:genre_id, :film_id)
             ";
 
             $params = [
@@ -167,11 +189,17 @@ class MovieController {
 
             //si des erreurs arrivent après mes règles métiers
             try {
-                $isSuccess = $dao->executerRequete($sql, $params);
+                $isSuccess = $dao->executerRequete($sqlFilm, $params);
 
                 //me permettra de passer sur le detailsFilm modifié avec son id
                 $idFilm = $dao->getBDD()->lastInsertId();
 
+                $params = [
+                    "genre_id" => $genre_id,
+                    "film_id" => $idFilm
+                ];
+
+                $dao->executerRequete($sqlGenre, $params);
             } catch (\Throwable $error) {
 
                 $sqlError = $error;
@@ -206,7 +234,7 @@ class MovieController {
     }
 
     function updateFilmForm($idFilm, $formData = [], $globalErrorMessage = null, $formErrors = []) {
-        $fieldNames = ["titre", "dateDeSortie", "duree", "realisateur_id"];
+        $fieldNames = ["titre", "dateDeSortie", "duree", "realisateur_id", "genre_id"];
         $dao = new DAO();
 
         $titrePage = "Update Film";
@@ -226,7 +254,7 @@ class MovieController {
             id_film = :idFilm
         ";
 
-        $sqlFilms = 
+        $sqlDirector = 
         "SELECT
             id_realisateur AS id_option,
             CONCAT(prenom, ' ',nom) AS complete_label
@@ -235,12 +263,31 @@ class MovieController {
             realisateur
         ";
 
+        $sqlGenre = 
+        "SELECT
+            id_genre AS id_option,
+            libelle AS complete_label
+
+        FROM 
+            genre
+        -- HAVING 
+        --     id_genre IN (
+        --         SELECT 
+        --             genre_id
+        --         FROM 
+        --             genre_film
+        --         WHERE 
+        --             film_id = :idFilm
+        -- )
+        ";
+
         $params = [
             "idFilm" => $idFilm
         ];
 
         $entity = $dao->executerRequete($sql, $params);
-        $options = $dao->executerRequete($sqlFilms); 
+        $options = $dao->executerRequete($sqlDirector); 
+        $optionsGenre = $dao->executerRequete($sqlGenre); 
         require "./view/commonForm.php";
     }
 
@@ -587,8 +634,27 @@ class MovieController {
             // on renvoie vers le même formulaire, en donnant les infos nécessaires à l'affichage
             $this->addCastingFilmForm($formData, $sqlError, $formErrors);
         }
-
     }
+
+    public function deleteFilm($idFilm) {
+        $dao = new DAO ();
+
+        $sql =
+        "DELETE FROM 
+            film
+        WHERE 
+            id_film = :idFilm
+        ";
+
+        $params = [
+            "idFilm" => $idFilm
+        ];
+
+        $dao->executerRequete($sql, $params);
+
+        $this->listFilms();
+    }
+
 
 
     //WIP fonctionnalités qui seront peut être ajoutés dans le futur

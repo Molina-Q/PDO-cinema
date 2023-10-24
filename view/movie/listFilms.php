@@ -22,12 +22,28 @@ ob_start();
 <?php
     while ($film = $films->fetch()) {
 ?>
-        <div class='blocFilms'>
+        <div class='blocFilms listBloc'>
+
             <a href="index.php?action=detailsFilm&id=<?=$film['id_film']?>">
                 <p class="listEntities"><?=$film["titre"]?></p>
                 <p>En savoir plus</p>
-            </a>
-        </div>
+            </a>        
+            
+            <div class="deleteBloc">
+                <a href="index.php?action=deleteFilm&id=<?= $film["id_film"] ?>">
+                    <button class="deleteBtn"><i class="fa-solid fa-xmark"></i></button>
+                </a>
+            </div>
+
+            <div class="updateBloc">
+                <a href="index.php?action=updateFilmForm&id=<?= $film["id_film"] ?>">
+                    <button class="updateBtn"><i class="fa-solid fa-pen"></i></button>
+                </a>
+            </div>
+
+        </div>       
+        
+
 <?php
     }
 ?>

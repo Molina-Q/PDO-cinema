@@ -12,7 +12,7 @@ function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entit
     $stepValue = 0; // step = 1 permet d'afficher "time" en h:m:s sans affecter le reste des "date", il est initié sur zéro et switch sur 1 lors du tour de time
     $formData = []; 
 
-    // aussi pour empecher le add d'interagir avec entity et de creer une erreur
+    // if() pour empecher un add d'interagir avec entity et de créer une erreur (entity est utilisé uniquement pour les updates)
     if($entity) {
         // stock la valeur de la colonne actuelle
         $entityName = $entity[$columnName];

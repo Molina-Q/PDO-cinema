@@ -236,6 +236,25 @@ class GenreController {
         }    
     }
 
+    public function deleteGenre($idGenre) {
+        $dao = new DAO ();
+
+        $sql =
+        "DELETE FROM 
+            genre
+        WHERE 
+            id_genre = :idGenre
+        ";
+
+        $params = [
+            "idGenre" => $idGenre
+        ];
+
+        $dao->executerRequete($sql, $params);
+
+        $this->listGenres();
+    }
+
 
 }
 

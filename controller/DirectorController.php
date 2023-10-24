@@ -303,6 +303,25 @@ class DirectorController {
             $this->updateDirectorForm($idDirector, $formData, $sqlError, $formErrors);
         }    
     } 
+
+    public function deleteDirector($idDirector) {
+        $dao = new DAO ();
+
+        $sql =
+        "DELETE FROM 
+            realisateur
+        WHERE 
+            id_realisateur = :idDirector
+        ";
+
+        $params = [
+            "idDirector" => $idDirector
+        ];
+
+        $dao->executerRequete($sql, $params);
+
+        $this->listDirectors();
+    }
 }
 
 ?>

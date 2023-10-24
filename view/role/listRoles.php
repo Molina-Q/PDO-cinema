@@ -14,9 +14,23 @@ ob_start();
 <?php
     while ($role = $roles->fetch()) {
 ?>
-    <a class="linkEntities" href='index.php?action=detailsRole&id=<?= $role["id_role"] ?>'>
-        <p class="listEntities"><?= $role["libelle"] ?></p>
-    </a>
+    <div class="listBloc">
+        <a class="linkEntities" href='index.php?action=detailsRole&id=<?= $role["id_role"] ?>'>
+            <p class="listEntities"><?= $role["libelle"] ?></p>
+        </a>
+        <div class="deleteBloc">
+            <a href="index.php?action=deleteRole&id=<?= $role["id_role"] ?>">
+                <button class="deleteBtn"><i class="fa-solid fa-xmark"></i></button>
+            </a>
+        </div>
+
+        <div class="updateBloc">
+            <a href="index.php?action=updateRoleForm&id=<?= $role["id_role"] ?>">
+                <button class="updateBtn"><i class="fa-solid fa-pen"></i></button>
+            </a>
+        </div>
+    </div>
+    
 <?php
     }
 ?>

@@ -115,12 +115,23 @@ window.addEventListener("click", closeAllSelect);
 
 /////////////////////////////////////// search bar dynamique (AJAX) ///////////////////////////////////////
 
+// function checkHeight() {
+//     computedHeight = window.getComputedStyle(textHint);
+//     if (computedHeight.getPropertyValue("height") >= "600px") {
+//         textHint.style.overflowY = "scroll";
+//     } else {
+//         textHint.style.overflowY = "hidden";
+//     }
+// }
+
 // la function est appelé avec comme parametre le contenu de la search bar
 function showHint(srch) {
     if (srch.length == 0) {
         // si la search bar est vide, le menu n'est pas affiché 
         textHint.innerHTML = "";    
         textHint.classList.remove("dropDownMenuHint");
+
+        // checkHeight();
         
     } else {
         // si la search bar a du contenu, une requête XML est faite et stocké comme object dans une variable
@@ -139,15 +150,92 @@ function showHint(srch) {
 
         // et le menu sera affiché 
         textHint.classList.add("dropDownMenuHint");
+
+        // setTimeout(checkHeight, 50);
     }
 }
 
+
 // div qui contient le resultat de la recherche
 const textHint = document.getElementById("textHint");
+//
+let computedHeight = window.getComputedStyle(textHint);
 
 // id de la search bar
 const searchBar = document.getElementById("searchInput");
 
 // la function est appelé à chaque fois qu'une touche est 'up' après avoir appuyé dessus
 searchBar.addEventListener("keyup", () => showHint(searchBar.value));
+
+// recupère tous les balises enfants de textHint 
+const child = textHint.childNodes;
+
+// ferme le dropdown menu de la bar de recherche et la vide quand on clique dans la page 
+window.addEventListener("click", function() {
+    if(textHint.classList.contains("dropDownMenuHint")) {
+        while(child.length > 0) {
+            textHint.removeChild(child[0]);
+        }      
+        textHint.classList.remove("dropDownMenuHint");
+
+        // checkHeight();
+    }
+});
+
+// lors d'un clic sur le deleteBtn une fenêtre confirm() sera ouverte, si confirme laisse les choses, sinon stoppe le GET
+const btnAlert = document.getElementsByClassName("deleteBtn");
+for (let i = 0; i < btnAlert.length; i++) {
+    const openBtnAlert = btnAlert[i];
+
+    openBtnAlert.addEventListener("click", function() {
+        // stock le contenu du href de l'element clické
+        $hrefTarget = btnAlert[i].parentElement.href;
+        //cette function me permet d'appliquer un timeout avant de l'executer avec setTimeout() 
+        $updateHref = function() {btnAlert[i].parentElement.href = $hrefTarget };
+
+        $check = confirm("Are you sure you want to delete this ?");
+        if (!$check) {
+            btnAlert[i].parentElement.setAttribute("href", "#");
+            setTimeout($updateHref, 500);
+        } else {
+
+        }
+    })
+}
+
+const updateGenre = document.getElementById("updateGenre");
+const genresFilm = document.getElementsByClassName("genreFilm");
+
+
+
+
+function updateGenreOnClick() {
+    for (let i = 0; i < genresFilm.length; i++) {
+        const openGenreFilm = genresFilm[i];
+        let hrefTarget = openGenreFilm.href;
+        let targetArray = hrefTarget.split('');
+        let idTarget = targetArray[targetArray.length - 1]
+
+        "index.php?action=updateGenreFilmForm&id="
+        function removeEventListener() {
+            openGenreFilm.removeEventListener("click", updateHref);
+            openGenreFilm.style.color = "var(--primary-font-color)"; 
+            openGenreFilm.href = hrefTarget;
+            console.log(hrefTarget);
+        } 
+
+        function updateHref() {
+            openGenreFilm.href = "index.php?action=updateGenreFilmForm&id="+idTarget;
+            openGenreFilm.style.color = "blue"; 
+        } 
+
+        setTimeout(removeEventListener, 3000);
+        openGenreFilm.addEventListener("click", updateHref);
+        
+        openGenreFilm.style.color = "red";
+    }
+};
+
+updateGenre.addEventListener("click", updateGenreOnClick);
+
 
