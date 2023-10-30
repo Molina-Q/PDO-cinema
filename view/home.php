@@ -20,7 +20,7 @@ while ($director = $directors->fetch()) {
 }
 while ($actor = $actors->fetch()) {
 ?>
-        <p><?=$actor["nb_acteurs"]?> acteurs</p>
+        <p><?=$actor["nb_acteurs"]?> actors</p>
     </div>
 <?php
 }

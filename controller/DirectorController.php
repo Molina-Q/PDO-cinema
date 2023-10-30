@@ -8,12 +8,12 @@ class DirectorController {
         $dao = new DAO();
         $sql = 
         "SELECT 
-            r.id_realisateur, CONCAT(r.prenom ,' ', r.nom) AS full_name
+            r.id_director, CONCAT(r.prenom ,' ', r.nom) AS full_name
         FROM 
-            realisateur r
+            director r
         ";
 
-        $realisateurs = $dao->executerRequete($sql);
+        $directors = $dao->executerRequete($sql);
         require "./view/director/listDirectors.php";
     }
 
@@ -27,7 +27,7 @@ class DirectorController {
 
         $sqlDirector = 
         "SELECT 
-            r.id_realisateur,
+            r.id_director,
             r.prenom,
             r.nom,
             r.sexe, 
@@ -36,9 +36,9 @@ class DirectorController {
             r.dateDeDeces,
             DATE_FORMAT(r.dateDeDeces, '%d/%m/%Y') AS formatedDateDeDeces
         FROM
-            realisateur r
+            director r
         WHERE 
-            r.id_realisateur = :idDirector
+            r.id_director = :idDirector
 
         ";
 
@@ -116,7 +116,7 @@ class DirectorController {
             $dao = new DAO();
     
             $sql =
-            "INSERT INTO realisateur (nom, prenom, sexe, dateDeNaissance, dateDeDeces)
+            "INSERT INTO director (nom, prenom, sexe, dateDeNaissance, dateDeDeces)
             VALUES (:nom,:prenom,:sexe,:dateDeNaissance,:dateDeDeces)
             ";
     
@@ -179,16 +179,16 @@ class DirectorController {
 
         $sql = 
         "SELECT 
-            id_realisateur,
+            id_director,
             nom,
             prenom,
             sexe,
             dateDeNaissance,
             dateDeDeces
         FROM 
-            realisateur
+            director
         WHERE
-            id_realisateur = :idDirector
+            id_director = :idDirector
         ";
         
         $params = [
@@ -248,7 +248,7 @@ class DirectorController {
 
             $sql =
             "UPDATE 
-                realisateur  
+                director  
             SET 
                 nom = :nom,
                 prenom = :prenom,
@@ -256,7 +256,7 @@ class DirectorController {
                 dateDeNaissance = :dateDeNaissance,
                 dateDeDeces = :dateDeDeces
             WHERE 
-                id_realisateur = :idDirector
+                id_director = :idDirector
             ";
 
             $params = [
@@ -309,9 +309,9 @@ class DirectorController {
 
         $sql =
         "DELETE FROM 
-            realisateur
+            director
         WHERE 
-            id_realisateur = :idDirector
+            id_director = :idDirector
         ";
 
         $params = [

@@ -12,21 +12,21 @@ ob_start();
     
 <div id=listRealisateurs>
 <?php
-while ($realisateur = $realisateurs->fetch()) {
+while ($director = $directors->fetch()) {
 ?>
     <div class="listBloc">
-        <a class="linkEntities" href='index.php?action=detailsDirector&id=<?= $realisateur["id_realisateur"] ?>'>
-            <p class="listEntities"><?= $realisateur["full_name"] ?></p>
+        <a class="linkEntities" href='index.php?action=detailsDirector&id=<?= $director["id_director"] ?>'>
+            <p class="listEntities"><?= $director["full_name"] ?></p>
         </a>
         
         <div class="deleteBloc">
-            <a href="index.php?action=deleteDirector&id=<?= $realisateur["id_realisateur"] ?>">
+            <a href="index.php?action=deleteDirector&id=<?= $director["id_director"] ?>">
                 <button class="deleteBtn"><i class="fa-solid fa-xmark"></i></button>
             </a>
         </div>
 
         <div class="updateBloc">
-            <a href="index.php?action=updateDirectorForm&id=<?= $realisateur["id_realisateur"] ?>">
+            <a href="index.php?action=updateDirectorForm&id=<?= $director["id_director"] ?>">
                 <button class="updateBtn"><i class="fa-solid fa-pen"></i></button>
             </a>
         </div>

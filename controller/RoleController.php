@@ -41,7 +41,7 @@ class RoleController {
         FROM 
             casting c
         INNER JOIN 
-            acteur a ON c.acteur_id = a.id_acteur
+            actor a ON c.acteur_id = a.id_actor
         INNER JOIN
             film f ON c.film_id = f.id_film
         WHERE 

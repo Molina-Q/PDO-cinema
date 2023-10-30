@@ -23,26 +23,26 @@ function showAge($dateTimeNaissance,  $dateTimeDeces = null) {
 }
 
 
-while ($realisateur = $detailsDirector->fetch()) {
+while ($director = $detailsDirector->fetch()) {
 ?>
     <div class="interactUpdate">
-        <a href="index.php?action=updateDirectorForm&id=<?= $realisateur["id_realisateur"] ?>">
+        <a href="index.php?action=updateDirectorForm&id=<?= $director["id_director"] ?>">
             <p>Update</p>
         </a>
     </div>
    <div class='blocDetailsDirector'>
-            <h3><?=$realisateur["prenom"]?> <?=$realisateur["nom"]?></h3>
+            <h3><?=$director["prenom"]?> <?=$director["nom"]?></h3>
             <ul>
-              <li><?=$realisateur["sexe"]?></li>
-              <li><span>Date de naissance</span> : <?=$realisateur["formatedDateDeNaissance"]?></li>
+              <li><?=$director["sexe"]?></li>
+              <li><span>Date de naissance</span> : <?=$director["formatedDateDeNaissance"]?></li>
 <?php
-                if($realisateur["formatedDateDeDeces"]) {
+                if($director["formatedDateDeDeces"]) {
 ?>
-                    <li><span>Date de décès</span> : <?=$realisateur["formatedDateDeDeces"]?> (<?=showAge($realisateur["dateDeNaissance"], $realisateur["dateDeDeces"])?>) </li>
+                    <li><span>Date de décès</span> : <?=$director["formatedDateDeDeces"]?> (<?=showAge($director["dateDeNaissance"], $director["dateDeDeces"])?>) </li>
 <?php
                 } else {
 ?>
-                    <li><span>Age</span> : <?=showAge($realisateur["dateDeNaissance"])?></li>   
+                    <li><span>Age</span> : <?=showAge($director["dateDeNaissance"])?></li>   
 <?php
                 }
 ?>

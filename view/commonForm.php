@@ -7,13 +7,13 @@ if ($entity) {
 }
 
 //function qui crée les balises html du form: labelName = nom du label, $inputType = type d'input demandé, columnName est le nom de la colonne voulu dans la bdd
-function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entity, $options = null) {
+function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entity = null, $options = null) {
     $inputs = ["text", "number", "date", "time"]; 
     $stepValue = 0; // step = 1 permet d'afficher "time" en h:m:s sans affecter le reste des "date", il est initié sur zéro et switch sur 1 lors du tour de time
     $formData = []; 
 
     // if() pour empecher un add d'interagir avec entity et de créer une erreur (entity est utilisé uniquement pour les updates)
-    if($entity) {
+    if($entity && isset($entity[$columnName])) { 
         // stock la valeur de la colonne actuelle
         $entityName = $entity[$columnName];
         // l'utilise pour la placer dans le formData (et afficher les données dans les input)
@@ -34,9 +34,9 @@ function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entit
     </div>
     <?php
  
-    } else {
+    } else if ($inputType == "select") {
 ?>
-        <div class="custom-select" style="width:230px;">
+        <div class="custom-select">
             <select name="<?= $columnName ?>" id="<?= $columnName ?>">
                 <option value="<?= isset($formData[$columnName]) ? $formData[$columnName] : $inputType ?>"><?=$placeholder?></option>
 <?php 
@@ -46,15 +46,25 @@ function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entit
                         $selected = "selected";
                     }
                     /* id_option et complete_label sont des alias de l'id utilisé en value et du nom/titre/libelle utilisés pour décrire l'entité et permettent de créer un select/option pour le form entier */
-?>          
+?>
                     <option <?= $selected ?> value="<?= $option["id_option"] ?>"><?= $option["complete_label"]?></option>
                     <?php
                 }
-?>
+                ?>
             </select>
         </div>
     </div>
+    <?php
+    // si l'input est un radio
+    } else if ($inputType == "radio") {
+        while($option = $options->fetch()) {
+?>      
+            <div class="radio-form">
+                <input type="<?= $inputType ?>" id="<?= $columnName ?>" name="<?= $columnName ?>" value="<?= $option["id_option"] ?>" />
+                <label for="<?= $columnName ?>"><?= $option["complete_label"] ?></label>
+            </div>
 <?php
+        }
     }
 }
 
@@ -79,11 +89,11 @@ function messageErrors($formErrors, $columnName) {
 
             /***** genre, role *****/
             if (in_array("libelle", $fieldNames)) { // mon entité a un fields libelle
-                makeHtmlGroup("Label", "text", "libelle", $placeholder, $entity); // le field "libelle" : a un label "Label"(c'est un nom pour décrire l'input), un input de type text, le nom de la colonne de la bdd que je veux modifier/créer, name et dataForm l'utilise, placeholder, entity contient l'id et le nom de la colonne de l'entity que je veux modifier(entity est utilisé uniquement durant une update) 
+                makeHtmlGroup("Label", "text", "libelle", $placeholder, $entity); // le field "libelle" : a un label "Label"(un nom pour décrire l'input), un input de type text, le nom de la colonne de la bdd que je veux modifier/ajouter, name et dataForm l'utilise, placeholder, entity contient l'id et le nom de la colonne de l'entity que je veux modifier(entity est utilisé uniquement pour une update) 
                 messageErrors($formErrors, "libelle");  
             }            
             
-            /***** acteur, realisateur *****/
+            /***** actor, director *****/
             if (in_array("nom", $fieldNames)) { // mon entité a un fields nom      
                 makeHtmlGroup("last Name", "text", "nom", "Dupont...", $entity);   
                 messageErrors($formErrors, "nom");  
@@ -131,30 +141,30 @@ function messageErrors($formErrors, $columnName) {
 
             }         
 
-            if (in_array("realisateur_id", $fieldNames)) { // mon entité a un fields id realisateur (foreign key)
+            if (in_array("realisateur_id", $fieldNames)) { // mon entité a un fields id director (foreign key)
                 makeHtmlGroup("Director", "select", "realisateur_id", "--Choose a director--", $entity, $options);  
                 messageErrors($formErrors, "realisateur_id");  
             }
 
+            /***** commun genre_film/casting *****/
+            if (in_array("film_id", $fieldNames)) { // mon entité a un fields id director (foreign key)
+                makeHtmlGroup("Film", "select", "film_id", "--Choose a film--", $entity, $optionsFilm);  
+                messageErrors($formErrors, "film_id");  
+            }
+
             /***** genre_film *****/
-            if (in_array("genre_id", $fieldNames)) { // mon entité a un fields id realisateur (foreign key)
+            if (in_array("genre_id", $fieldNames)) { // mon entité a un fields id director (foreign key)
                 makeHtmlGroup("Genre", "select", "genre_id", "--Choose a genre--", $entity, $optionsGenre);  
                 messageErrors($formErrors, "genre_id");  
             }
 
-            /***** commun genre_film/casting *****/
-            if (in_array("film_id", $fieldNames)) { // mon entité a un fields id realisateur (foreign key)
-                makeHtmlGroup("Film", "select", "film_id", "--Choose a movie--", $entity, $optionsFilm);  
-                messageErrors($formErrors, "film_id");  
-            }
-
             /***** casting *****/
-            if (in_array("acteur_id", $fieldNames)) { // mon entité a un fields id realisateur (foreign key)
+            if (in_array("acteur_id", $fieldNames)) { // mon entité a un fields id director (foreign key)
                 makeHtmlGroup("Actor", "select", "acteur_id", "--Choose an actor--", $entity, $optionsActor);  
                 messageErrors($formErrors, "acteur_id");  
             }
 
-            if (in_array("role_id", $fieldNames)) { // mon entité a un fields id realisateur (foreign key)
+            if (in_array("role_id", $fieldNames)) { // mon entité a un fields id director (foreign key)
                 makeHtmlGroup("Role", "select", "role_id", "--Choose a role--", $entity, $optionsRole);  
                 messageErrors($formErrors, "role_id");  
             }

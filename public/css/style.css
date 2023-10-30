@@ -38,7 +38,7 @@ main {
     text-align: center;
 }
 
-#listActeurs, #listRealisateurs, #listRoles, #listGenres { /* toutes les listes sauf film */
+#listActors, #listRealisateurs, #listRoles, #listGenres { /* toutes les listes sauf film */
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -351,6 +351,10 @@ nav ul li a:hover {
     align-items: center;
 }
 
+#updateGenre {
+    cursor: pointer;
+}
+
 /********** blocDetails - general **********/
 .blocDetailsFilm a, .blocDetailsDirector a, .blocDetailsActor a, .blocDetailsRole a, .blocDetailsGenre a{
     text-decoration: none;
@@ -495,6 +499,7 @@ span {
     text-align: center;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .form-label { /* label */
@@ -549,7 +554,21 @@ span {
 }
 
 .error {
-    color: red;
+    color: rgb(138, 2, 2);
+}
+
+.radio-form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.radio-form input {
+    flex: 1;
+}
+
+.radio-form label {
+    flex: 2;
 }
 
 /*************** footer ***************/
@@ -621,7 +640,7 @@ footer ul li {
 /* le menu déroulant d'options */
 .select-items {
     width: calc(100% + 1px);
-    height: 200px;
+    max-height: 200px;
     position: absolute;
     top: 100%;
     left: 0;

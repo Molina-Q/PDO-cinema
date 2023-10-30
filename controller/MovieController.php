@@ -23,7 +23,7 @@ class MovieController {
         $dao = new DAO();
 
         // tous les elements à afficher pour detailsFilm
-        // un film, n'a qu'un realisateur donc il n'y qu'une requête pour ceci
+        // un film, n'a qu'un director donc il n'y qu'une requête pour ceci
         $sqlFilm = 
             "SELECT
                 f.id_film,
@@ -31,12 +31,12 @@ class MovieController {
                 f.duree,
                 DATE_FORMAT(f.dateDeSortie, '%d/%m/%Y') AS release_date,
                 f.affiche,
-                r.id_realisateur,
+                r.id_director,
                 r.prenom, 
                 r.nom
             FROM
                 film f
-                INNER JOIN realisateur r ON f.realisateur_id = r.id_realisateur
+                INNER JOIN director r ON f.realisateur_id = r.id_director
             WHERE f.id_film = :idFilm
             GROUP BY f.id_film
         ";
@@ -56,14 +56,14 @@ class MovieController {
         // et généralement plusieurs castings
         $sqlCastings = 
             "SELECT
-                a.id_acteur,
+                a.id_actor,
                 a.prenom,
                 a.nom,
                 ro.libelle,
                 ro.id_role
             FROM
                 casting c
-                INNER JOIN acteur a ON c.acteur_id = a.id_acteur
+                INNER JOIN actor a ON c.acteur_id = a.id_actor
                 INNER JOIN role ro ON c.role_id = ro.id_role
             WHERE
                 c.film_id = :idFilm
@@ -88,7 +88,7 @@ class MovieController {
         $dao = new DAO();
 
         //fields nécessaire pour le form
-        $fieldNames = ["titre", "dateDeSortie", "duree", "realisateur_id", "genre_id"];
+        $fieldNames = ["titre", "dateDeSortie", "duree", "realisateur_id", "role_id", "acteur_id", "genre_id"];
 
         $titrePage = "Add Movie";
         $tableToFocus = "Movie";
@@ -98,10 +98,10 @@ class MovieController {
         // id_option et complete_label sont des alias peu précis car ils sont utilisés pour afficher des données déjà existante dans les select > options des form
         $sqlFilms = 
         "SELECT
-            id_realisateur AS id_option, 
+            id_director AS id_option, 
             CONCAT(prenom, ' ',nom) AS complete_label
         FROM 
-            realisateur
+            director
         ";
 
         $sqlGenres = 
@@ -112,9 +112,27 @@ class MovieController {
             genre
         ";
 
+        $sqlRoles = 
+        "SELECT
+            id_role AS id_option, 
+            libelle AS complete_label
+        FROM 
+            role
+        ";
+
+        $sqlActors = 
+        "SELECT
+            id_actor AS id_option, 
+            CONCAT(prenom, ' ',nom) AS complete_label
+        FROM 
+            actor
+        ";
+
         //options sera utilise pour la liste d'option dans le select du form qui sera crée
-        $optionsGenre = $dao->executerRequete($sqlGenres); 
         $options = $dao->executerRequete($sqlFilms); 
+        $optionsGenre = $dao->executerRequete($sqlGenres); 
+        $optionsRole = $dao->executerRequete($sqlRoles); 
+        $optionsActor = $dao->executerRequete($sqlActors); 
 
         require "./view/commonForm.php";
     }
@@ -128,6 +146,8 @@ class MovieController {
         $duree = filter_input(INPUT_POST, "duree", FILTER_SANITIZE_NUMBER_INT);
         $realisateur_id = filter_input(INPUT_POST, "realisateur_id", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $genre_id = filter_input(INPUT_POST, "genre_id", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $acteur_id = filter_input(INPUT_POST, "acteur_id", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $role_id = filter_input(INPUT_POST, "role_id", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
         // init vars
         $formErrors = [];
@@ -157,6 +177,14 @@ class MovieController {
         if ($genre_id == "select") {
             $formErrors["genre_id"] = "This field is mandatory";
         } 
+        
+        if ($acteur_id == "select") {
+            $formErrors["acteur_id"] = "This field is mandatory";
+        } 
+        
+        if ($role_id == "select") {
+            $formErrors["role_id"] = "This field is mandatory";
+        } 
 
         // autre règle métier / de validation du formulaire
         // if
@@ -180,6 +208,13 @@ class MovieController {
                 (:genre_id, :film_id)
             ";
 
+            $sqlCasting = 
+            "INSERT INTO
+                casting (film_id, acteur_id, role_id)
+            VALUES 
+                (:film_id, :acteur_id, :role_id)
+            ";
+
             $params = [
                 "titre" => $titre,
                 "dateDeSortie" => $dateDeSortie,
@@ -200,6 +235,15 @@ class MovieController {
                 ];
 
                 $dao->executerRequete($sqlGenre, $params);
+
+                $params = [
+                    "film_id" => $idFilm,
+                    "acteur_id" => $acteur_id,
+                    "role_id" => $role_id
+                ];
+
+                $dao->executerRequete($sqlCasting, $params);
+
             } catch (\Throwable $error) {
 
                 $sqlError = $error;
@@ -234,7 +278,7 @@ class MovieController {
     }
 
     function updateFilmForm($idFilm, $formData = [], $globalErrorMessage = null, $formErrors = []) {
-        $fieldNames = ["titre", "dateDeSortie", "duree", "realisateur_id", "genre_id"];
+        $fieldNames = ["titre", "dateDeSortie", "duree", "realisateur_id","genre_id", "acteur_id", "role_id"];
         $dao = new DAO();
 
         $titrePage = "Update Film";
@@ -256,29 +300,47 @@ class MovieController {
 
         $sqlDirector = 
         "SELECT
-            id_realisateur AS id_option,
+            id_director AS id_option,
             CONCAT(prenom, ' ',nom) AS complete_label
 
         FROM 
-            realisateur
+            director
         ";
 
-        $sqlGenre = 
+        $sqlGenres = 
         "SELECT
             id_genre AS id_option,
             libelle AS complete_label
-
         FROM 
             genre
-        -- HAVING 
-        --     id_genre IN (
-        --         SELECT 
-        --             genre_id
-        --         FROM 
-        --             genre_film
-        --         WHERE 
-        --             film_id = :idFilm
-        -- )
+        INNER JOIN 
+            genre_film gf ON genre.id_genre = gf.genre_id
+        WHERE
+            film_id = :idFilm 
+        ";
+
+        $sqlActors = 
+        "SELECT
+            id_actor AS id_option,
+            CONCAT(prenom, ' ',nom) AS complete_label
+        FROM 
+            actor
+        INNER JOIN 
+            casting c ON actor.id_actor = c.acteur_id
+        WHERE
+            film_id = :idFilm 
+        ";
+
+        $sqlRoles = 
+        "SELECT
+            id_role AS id_option,
+            libelle AS complete_label
+        FROM 
+            role  
+        INNER JOIN 
+            casting c ON role.id_role = c.role_id
+        WHERE
+            film_id = :idFilm         
         ";
 
         $params = [
@@ -287,7 +349,10 @@ class MovieController {
 
         $entity = $dao->executerRequete($sql, $params);
         $options = $dao->executerRequete($sqlDirector); 
-        $optionsGenre = $dao->executerRequete($sqlGenre); 
+        $optionsGenre = $dao->executerRequete($sqlGenres, $params); 
+        $optionsActor = $dao->executerRequete($sqlActors, $params); 
+        $optionsRole = $dao->executerRequete($sqlRoles, $params); 
+        // $radios = $dao->executerRequete($sqlGenres); 
         require "./view/commonForm.php";
     }
 
@@ -477,6 +542,8 @@ class MovieController {
                 $idFilm = $film_id;
 
             } catch (\Throwable $error) {
+                var_dump($error);
+                die();
                 $sqlError = $error;
                 $isSuccess = false;
             }
@@ -527,10 +594,10 @@ class MovieController {
 
         $sqlActors = 
          "SELECT
-            id_acteur AS id_option,
+            id_actor AS id_option,
             CONCAT(prenom, ' ', nom) AS complete_label
         FROM 
-            acteur
+            actor
         ";
 
         $sqlRoles = 
@@ -645,160 +712,192 @@ class MovieController {
         WHERE 
             id_film = :idFilm
         ";
+        
+        $sqlGenre = 
+        "DELETE FROM 
+            genre_film
+        WHERE 
+            film_id = :idFilm
+        ";
+
+        $sqlCast = 
+        "DELETE FROM 
+            casting
+        WHERE 
+            film_id = :idFilm
+        ";
 
         $params = [
             "idFilm" => $idFilm
         ];
 
+        $dao->executerRequete($sqlGenre, $params);
+        $dao->executerRequete($sqlCast, $params);
         $dao->executerRequete($sql, $params);
 
         $this->listFilms();
     }
 
+    public function deleteGenreFilm($idGenre, $idFilm) {
+        $dao = new DAO ();
 
+        $sql =
+        "DELETE FROM 
+            genre_film
+        WHERE 
+            film_id = :idFilm AND genre_id = :idGenre
+        ";
+        $params = [
+            "idFilm" => $idFilm,
+            "idGenre" => $idGenre
+        ];
+        
+        $dao->executerRequete($sql, $params);
+
+        $this->detailsFilm($idFilm);
+    }
 
     //WIP fonctionnalités qui seront peut être ajoutés dans le futur
+    function updateGenreFilmForm($idGenre, $idFilm, $formData = [], $globalErrorMessage = null, $formErrors = []) {
+        $dao = new DAO();
+        $fieldNames = ["film_id", "genre_id"];
 
-    // function updateGenreFilmForm($idFilm, $formData = [], $globalErrorMessage = null, $formErrors = []) {
-    //     $dao = new DAO();
-    //     $fieldNames = ["film_id", "genre_id"];
+        $titrePage = "Update a Genre from a Movie ";
+        $tableToFocus = "Movie";
+        $actionForm = "updateGenreFilm&id=$idGenre&idSec=$idFilm";
+        $entity = null;
 
-    //     $titrePage = "Udate a Genre from a Movie ";
-    //     $tableToFocus = "Movie";
-    //     $actionForm = "updateGenreFilm&id=$idFilm";
-    //     $entity = null;
+        $sqlGenreFilm = 
+        "SELECT 
+            film_id,
+            genre_id
+            
+        FROM
+            genre_film
+        WHERE
+            genre_id = :idGenre AND film_id = :idFilm
+        ";
 
-    //     $sqlGenres = 
-    //     "SELECT
-    //         id_genre AS id_option,
-    //         libelle AS complete_label
-    //     FROM 
-    //         genre
-    //     ";
+        $sqlGenres = 
+        "SELECT
+            id_genre AS id_option,
+            libelle AS complete_label
+        FROM 
+            genre
+        HAVING id_genre NOT IN (
+                SELECT genre_id
+                FROM genre_film
+                WHERE film_id = :idFilm
+            )
+        ";
 
-    //     $sqlFilms = 
-    //      "SELECT
-    //         id_film AS id_option,
-    //         titre AS complete_label
-    //     FROM 
-    //         film
-    //     ";
+        $sqlFilms = 
+        "SELECT
+            id_film AS id_option,
+            titre AS complete_label
+        FROM 
+            film
+        WHERE id_film = :idFilm
+        ";
 
-    //     $sqlFilms = 
-    //     "SELECT
-    //         id_realisateur AS id_option,
-    //         CONCAT(prenom, ' ',nom) AS complete_label
+        $params = [
+            "idGenre" => $idGenre,
+            "idFilm" => $idFilm
+        ];
 
-    //     FROM 
-    //         film
-    //     ";
+        $param = [
+            "idFilm" => $idFilm
+        ];
 
-    //     $params = [
-    //         "idFilm" => $idFilm
-    //     ];
+        $entity = $dao->executerRequete($sqlGenreFilm, $params);
+        $optionsGenre = $dao->executerRequete($sqlGenres, $param); 
+        $optionsFilm = $dao->executerRequete($sqlFilms, $param); 
+        require "./view/commonForm.php";
+    }
 
-    //     $entity = $dao->executerRequete($sql, $params);
-    //     $options = $dao->executerRequete($sqlFilms); 
-    //     require "./view/commonForm.php";
-    // }
-
-    // function updateGenreFilm($idFilm) {
+    function updateGenreFilm($idGenre, $idFilm) {
         
-    //     // filtrer / nettoyer les données reçues en POST
-    //     $titre = filter_input(INPUT_POST, "titre", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    //     $dateDeSortie = filter_input(INPUT_POST, "dateDeSortie", FILTER_SANITIZE_NUMBER_INT);
-    //     $duree = filter_input(INPUT_POST, "duree", FILTER_SANITIZE_NUMBER_INT);
-    //     $realisateur_id = filter_input(INPUT_POST, "realisateur_id", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        // filtrer / nettoyer les données reçues en POST
+        $genre_id = filter_input(INPUT_POST, "genre_id", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $film_id = filter_input(INPUT_POST, "film_id", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    //     // init vars
-    //     $formErrors = [];
-    //     $isSuccess = true;
-    //     $sqlError = null;    
+
+        // init vars
+        $formErrors = [];
+        $isSuccess = true;
+        $sqlError = null;    
            
         
-    //     // validation des règles métier (valider les données saisies dans le formulaire soumis)
+        // validation des règles métier (valider les données saisies dans le formulaire soumis)
 
-    //     // le champ libelle est obligatoire
-    //     if (empty($titre)) {
-    //         $formErrors["titre"]= "This field is mandatory";
-    //     }
+        // le champ libelle est obligatoire
+        if (empty($genre_id)) {
+            $formErrors["genre_id"]= "This field is mandatory";
+        }
 
-    //     if (empty($dateDeSortie)) {
-    //         $formErrors["dateDeSortie"] = "This field is mandatory";
-    //     }
+        if (empty($film_id)) {
+            $formErrors["film_id"] = "This field is mandatory";
+        } 
 
-    //     if (empty($duree)) {
-    //         $formErrors["duree"] = "This field is mandatory";
-    //     }
+        // autre règle métier / de validation du formulaire
+        // if
 
-    //     if (empty($realisateur_id)) {
-    //         $formErrors["realisateur_id"] = "This field is mandatory";
-    //     } 
+        // si le formulaire est valide
+        if (empty($formErrors)) {
 
-    //     // autre règle métier / de validation du formulaire
-    //     // if
+            $dao = new DAO();
 
-    //     // si le formulaire est valide
-    //     if (empty($formErrors)) {
+            $sql =
+            "UPDATE 
+                genre_film
+            SET 
+                film_id = :film_id,
+                genre_id = :genre_id
 
-    //         $dao = new DAO();
+            WHERE 
+                film_id = :idFilm AND genre_id = :idGenre 
+            ";
 
-    //         $sql =
-    //         "UPDATE 
-    //             film  
-    //         SET 
-    //             titre = :titre,
-    //             dateDeSortie = :dateDeSortie,
-    //             duree = :duree,
-    //             realisateur_id = :realisateur_id
+            $params = [
+                "film_id" => $film_id,
+                "genre_id" => $genre_id,
+                "idGenre" => $idGenre,
+                "idFilm" => $idFilm
+            ];
 
-    //         WHERE 
-    //             id_film= :idFilm
-    //         ";
+            try {
 
-    //         $params = [
-    //             "titre" => $titre,
-    //             "dateDeSortie" => $dateDeSortie,
-    //             "duree" => $duree,
-    //             "realisateur_id" => $realisateur_id,
-    //             "idFilm" => $idFilm
-    //         ];
+                $isSuccess = $dao->executerRequete($sql, $params);
 
-    //         try {
+            } catch (\Throwable $error) {
 
-    //             $isSuccess = $dao->executerRequete($sql, $params);
+                $sqlError = $error;
+                $isSuccess = false;
+            }
 
-    //         } catch (\Throwable $error) {
+        } else {
+            $isSuccess = false;
+        }
 
-    //             $sqlError = $error;
-    //             $isSuccess = false;
-    //         }
+        // si tout s'est bien déroulé (requêtes SQL incluse)
+        if ($isSuccess) {
 
-    //     } else {
-    //         $isSuccess = false;
-    //     }
+            // on redirige vers le détail du nouveau Genre
+            $this->detailsFilm($idFilm); // contient toute la logique, jusqu'à la vue
 
-    //     // si tout s'est bien déroulé (requêtes SQL incluse)
-    //     if ($isSuccess) {
+        } else {
+            // il y a eu un souci
 
-    //         // on redirige vers le détail du nouveau Genre
-    //         $this->detailsFilm($idFilm); // contient toute la logique, jusqu'à la vue
+            // préparation au renvoi des données saisies dans le formulaire
+            $formData = [
+                "film_id" => $film_id,
+                "genre_id" => $genre_id
+            ];
 
-    //     } else {
-    //         // il y a eu un souci
-
-    //         // préparation au renvoi des données saisies dans le formulaire
-    //         $formData = [
-    //             "titre" => $titre,
-    //             "dateDeSortie" => $dateDeSortie,
-    //             "duree" => $duree,
-    //             "realisateur_id" => $realisateur_id
-    //         ];
-
-    //         // on renvoie vers le même formulaire, en donnant les infos nécessaires à l'affichage
-    //         $this->updateFilmForm($idFilm, $formData, $sqlError, $formErrors);
-    //     }    
-    // }
+            // on renvoie vers le même formulaire, en donnant les infos nécessaires à l'affichage
+            $this->updateGenreFilm($idGenre, $idFilm, $formData, $sqlError, $formErrors);
+        }    
+    }
 
 }
 

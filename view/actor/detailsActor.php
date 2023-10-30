@@ -6,7 +6,7 @@ $nbRow = $castings->rowCount();
 $separator = ", ";
 
 ?>
-<h2 class="titrePage">Details de l'acteur</h2>
+<h2 class="titrePage">Details de l'actor</h2>
 <?php
 
 function showAge($dateTimeNaissance,  $dateTimeDeces = null) {
@@ -22,28 +22,28 @@ function showAge($dateTimeNaissance,  $dateTimeDeces = null) {
 }
 
 
-if ($acteur = $detailsActeur->fetch()) {
+if ($actor = $detailsActor->fetch()) {
     ?>          
     <div class="interactUpdate">
-        <a href="index.php?action=updateActorForm&id=<?= $acteur["id_acteur"] ?>">
+        <a href="index.php?action=updateActorForm&id=<?= $actor["id_actor"] ?>">
             <p>Update</p>
         </a>
     </div>
 
     <div class='blocDetailsActor'>
-        <h3><?= $acteur["prenom"] ?> <?= $acteur["nom"] ?></h3>
+        <h3><?= $actor["prenom"] ?> <?= $actor["nom"] ?></h3>
 
         <ul>
-            <li><?= $acteur["sexe"] ?></li>
-            <li><span>Date de naissance</span> : <?=$acteur["formatedDateDeNaissance"]?></li>
+            <li><?= $actor["sexe"] ?></li>
+            <li><span>Date de naissance</span> : <?=$actor["formatedDateDeNaissance"]?></li>
 <?php
-            if($acteur["formatedDateDeDeces"]) { /* check si la personne à une date de decès et ensuite afficher le nécessaire */
+            if($actor["formatedDateDeDeces"]) { /* check si la personne à une date de decès et ensuite afficher le nécessaire */
 ?>
-                <li><span>Date de décès</span> : <?=$acteur["formatedDateDeDeces"]?> (<?=showAge($acteur["dateDeNaissance"], $acteur["dateDeDeces"])?>) </li>
+                <li><span>Date de décès</span> : <?=$actor["formatedDateDeDeces"]?> (<?=showAge($actor["dateDeNaissance"], $actor["dateDeDeces"])?>) </li>
 <?php
             } else {
 ?>
-                <li><span>Age</span> : <?=showAge($acteur["dateDeNaissance"])?></li>   
+                <li><span>Age</span> : <?=showAge($actor["dateDeNaissance"])?></li>   
 <?php
             }
 ?>
@@ -66,7 +66,7 @@ if ($acteur = $detailsActeur->fetch()) {
 
 <?php 
 // termine la temporisation, et initie les variables title et content, content qui aura tous le contenu de cette page
-$title = "Informations acteur";
+$title = "Informations actor";
 $content = ob_get_clean(); 
 require "./view/layout.php";
 ?>

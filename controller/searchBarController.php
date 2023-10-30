@@ -1,164 +1,142 @@
 <?php
-// require_once "./bdd/DAO.php";
+require_once "./bdd/DAO.php";
 
 class SearchBarController{
 
     // function utilisé par la search bar
-    public function searchBar($srch) {
-
+    public function searchBar() {
         $dao = new DAO();
 
-        $sqlFilms =
-        "SELECT 
-            id_film AS id_search,
-            titre AS label
-        FROM 
-            film
-        ";
+        // $srch est la variable qui contient ce qu'il y a dans la search bar 
+        $srch = filter_input(INPUT_GET, "srch", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-        $sqlActors =
-        "SELECT 
-            id_acteur AS id_search,
-            CONCAT(prenom, ' ', nom) AS  label
-        FROM 
-            acteur 
-        ";
+        $searchResults = "" ;
 
-        $sqlDirectors =
-        "SELECT 
-            id_realisateur AS id_search,
-            CONCAT(prenom, ' ', nom) AS label
-        FROM 
-            realisateur
-        ";
+        // un array avec les paramètres que j'utilise dans le foreach en dessous pour me permettre de factoriser mes requêtes SQL
+        $sqlBuilderCategoryField = [
+            "Film" => "titre", // $category => $field, $cat est la table visé et $field le nom de la colonne voulu
+            "Actor" => "CONCAT(prenom, ' ', nom)",
+            "Director" => "CONCAT(prenom, ' ', nom)",
+            "Role" => "libelle",
+            "Genre" => "libelle"
+        ];
 
-        $sqlRoles =
-        "SELECT 
-            id_role AS id_search,
-            libelle AS label
-        FROM 
-            role
-        ";
+        $sql = "";
+        $isFirstEntity = true;
 
-        $sqlGenres =
-        "SELECT 
-            id_genre AS id_search,
-            libelle AS label
-        FROM 
-            genre
-        ";
+        foreach ($sqlBuilderCategoryField as $category => $field) {
 
-        $films = $dao->executerRequete($sqlFilms);  
-        $actors = $dao->executerRequete($sqlActors);  
-        $directors = $dao->executerRequete($sqlDirectors);  
-        $roles = $dao->executerRequete($sqlRoles);  
-        $genres = $dao->executerRequete($sqlGenres);  
-
-        $searchArray = [];
-
-        // remplis un array associatif avec les id, label et categorie des films, acteurs et realisateurs
-        while($film = $films->fetch()) {
-            $searchArray["articles"][] = [ 
-                "label" => $film["label"],
-                "id" => "index.php?action=detailsFilm&id=".$film["id_search"],
-                "category" => "Film"
-            ];
-        }
-
-        while($actor = $actors->fetch()) {
-            $searchArray["articles"][] = [
-                "label" => $actor["label"], 
-                "id" => "index.php?action=detailsActor&id=".$actor["id_search"],
-                "category" => "Actor" 
-            ];
-        }   
-
-        while($director = $directors->fetch()) {
-            $searchArray["articles"][] = [
-                "label" => $director["label"],
-                "id" => "index.php?action=detailsDirector&id=".$director["id_search"],
-                "category" => "Director"
-            ];
-        }
-
-        while($role = $roles->fetch()) {
-            $searchArray["articles"][] = [
-                "label" => $role["label"],
-                "id" => "index.php?action=detailsDirector&id=".$role["id_search"],
-                "category" => "Role"
-            ];
-        }
-
-        while($genre = $genres->fetch()) {
-            $searchArray["articles"][] = [
-                "label" => $genre["label"],
-                "id" => "index.php?action=detailsDirector&id=".$genre["id_search"],
-                "category" => "Genre"
-            ];
-        }
-        
-        $hint = "";
-
-        // si la search bar n'est pas vide
-        if ($srch !== "") {
-
-            $srch = strtolower($srch); // stock le texte écris dans la bar de recherche et le met en lowercase
-
-            $srchLen = strlen($srch); // stock la longueur du string écris dans la bar
-
-            foreach($searchArray["articles"] as $element) { // boucle sur l'array associatif searchArray
-
-                if ($srch == strtolower($element["category"])) {
-                    $idSearch = $element["id"];
-                    if ($hint === "") {
-                        $hint =
-                        "<a href='$idSearch'>
-                            <p><span>".$element["category"]." -> </span>".$element['label']."</p>
-                        </a>";
-
-                    } else {
-
-                        $hint .=
-                        "<a href='$idSearch'>
-                            <p><span>".$element["category"]." -> </span>".$element['label']."</p>
-                       </a>";
-
-                    }
-
-                    /* j'hésite entre deux système de recherche : 
-                    1 => cherche un resultat qui CONTIENT le string écrit dans la search bar
-                    2 => cherche un resultat qui COMMENCE par le string écrit dans la search bar 
-                    potentiel solution : mettre en place une radio ou un btn qui permet au user de choisir le système voulu
-                    */
-                } else if (str_contains(strtolower($element["label"]), $srch) || str_contains($element["label"], $srch)) { 
-                // } else if (stristr($srch, substr($element["label"], 0, $srchLen))) {  
-
-                    // cherche si il existe des valeurs dont le label commence par le string écris dans la bar
-                    // substr([mot de l'array], [index string(0 est la première lettre)], [nb de caractère à return]) return un string 
-                    // stristr([string dans la search bar], substr()) va return tous les label qui commence par le string écris dans la search bar
-
-                    $idSearch = $element["id"];
-                    if ($hint === "") {
-                        $hint =
-                        "<a href='$idSearch'>
-                            <p><span>".$element["category"]." -> </span>".$element['label']."</p>
-                        </a>";
-
-                    } else {
-
-                        $hint .=
-                        "<a href='$idSearch'>
-                            <p><span>".$element["category"]." -> </span>".$element['label']."</p>
-                       </a>";
-                       
-                    }
-                }
+            // ajoute "UNION" à la requête uniquement à partir de la deuxieme boucle du foreach
+            if ($isFirstEntity) {
+                $isFirstEntity = false;
+            } else {
+                $sql .= " UNION ";
             }
+
+            // ..details".$category."&id.. me permet de donner au resultat de la requête un lien vers son détails
+            $sql .= "SELECT ";
+            $sql .= "CONCAT('index.php?action=details".$category."&id=', id_$category) AS link, ";
+            $sql .= "$field AS label, ";
+            $sql .= "'$category' AS category ";
+            $sql .= "FROM ";
+            $sql .= "$category ";
+            $sql .= "WHERE ";
+            $sql .= "$field LIKE '%$srch%' ";
+        }
+
+        try {
+          
+            $searchResults = $dao->executerRequete($sql);
+            $result = $searchResults->fetchAll();
             
+            $results = json_encode($result);
+            echo $results;
+
+        } catch(\Throwable $error) {
+
+            echo  json_encode([
+                "srch" => $srch,
+                "sql" => $sql,
+                "request" => $dao->executerRequete($sql)
+            ]);
+          
         }
         
-        // si il n'y a aucun resultat 
-        echo $hint === "" ? "no suggestion" : $hint;
+        // $searchResults = $searchResults->fetchAll();
+        
+        // $hint = "";
+
+        // // si la search bar n'est pas vide
+        // if ($srch !== "") {
+
+        //     $srch = strtolower($srch); // stock le texte écris dans la bar de recherche et le met en lowercase
+
+        //     $srchLen = strlen($srch); // stock la longueur du string écris dans la bar
+
+        //     foreach($searchArray["articles"] as $element) { // boucle sur l'array associatif searchArray
+
+        //         if ($srch == strtolower($element["category"])) {
+        //             $idSearch = $element["id"];
+        //             if ($hint === "") {
+        //                 $hint =
+        //                 "<a href='$idSearch'>
+        //                     <p><span>".$element["category"]." -> </span>".$element['label']."</p>
+        //                 </a>";
+
+        //             } else {
+
+        //                 $hint .=
+        //                 "<a href='$idSearch'>
+        //                     <p><span>".$element["category"]." -> </span>".$element['label']."</p>
+        //                </a>";
+
+        //             }
+
+        //             /* j'hésite entre deux système de recherche : 
+        //             1 => cherche un resultat qui CONTIENT le string écrit dans la search bar
+        //             2 => cherche un resultat qui COMMENCE par le string écrit dans la search bar 
+        //             potentiel solution : mettre en place une radio ou un btn qui permet au user de choisir le système voulu
+        //             */
+        //         } else if (str_contains(strtolower($element["label"]), $srch) || str_contains($element["label"], $srch)) { 
+        //         // } else if (stristr($srch, substr($element["label"], 0, $srchLen))) {  
+
+        //             // cherche si il existe des valeurs dont le label commence par le string écris dans la bar
+        //             // substr([mot de l'array], [index string(0 est la première lettre)], [nb de caractère à return]) return un string 
+        //             // stristr([string dans la search bar], substr()) va return tous les label qui commence par le string écris dans la search bar
+
+        //             $idSearch = $element["id"];
+        //             if ($hint === "") {
+        //                 $hint =
+        //                 "<a href='$idSearch'>
+        //                     <p><span>".$element["category"]." -> </span>".$element['label']."</p>
+        //                 </a>";
+
+        //             } else {
+
+        //                 $hint .=
+        //                 "<a href='$idSearch'>
+        //                     <p><span>".$element["category"]." -> </span>".$element['label']."</p>
+        //                </a>";
+                       
+        //             }
+        //         }
+        //     }
+            
+        // }
+        
+        // // si il n'y a aucun resultat 
+        // echo $hint === "" ? "no suggestion" : $hint;
+        
+        // echo json_encode($searchResults);
+        // echo json_encode($searchResults ? $searchResults : "no suggestion");
+
+        // if ($searchResults) {
+            // $result = json_encode($searchResults);
+            // echo $result;
+        // } else {
+        //     $result = json_encode("no suggestion");
+        //     echo $result;
+        // }
         
     }
 

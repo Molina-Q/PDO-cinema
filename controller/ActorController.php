@@ -3,29 +3,29 @@
 require_once "./bdd/DAO.php";
 
 class ActorController {
-    // requête qui donne l'id et le nom de tous les acteurs présents dans bdd
+    // requête qui donne l'id et le nom de tous les actors présents dans bdd
     public function listActors() {
         // on instancie DAO pour avoir la connection à la base de données
         $dao = new DAO();
         // la requête SQL
         $sql = 
         "SELECT 
-            a.id_acteur, 
+            a.id_actor, 
             CONCAT(a.prenom ,' ', a.nom) AS full_name
         FROM 
-            acteur a
+            actor a
         ";
         // on stock le resultat de la requête dans une valeur
-        $acteurs = $dao->executerRequete($sql);
+        $actors = $dao->executerRequete($sql);
         require "./view/actor/listActors.php";
     }
     // la function doit forcément avoir un id en paramètre
     public function detailsActor($idActor) {
         $dao = new DAO();
         // il y les dates inital et une formated car les function pour calculer l'age avec la date ne prennent pas la version formated des dates
-        $sqlActeur = 
+        $sqlActor = 
         "SELECT 
-            a.id_acteur,
+            a.id_actor,
             a.prenom,
             a.nom, 
             a.sexe, 
@@ -34,15 +34,15 @@ class ActorController {
             a.dateDeDeces,
             DATE_FORMAT(a.dateDeDeces, '%d/%m/%Y') AS formatedDateDeDeces
         FROM 
-            acteur a
+            actor a
         WHERE 
-            a.id_acteur = :idActor /* :idACtor est la valeur que je souhaite avoir mais qui n'est pas la même à chaque fois */
+            a.id_actor = :idActor /* :idACtor est la valeur que je souhaite avoir mais qui n'est pas la même à chaque fois */
         GROUP BY 
-            a.id_acteur
+            a.id_actor
         ";
 
-        // ici je dis que idActeur = au contenu de l'idActeur que j'ai en paramètre de la fonction 
-        $paramsActeur = [
+        // ici je dis que idActor = le contenu de la variable idActor que j'ai en paramètre de la fonction 
+        $paramsActor = [
             "idActor" => $idActor
         ];
 
@@ -60,15 +60,15 @@ class ActorController {
         ";
 
         //plusieurs requêtes car il y a plusieurs casting possible, tout en une requête ferait des doublons
-        //execute avec ma requête SQL et le params mis en place en haut, qui fera comprends a execute() que :idActeur = $idActeur
-        $detailsActeur = $dao->executerRequete($sqlActeur, $paramsActeur);
-        $castings = $dao->executerRequete($sqlCasting, $paramsActeur);
+        //execute avec ma requête SQL et le params mis en place en haut, qui fera comprends a execute() que :idActor = $idActor
+        $detailsActor = $dao->executerRequete($sqlActor, $paramsActor);
+        $castings = $dao->executerRequete($sqlCasting, $paramsActor);
         require "./view/actor/detailsActor.php";
     }
 
     //tous les paramètres sont des variables optionnels, elle sont présentes uniquement si il y a eu une erreur plus bas dans la function
     function addActorForm($formData = [], $globalErrorMessage = null, $formErrors = []) {
-        // tous les noms de colones que j'ai besoin d'afficher quand je crée mon form pour ajouter un acteur a ma bdd
+        // tous les noms de colones que j'ai besoin d'afficher quand je crée mon form pour ajouter un actor a ma bdd
         $fieldNames = ["nom", "prenom", "sexe", "dateDeNaissance", "dateDeDeces"];
 
         // var qui seront utilsés dans la page pour avoir des titres et elements textes différents à chaque affichage de la page en fonction du controller appelé
@@ -133,7 +133,7 @@ class ActorController {
             // aucune erreur n'est detecté, je peux donc ajouter toutes mes valeurs dans la bdd
             $sql =
             "INSERT INTO 
-                acteur (nom, prenom, sexe, dateDeNaissance, dateDeDeces)
+                actor (nom, prenom, sexe, dateDeNaissance, dateDeDeces)
             VALUES 
                 (:nom,:prenom,:sexe,:dateDeNaissance,:dateDeDeces)
             ";
@@ -167,7 +167,7 @@ class ActorController {
         // si tout s'est bien déroulé (requêtes SQL incluse)
         if ($isSuccess) {
 
-            // on redirige vers le détail du nouveau acteur, grace à la ligne juste au dessus qui stock l'id 
+            // on redirige vers le détail du nouveau actor, grace à la ligne juste au dessus qui stock l'id 
             $this->detailsActor($idActor); // contient toute la logique, jusqu'à la vue
 
         } else {
@@ -194,21 +194,21 @@ class ActorController {
 
         $titrePage = "Update Actor";
         $tableToFocus = "Actor";
-        // cette fois j'ai un id car j'ai besoin de savoir vers quel acteur redirigé la page
+        // cette fois j'ai un id car j'ai besoin de savoir vers quel actor redirigé la page
         $actionForm = "updateActor&id=$idActor";
 
         $sql = 
         "SELECT 
-            id_acteur,
+            id_actor,
             nom,
             prenom,
             sexe,
             dateDeNaissance,
             dateDeDeces
         FROM 
-            acteur
+            actor
         WHERE
-            id_acteur = :idActor
+            id_actor = :idActor
         ";
         
         $params = [
@@ -268,7 +268,7 @@ class ActorController {
 
             $sql =
             "UPDATE 
-                acteur  
+                actor  
             SET 
                 nom = :nom,
                 prenom = :prenom,
@@ -276,7 +276,7 @@ class ActorController {
                 dateDeNaissance = :dateDeNaissance,
                 dateDeDeces = :dateDeDeces
             WHERE 
-                id_acteur = :idActor
+                id_actor = :idActor
             ";
 
             // je recup toutes les données via le POST et les mets à jour dans la bdd
@@ -306,7 +306,7 @@ class ActorController {
         // si tout s'est bien déroulé (requêtes SQL incluse)
         if ($isSuccess) {
 
-            // on redirige vers le détail de l'acteur mis à jour
+            // on redirige vers le détail de l'actor mis à jour
             $this->detailsActor($idActor); // contient toute la logique, jusqu'à la vue
 
         } else {
@@ -331,9 +331,9 @@ class ActorController {
 
         $sql =
         "DELETE FROM 
-            acteur
+            actor
         WHERE 
-            id_acteur = :idActor
+            id_actor = :idActor
         ";
 
         $params = [

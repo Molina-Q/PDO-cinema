@@ -19,13 +19,13 @@ On fait appel aux fichiers physiques */
     $roleController = new RoleController();
     $genreController = new GenreController();
     $homeController = new HomeController();
-    $searchController = new searchBarController();
+    $searchController = new SearchBarController();
 
     // si j'ai une "action "dans l'URL, cette action donnera accès à un controlleur et à la fonction demandée (si elle existe)
     if(isset($_GET['action'])){
     
         $id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT); // car possible d'injecter du code malveillant dans l'URL
-        $srch = filter_input(INPUT_GET, "srch", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $idSec = filter_input(INPUT_GET, "idSec", FILTER_SANITIZE_NUMBER_INT);
         
         switch($_GET['action']){
             // cases en lien avec homePage
@@ -43,8 +43,9 @@ On fait appel aux fichiers physiques */
             case "addCastingFilmForm" : $movieController->addCastingFilmForm(); break;
             case "addCastingFilm" : $movieController->addCastingFilm(); break;
             case "deleteFilm" : $movieController->deleteFilm($id); break;
-            // case "updateGenreFilmForm" : $movieController->updateGenreFilmForm($id); break;
-            // case "updateGenreFilm" : $movieController->updateGenreFilm($id); break;
+            case "deleteGenreFilm" : $movieController->deleteGenreFilm($id, $idSec); break;
+            case "updateGenreFilmForm" : $movieController->updateGenreFilmForm($id, $idSec); break;
+            case "updateGenreFilm" : $movieController->updateGenreFilm($id, $idSec); break;
             // case "updateCastingFilmForm" : $movieController->updateCastingFilmForm($id); break;
             // case "updateCastingFilm" : $movieController->updateCastingFilm($id); break;
 
@@ -66,6 +67,7 @@ On fait appel aux fichiers physiques */
             case "updateDirector" : $directorController->updateDirector($id); break;
             case "deleteDirector" : $directorController->deleteDirector($id); break;
 
+
             // cases role
             case "listRoles" : $roleController->listRoles(); break;
             case "detailsRole" : $roleController->detailsRole($id); break;
@@ -85,7 +87,7 @@ On fait appel aux fichiers physiques */
             case "deleteGenre" : $genreController->deleteGenre($id); break;
 
             // case search
-            case "search" : $searchController->searchBar($srch); break;
+            case "search" : $searchController->searchBar(); break;
             
             // si action n'est pas reconnu redirige vers homePage
             default : $homeController->homePage(); break;

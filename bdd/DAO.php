@@ -15,7 +15,7 @@ et return un object PDOStatement
 prepare() prépare la requête à exécuter
 execute() return le resultat de la requête preparé en incluant les valeurs données pour les :qqch
 */
-//permet la comm entre php et la bdd
+// permet la comm entre php et la bdd
 class DAO{
     private $bdd;
 
