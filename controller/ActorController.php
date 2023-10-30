@@ -3,7 +3,8 @@
 require_once "./bdd/DAO.php";
 
 class ActorController {
-    // requête qui donne l'id et le nom de tous les actors présents dans bdd
+
+    // function qui vas donner l'id et le nom de tous les actors présents dans la bdd
     public function listActors() {
         // on instancie DAO pour avoir la connection à la base de données
         $dao = new DAO();
@@ -19,10 +20,11 @@ class ActorController {
         $actors = $dao->executerRequete($sql);
         require "./view/actor/listActors.php";
     }
-    // la function doit forcément avoir un id en paramètre
+
+    // la function donne toutes les informations d'un acteur grace à son id qui est donné en paramètre
     public function detailsActor($idActor) {
         $dao = new DAO();
-        // il y les dates inital et une formated car les function pour calculer l'age avec la date ne prennent pas la version formated des dates
+        // il y les dates initial et une formated car les function pour calculer l'age avec la date ne prennent pas la version formated des dates
         $sqlActor = 
         "SELECT 
             a.id_actor,
@@ -32,7 +34,8 @@ class ActorController {
             a.dateDeNaissance, 
             DATE_FORMAT(a.dateDeNaissance, '%d/%m/%Y') AS formatedDateDeNaissance,
             a.dateDeDeces,
-            DATE_FORMAT(a.dateDeDeces, '%d/%m/%Y') AS formatedDateDeDeces
+            DATE_FORMAT(a.dateDeDeces, '%d/%m/%Y') AS formatedDateDeDeces,
+            a.image
         FROM 
             actor a
         WHERE 
@@ -46,6 +49,7 @@ class ActorController {
             "idActor" => $idActor
         ];
 
+        // je fait une requête dans casting car un acteur peut avoir des roles
         $sqlCasting =  
         "SELECT 
             ro.libelle,
@@ -53,10 +57,14 @@ class ActorController {
             c.role_id,
             f.titre
 
-        FROM casting c
-        INNER JOIN role ro ON c.role_id = ro.id_role
-        INNER JOIN film f ON c.film_id = f.id_film
-        WHERE c.acteur_id = :idActor
+        FROM 
+            casting c
+        INNER JOIN 
+            role ro ON c.role_id = ro.id_role
+        INNER JOIN 
+            film f ON c.film_id = f.id_film
+        WHERE 
+            c.acteur_id = :idActor
         ";
 
         //plusieurs requêtes car il y a plusieurs casting possible, tout en une requête ferait des doublons
@@ -66,16 +74,17 @@ class ActorController {
         require "./view/actor/detailsActor.php";
     }
 
-    //tous les paramètres sont des variables optionnels, elle sont présentes uniquement si il y a eu une erreur plus bas dans la function
+    // function qui me permet d'afficher les infos nécessaires pour créer un acteur dans la bdd
     function addActorForm($formData = [], $globalErrorMessage = null, $formErrors = []) {
-        // tous les noms de colones que j'ai besoin d'afficher quand je crée mon form pour ajouter un actor a ma bdd
-        $fieldNames = ["nom", "prenom", "sexe", "dateDeNaissance", "dateDeDeces"];
+        // tous les paramètres sont des variables optionnels, elle sont présentes uniquement si il y a eu une erreur plus bas dans la function
+        // les noms des colonnes que j'ai besoin d'afficher avant de pouvoir créer un acteur dans ma bdd
+        $fieldNames = ["nom", "prenom", "sexe", "dateDeNaissance", "dateDeDeces", "image"]; // il n'y a pas d'id car c'est une primary key qui est incrémenté automatiquement par la bdd
 
-        // var qui seront utilsés dans la page pour avoir des titres et elements textes différents à chaque affichage de la page en fonction du controller appelé
+        // var qui seront utilisées dans la page pour avoir des titres et elements textes différents à chaque affichage de la page en fonction du controller appelé
         $titrePage = "Add Actor";
         $tableToFocus = "Actor";
-        $submitInput = "submit";
         $actionForm = "addActor";
+
 
         // entity n'est pas nécessaire lors de l'ajout mais elle doit quand même exister donc je l'initie en NULL
         $entity = null;
@@ -83,22 +92,32 @@ class ActorController {
         require "./view/commonForm.php";
     }
 
+    // ajoute un acteur à la base de données, cette function est appelé après avoir submit toutes les informations demandées par function précédantes
     function addActor() {
-        
+
         // filtrer / nettoyer les données reçues en POST
         $nom = filter_input(INPUT_POST, "nom", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $prenom = filter_input(INPUT_POST, "prenom", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $sexe = filter_input(INPUT_POST, "sexe", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $dateDeNaissance = filter_input(INPUT_POST, "dateDeNaissance", FILTER_SANITIZE_NUMBER_INT);
         $dateDeDeces = filter_input(INPUT_POST, "dateDeDeces", FILTER_SANITIZE_NUMBER_INT);
+        
+        $_FILES["image"]["name"] = filter_var($_FILES["image"]["name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $_FILES["image"]["tmp_name"] = filter_var($_FILES["image"]["tmp_name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
+        $uploadDir = "./public/img/uploads/"; // l'endroit ou je veux upload l'img
+        $uploadFile = $uploadDir . basename($_FILES["image"]["name"]); // le chemin final de l'img
+        
+        var_dump($_FILES["image"]["tmp_name"]);
+        // var_dump($_FILES['image']);
+        // // var_dump($_POST);
+        die();
 
         // init vars
         $formErrors = [];
         $isSuccess = true;
         $idActor = null;
         $sqlError = null;
-
 
         // validation des règles métier (valider les données saisies dans le formulaire soumis)
 
@@ -118,10 +137,24 @@ class ActorController {
         if (empty($dateDeNaissance)) {
             $formErrors["dateDeNaissance"] = "This field is mandatory";
         } 
+
         // différent car cette var est optionnel, et donc NULL si elle n'est pas entré
         if (empty($dateDeDeces)) {
             $dateDeDeces = null;
         }  
+
+        if ($_FILES["image"]["type"] != "image/webp"||$_FILES["image"]["type"] != "image/jpeg"||$_FILES["image"]["type"] != "image/png") {
+            $formErrors["image"] = "Wrong image format";
+        }
+
+        if(empty($formErrors["image"])) {
+
+            if(!move_uploaded_file($_FILES["image"]["tmp_name"], $uploadFile)) {
+                $formErrors["image"] = "Error";
+            }
+        }
+
+        
 
         // autre règle métier / de validation du formulaire
         // if
@@ -138,7 +171,7 @@ class ActorController {
                 (:nom,:prenom,:sexe,:dateDeNaissance,:dateDeDeces)
             ";
             
-            // je reprends mes var filtrés plus haut pour être sur qu'elle soit safe
+            // je reprends mes var filtrés plus haut car je sais qu'elles sont safe
             $params = [
                 "nom" => $nom,
                 "prenom" => $prenom,
@@ -182,12 +215,12 @@ class ActorController {
                 "dateDeDeces" => $dateDeDeces
             ];
 
-            // on renvoie vers le même formulaire, en donnant les infos nécessaires à l'affichage, le formData permet d'afficher toutes les données ecrit par le user
+            // on renvoie vers le même formulaire, en donnant les infos nécessaires à l'affichage, le formData permet d'afficher toutes les données transmises par le user
             $this->addActorForm($formData, $sqlError, $formErrors);
         }
     }
 
-    // etant donné que cette function update j'ai besoin de l'id de l'element a updaten et leurs erreurs pour la même raison qu'au dessus
+    // étant donné que cette function fait une update j'ai besoin de l'id de l'entité à update et les erreurs pour la même raison qu'au dessus
     function updateActorForm($idActor, $formData = [], $globalErrorMessage = null, $formErrors = []) {
         $fieldNames = ["nom", "prenom", "sexe", "dateDeNaissance", "dateDeDeces"];
         $dao = new DAO();
@@ -220,6 +253,7 @@ class ActorController {
         require "./view/commonForm.php";
     }
 
+    // met à jour un acteur de la base de données, cette function est appelé après avoir submit toutes les informations demandées par function précédantes
     function updateActor($idActor, ) {
         
         // filtrer / nettoyer les données reçues en POST
@@ -326,6 +360,7 @@ class ActorController {
         }    
     }
 
+    // supprime un acteur de la bdd
     public function deleteActor($idActor) {
         $dao = new DAO ();
 
@@ -342,9 +377,9 @@ class ActorController {
 
         $dao->executerRequete($sql, $params);
 
+        // une fois terminé renvoie vers la liste de l'entité
         $this->listActors();
     }
-
-
 }
 ?>
+

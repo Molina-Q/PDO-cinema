@@ -161,56 +161,53 @@ async function showHint(srch) {
         // appel asynchrone
         const response = await fetch(
             "index.php?action=search&srch=" + srch
-            // {
-            //     method: "GET",
-            //     headers: {},
-            //     body: {},
-            // }
         );
         
-        // on attend le retour de PHP avec le JSON qui contient le resultat de la requête SQL
+        // on attend le retour de PHP avec le JSON qui contient le resultat de la requête SQL et data revient comme un array multidimensionnel
         const data = await response.json();
-        // const data = await JSON.parse(response);
 
         if(data) {
 
+            // boucle sur les arrays de data
             data.forEach((info) => {
+                // prépare 3 elements pour afficher le résultats en html
                 const newValueResult = valueResult.cloneNode(); // <a>
                 const newLinkResult = linkResult.cloneNode(); // <p>
                 const newCategoryResult = categoryResult.cloneNode(); // <span>
 
+                // leurs attribut le contenu de la requête
                 newLinkResult.href = info["link"];
                 newValueResult.textContent = info["label"];
                 newCategoryResult.textContent = info["category"]+" -> ";
 
+                // ajoute les elements crée ici à la liste d'enfant de texteHint
+                // <div> > <a> > <p> > <span>
                 textHint.appendChild(newLinkResult);
                 newLinkResult.appendChild(newValueResult);
-                newValueResult.prepend(newCategoryResult);
+                newValueResult.prepend(newCategoryResult); // prepend car je veux qu'il soit au début de la liste d'enfant et non à la fin 
             });
-
-        } else {
-
+                
+            if (textHint.childElementCount == 0) {
+                // si textHint n'as pas d'enfant c'est qu'il n'y a aucun resultat et donc aucune suggestion
+                const newValueResult = valueResult.cloneNode(); // <a>
+                const newLinkResult = linkResult.cloneNode(); // <p>
+    
+                newValueResult.textContent = "no suggestion";
+    
+                textHint.appendChild(newLinkResult);
+                newLinkResult.appendChild(newValueResult);
+            }
         }
 
         textHint.classList.add("dropDownMenuHint");
     }
 }
 
-// XMLHttpRequest : bas niveau, permet de mettre en place la solution sans aucune contrainte, peu importe le matériel, nécessite uniquement JS
-// fetch : librairie incluse dans tous les navigateurs, fonctionnera très bien dans la partie front d'une app, nécessitera d'être importée/installée dans un back
-// $.ajax (JQuery) : nécessite JQuery, très semblable à fetch, fait automatiquement la transformation de JSON en objet exploitable
-// axios : librairie à importer/installer obligatoirement, met à disposition beaucoup de fonctionnalités autour des requêtes/réponses HTTP
-
-// div qui contient le resultat de la recherche
-// const textHint = document.getElementById("textHint");
-
 // id de la search bar
 const searchBar = document.getElementById("searchInput");
 
 // la function est appelé à chaque fois qu'une touche est 'up' après avoir appuyé dessus
-searchBar.addEventListener("keyup", () => {
-    showHint(searchBar.value)
-});
+searchBar.addEventListener("keyup", () => showHint(searchBar.value));
 
 // recupère toutes les balises enfants de textHint 
 const child = textHint.childNodes;
@@ -227,7 +224,7 @@ window.addEventListener("click", function() {
 
 /////////////////////////////////////// Confirm delete btn ///////////////////////////////////////
 
-// lors d'un clic sur le deleteBtn une fenêtre confirm() sera ouverte, si TRUE laisse faire, sinon (FALSE) stoppe le GET
+// lors d'un clic sur le deleteBtn une fenêtre confirm() sera ouverte, si on appuie sur OK (TRUE) laisse l'action se faire faire, sinon (FALSE) stoppe la requête GET
 const btnAlert = document.getElementsByClassName("deleteBtn");
 for (let i = 0; i < btnAlert.length; i++) {
     const openBtnAlert = btnAlert[i];
@@ -239,12 +236,12 @@ for (let i = 0; i < btnAlert.length; i++) {
         //cette function me permet d'appliquer un timeout avant de l'executer avec setTimeout() 
         $updateHref = function() {btnAlert[i].parentElement.href = $hrefTarget };
 
+        // lors du clic sur le btn delete, ouvre une fenêtre qui confirme que l'on veut supprimer l'element cliqué 
         $check = confirm("Are you sure you want to delete this ?");
-        if (!$check) {
+        if (!$check) { // si check est false (et que l'action doit être stoppé)
+            // change le href puis exuctute la function plus haut pour lui redonner son href original
             btnAlert[i].parentElement.setAttribute("href", "#");
             setTimeout($updateHref, 500);
-        } else {
-
         }
     })
 }

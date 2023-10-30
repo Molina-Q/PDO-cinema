@@ -29,6 +29,9 @@ if ($actor = $detailsActor->fetch()) {
             <p>Update</p>
         </a>
     </div>
+    <figure>
+        <img src="./public/img/uploads/<?= $actor["image"] ?>" alt="<?= $actor["image"] ?>">
+    </figure>
 
     <div class='blocDetailsActor'>
         <h3><?= $actor["prenom"] ?> <?= $actor["nom"] ?></h3>

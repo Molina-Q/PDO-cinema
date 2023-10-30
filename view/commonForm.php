@@ -12,60 +12,70 @@ function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entit
     $stepValue = 0; // step = 1 permet d'afficher "time" en h:m:s sans affecter le reste des "date", il est initié sur zéro et switch sur 1 lors du tour de time
     $formData = []; 
 
-    // if() pour empecher un add d'interagir avec entity et de créer une erreur (entity est utilisé uniquement pour les updates)
+    // if() pour empecher une function add d'interagir avec entity et de créer une erreur (entity est utilisé uniquement pour les updates)
     if($entity && isset($entity[$columnName])) { 
         // stock la valeur de la colonne actuelle
         $entityName = $entity[$columnName];
         // l'utilise pour la placer dans le formData (et afficher les données dans les input)
         $formData = [$columnName => $entityName];
     }
-
 ?>
-    <!--  -->
-    <div class="div-label-input">
+    <div class="div-label-input"> <!--Start (div-label-input)-->
+
         <label for="<?= $columnName ?>" class="form-label"><?= $labelName ?></label>
 <?php
-    if(in_array($inputType, $inputs)) {
-        if($inputType == "time") {
-            $stepValue = 1;
-        }
+        if(in_array($inputType, $inputs)) {
+            if($inputType == "time") {
+              $stepValue = 1;
+            }
 ?>
         <input type="<?= $inputType ?>" id="<?= $columnName ?>" name="<?= $columnName ?>" step="<?= $stepValue ?>" placeholder="<?= $placeholder ?>" value="<?= isset($formData[$columnName]) ? $formData[$columnName] : ''?>">
-    </div>
-    <?php
+
+    </div> <!--End here (div-label-input) -->
+
+<?php
  
-    } else if ($inputType == "select") {
+        } else if ($inputType == "select") {
 ?>
-        <div class="custom-select">
-            <select name="<?= $columnName ?>" id="<?= $columnName ?>">
-                <option value="<?= isset($formData[$columnName]) ? $formData[$columnName] : $inputType ?>"><?=$placeholder?></option>
+            <div class="custom-select">
+                <select name="<?= $columnName ?>" id="<?= $columnName ?>">
+                    <option value="<?= isset($formData[$columnName]) ? $formData[$columnName] : $inputType ?>"><?=$placeholder?></option>
 <?php 
-                while($option = $options->fetch()) {
-                    $selected = "";
-                    if($formData[$columnName] == $option["id_option"]) {
-                        $selected = "selected";
-                    }
-                    /* id_option et complete_label sont des alias de l'id utilisé en value et du nom/titre/libelle utilisés pour décrire l'entité et permettent de créer un select/option pour le form entier */
+                    while($option = $options->fetch()) {
+                        $selected = "";
+                        if($formData[$columnName] == $option["id_option"]) {
+                            $selected = "selected";
+                        }
+                        /* id_option et complete_label sont des alias de l'id utilisé en value et du nom/titre/libelle utilisés pour décrire l'entité et permettent de créer un select/option pour le form entier */
 ?>
-                    <option <?= $selected ?> value="<?= $option["id_option"] ?>"><?= $option["complete_label"]?></option>
-                    <?php
-                }
-                ?>
-            </select>
-        </div>
-    </div>
-    <?php
-    // si l'input est un radio
-    } else if ($inputType == "radio") {
-        while($option = $options->fetch()) {
-?>      
-            <div class="radio-form">
-                <input type="<?= $inputType ?>" id="<?= $columnName ?>" name="<?= $columnName ?>" value="<?= $option["id_option"] ?>" />
-                <label for="<?= $columnName ?>"><?= $option["complete_label"] ?></label>
+                        <option <?= $selected ?> value="<?= $option["id_option"] ?>"><?= $option["complete_label"]?></option>
+                        <?php
+                    }
+                    ?>
+                </select>
             </div>
+
+    </div> <!-- OR can End here (div-label-input) -->
+
+<?php
+    // si l'input est un radio
+        } else if ($inputType == "radio") {
+            while($option = $options->fetch()) {
+?>      
+                <div class="radio-form">
+                    <input type="<?= $inputType ?>" id="<?= $columnName ?>" name="<?= $columnName ?>" value="<?= $option["id_option"] ?>" />
+                    <label for="<?= $columnName ?>"><?= $option["complete_label"] ?></label>
+                </div>
+<?php
+            }
+        } else if($inputType == "file") {
+?>
+            <!-- MAX_FILE_SIZE must precede the file input field -->
+            <label for="<?= $columnName ?>"></label>
+            <input type="hidden" name="MAX_FILE_SIZE" value="1000000"/>
+            <input type="file" name="<?= $columnName ?>" id="<?= $columnName ?>"/>
 <?php
         }
-    }
 }
 
 function messageErrors($formErrors, $columnName) {
@@ -79,7 +89,7 @@ function messageErrors($formErrors, $columnName) {
 ?>
 <h2 class="titrePage"><?=$titrePage?></h2>
 <div>
-    <form id="bloc-form" action="index.php?action=<?= $actionForm ?>" method="post">
+    <form id="bloc-form" action="index.php?action=<?= $actionForm ?>" enctype="multipart/form-data" method="post">
 <?php
             if ($globalErrorMessage) {
 ?>
@@ -102,43 +112,42 @@ function messageErrors($formErrors, $columnName) {
             if (in_array("prenom", $fieldNames)) { // mon entité a un fields prenom
                 makeHtmlGroup("first Name", "text", "prenom", "Benoit...", $entity); 
                 messageErrors($formErrors, "prenom");  
-
             }
 
             if (in_array("sexe", $fieldNames)) { // mon entité a un fields sexe
                 makeHtmlGroup("gender", "text", "sexe", "Homme...", $entity); 
                 messageErrors($formErrors, "sexe");  
-
             }
 
             if (in_array("dateDeNaissance", $fieldNames)) { // mon entité a un fields date de naissance
                 makeHtmlGroup("Birth date", "date", "dateDeNaissance", "20/01/2020", $entity); 
                 messageErrors($formErrors, "dateDeNaissance");  
-
             }
             
-            if (in_array("dateDeDeces", $fieldNames)) { // mon entité a un fields date de naissance
+            if (in_array("dateDeDeces", $fieldNames)) { // mon entité a un fields date de décès
                 makeHtmlGroup("Date of death", "date", "dateDeDeces", "2023-01-20", $entity); 
                 messageErrors($formErrors, "dateDeDeces");  
+            }
+
+            if (in_array("image", $fieldNames)) { // mon entité a un fields upload
+                makeHtmlGroup("Picture", "file", "image", "", $entity); 
+                messageErrors($formErrors, "image");  
             }
 
             /***** film *****/
             if (in_array("titre", $fieldNames)) { // mon entité a un fields titre
                 makeHtmlGroup("Movie's title", "text", "titre", "Star Wars : episode X...", $entity); 
                 messageErrors($formErrors, "titre");  
-
             }
 
             if (in_array("dateDeSortie", $fieldNames)) { // mon entité a un fields date de sortie 
                 makeHtmlGroup("Release date", "date", "dateDeSortie", "2020-12-25", $entity); 
                 messageErrors($formErrors, "dateDeSortie");  
-
             }     
 
             if (in_array("duree", $fieldNames)) { // mon entité a un fields durée
                 makeHtmlGroup("Duration", "time", "duree", "2020-12-25", $entity); 
                 messageErrors($formErrors, "duree");  
-
             }         
 
             if (in_array("realisateur_id", $fieldNames)) { // mon entité a un fields id director (foreign key)
@@ -168,13 +177,12 @@ function messageErrors($formErrors, $columnName) {
                 makeHtmlGroup("Role", "select", "role_id", "--Choose a role--", $entity, $optionsRole);  
                 messageErrors($formErrors, "role_id");  
             }
-
-            ?>
-            <button type="submit">Save</button>
+?>
+            <button type="submit" >Save</button>
             
         </form>
     </div>
-    <?php 
+<?php 
   
 // termine la temporisation, et initie les variables title et content, content qui aura tous le contenu de cette page
 $title = $titrePage;

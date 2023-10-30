@@ -44,16 +44,19 @@ class SearchBarController{
             $sql .= "$field LIKE '%$srch%' ";
         }
 
+        // try pour catch une potentielle erreur
         try {
-          
+            // execute la requête faite plus haut 
             $searchResults = $dao->executerRequete($sql);
+            // stock le contenu de toutes la requête avec un fetchAll
             $result = $searchResults->fetchAll();
             
+            // l'encode en JSON pour pouvoir le récupérer sur js ensuite
             $results = json_encode($result);
             echo $results;
 
         } catch(\Throwable $error) {
-
+            //si il y a une erreur le contenu sera affiché pour trouver le problème
             echo  json_encode([
                 "srch" => $srch,
                 "sql" => $sql,
@@ -62,74 +65,6 @@ class SearchBarController{
           
         }
         
-        // $searchResults = $searchResults->fetchAll();
-        
-        // $hint = "";
-
-        // // si la search bar n'est pas vide
-        // if ($srch !== "") {
-
-        //     $srch = strtolower($srch); // stock le texte écris dans la bar de recherche et le met en lowercase
-
-        //     $srchLen = strlen($srch); // stock la longueur du string écris dans la bar
-
-        //     foreach($searchArray["articles"] as $element) { // boucle sur l'array associatif searchArray
-
-        //         if ($srch == strtolower($element["category"])) {
-        //             $idSearch = $element["id"];
-        //             if ($hint === "") {
-        //                 $hint =
-        //                 "<a href='$idSearch'>
-        //                     <p><span>".$element["category"]." -> </span>".$element['label']."</p>
-        //                 </a>";
-
-        //             } else {
-
-        //                 $hint .=
-        //                 "<a href='$idSearch'>
-        //                     <p><span>".$element["category"]." -> </span>".$element['label']."</p>
-        //                </a>";
-
-        //             }
-
-        //             /* j'hésite entre deux système de recherche : 
-        //             1 => cherche un resultat qui CONTIENT le string écrit dans la search bar
-        //             2 => cherche un resultat qui COMMENCE par le string écrit dans la search bar 
-        //             potentiel solution : mettre en place une radio ou un btn qui permet au user de choisir le système voulu
-        //             */
-        //         } else if (str_contains(strtolower($element["label"]), $srch) || str_contains($element["label"], $srch)) { 
-        //         // } else if (stristr($srch, substr($element["label"], 0, $srchLen))) {  
-
-        //             // cherche si il existe des valeurs dont le label commence par le string écris dans la bar
-        //             // substr([mot de l'array], [index string(0 est la première lettre)], [nb de caractère à return]) return un string 
-        //             // stristr([string dans la search bar], substr()) va return tous les label qui commence par le string écris dans la search bar
-
-        //             $idSearch = $element["id"];
-        //             if ($hint === "") {
-        //                 $hint =
-        //                 "<a href='$idSearch'>
-        //                     <p><span>".$element["category"]." -> </span>".$element['label']."</p>
-        //                 </a>";
-
-        //             } else {
-
-        //                 $hint .=
-        //                 "<a href='$idSearch'>
-        //                     <p><span>".$element["category"]." -> </span>".$element['label']."</p>
-        //                </a>";
-                       
-        //             }
-        //         }
-        //     }
-            
-        // }
-        
-        // // si il n'y a aucun resultat 
-        // echo $hint === "" ? "no suggestion" : $hint;
-        
-        // echo json_encode($searchResults);
-        // echo json_encode($searchResults ? $searchResults : "no suggestion");
-
         // if ($searchResults) {
             // $result = json_encode($searchResults);
             // echo $result;

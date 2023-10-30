@@ -1,8 +1,9 @@
 <?php
 require_once "./bdd/DAO.php";
-// pour plus d'infos la seule différence avec ActorController est le nom des var, les commentaires sont dans ActorController.php
+
 class DirectorController {
 
+    // function qui vas donner l'id et le nom de tous les realisateurs présents dans la bdd
     public function listDirectors() {
 
         $dao = new DAO();
@@ -17,6 +18,7 @@ class DirectorController {
         require "./view/director/listDirectors.php";
     }
 
+    // la function donne toutes les informations d'un realisateur grace à son id qui est donné en paramètre
     public function detailsDirector($idDirector) {
 
         $dao = new DAO();
@@ -57,6 +59,7 @@ class DirectorController {
         require "./view/director/detailsDirector.php";
     }
 
+    // function qui me permet d'afficher les infos nécessaires pour créer un realisateur dans la bdd
     function addDirectorForm($formData = [], $globalErrorMessage = null, $formErrors = []) {
         $fieldNames = ["nom", "prenom", "sexe", "dateDeNaissance", "dateDeDeces"];
 
@@ -68,6 +71,7 @@ class DirectorController {
         require "./view/commonForm.php";
     }
 
+    // ajoute un realisateur à la base de données, cette function est appelé après avoir submit toutes les informations demandées par function précédantes
     function addDirector() {
         
         // filtrer / nettoyer les données reçues en POST
