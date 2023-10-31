@@ -19,39 +19,40 @@
 CREATE DATABASE IF NOT EXISTS `cinema` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `cinema`;
 
--- Listage de la structure de table cinema. acteur
-CREATE TABLE IF NOT EXISTS `acteur` (
-  `id_acteur` int NOT NULL AUTO_INCREMENT,
+-- Listage de la structure de table cinema. actor
+CREATE TABLE IF NOT EXISTS `actor` (
+  `id_actor` int NOT NULL AUTO_INCREMENT,
   `nom` varchar(255) NOT NULL,
   `prenom` varchar(255) NOT NULL,
   `sexe` varchar(255) NOT NULL,
   `dateDeNaissance` date NOT NULL,
   `dateDeDeces` date DEFAULT NULL,
-  PRIMARY KEY (`id_acteur`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'indisponible.jpg',
+  PRIMARY KEY (`id_actor`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table cinema.acteur : ~20 rows (environ)
-INSERT INTO `acteur` (`id_acteur`, `nom`, `prenom`, `sexe`, `dateDeNaissance`, `dateDeDeces`) VALUES
-	(1, 'Hamill', 'Mark', 'Homme', '1951-09-25', NULL),
-	(2, 'Ford', 'Harrison', 'Homme', '1942-06-13', NULL),
-	(3, 'Fisher', 'Carrie', 'Femme', '1956-10-21', NULL),
-	(4, 'McGregor', 'Ewan', 'Homme', '1971-03-31', NULL),
-	(5, 'Chistensen', 'Hayden', 'Homme', '1981-04-19', NULL),
-	(6, 'Portman', 'Natalie', 'Femme', '1981-07-09', NULL),
-	(7, 'Bale', 'Christian', 'Homme', '1974-01-30', NULL),
-	(8, 'Caine', 'Michael', 'Homme', '1933-03-14', NULL),
-	(9, 'Oldman', 'Gary', 'Homme', '1958-03-21', NULL),
-	(10, 'Freeman', 'Morgan', 'Homme', '1937-07-01', NULL),
-	(11, 'Chalamet', 'Timothée', 'Homme', '1995-12-27', NULL),
-	(12, 'Hathaway', 'Anne', 'Femme', '1982-11-12', NULL),
-	(13, 'Foy', 'Mackenzie', 'Femme', '2000-11-10', NULL),
-	(14, 'Thurman', 'Uma', 'Femme', '1970-04-29', NULL),
-	(15, 'Liu', 'Lucy', 'Femme', '1968-12-02', NULL),
-	(16, 'Jackson', 'Samuel L.', 'Homme', '1948-12-21', NULL),
-	(17, 'Mikkelsen', 'Mads', 'Homme', '1965-11-22', NULL),
-	(18, 'Perlman', 'Ron', 'Homme', '1950-04-13', NULL),
-	(19, 'Clooney', 'George', 'Homme', '1961-05-06', NULL),
-	(20, 'Gough', 'Michael', 'Homme', '1916-11-23', '2011-03-17');
+-- Listage des données de la table cinema.actor : ~20 rows (environ)
+INSERT INTO `actor` (`id_actor`, `nom`, `prenom`, `sexe`, `dateDeNaissance`, `dateDeDeces`, `image`) VALUES
+	(1, 'Hamill', 'Mark', 'Homme', '1951-09-25', NULL, 'MarkHamill6540f7f530516.webp'),
+	(2, 'Ford', 'Harrison', 'Homme', '1942-06-13', NULL, 'HarrisonFord6540fd029467b.webp'),
+	(3, 'Fisher', 'Carrie', 'Femme', '1956-10-21', NULL, 'indisponible'),
+	(4, 'McGregor', 'Ewan', 'Homme', '1971-03-31', NULL, 'indisponible'),
+	(5, 'Chistensen', 'Hayden', 'Homme', '1981-04-19', NULL, 'indisponible'),
+	(6, 'Portman', 'Natalie', 'Femme', '1981-07-09', NULL, 'indisponible'),
+	(7, 'Bale', 'Christian', 'Homme', '1974-01-30', NULL, 'indisponible'),
+	(8, 'Caine', 'Michael', 'Homme', '1933-03-14', NULL, 'indisponible'),
+	(9, 'Oldman', 'Gary', 'Homme', '1958-03-21', NULL, 'indisponible'),
+	(10, 'Freeman', 'Morgan', 'Homme', '1937-07-01', NULL, 'indisponible'),
+	(11, 'Chalamet', 'Timothée', 'Homme', '1995-12-27', NULL, 'indisponible'),
+	(12, 'Hathaway', 'Anne', 'Femme', '1982-11-12', NULL, 'indisponible'),
+	(13, 'Foy', 'Mackenzie', 'Femme', '2000-11-10', NULL, 'indisponible'),
+	(14, 'Thurman', 'Uma', 'Femme', '1970-04-29', NULL, 'indisponible'),
+	(15, 'Liu', 'Lucy', 'Femme', '1968-12-02', NULL, 'indisponible'),
+	(16, 'Jackson', 'Samuel L.', 'Homme', '1948-12-21', NULL, 'indisponible'),
+	(17, 'Mikkelsen', 'Mads', 'Homme', '1965-11-22', NULL, 'indisponible'),
+	(18, 'Perlman', 'Ron', 'Homme', '1950-04-13', NULL, 'indisponible'),
+	(19, 'Clooney', 'George', 'Homme', '1961-05-06', NULL, 'indisponible'),
+	(20, 'Gough', 'Michael', 'Homme', '1916-11-23', '2011-03-17', 'indisponible');
 
 -- Listage de la structure de table cinema. casting
 CREATE TABLE IF NOT EXISTS `casting` (
@@ -62,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `casting` (
   KEY `FK_casting_acteur` (`acteur_id`),
   KEY `FK_casting_film` (`film_id`),
   KEY `FK_casting_role` (`role_id`),
-  CONSTRAINT `FK_casting_acteur` FOREIGN KEY (`acteur_id`) REFERENCES `acteur` (`id_acteur`),
+  CONSTRAINT `FK_casting_acteur` FOREIGN KEY (`acteur_id`) REFERENCES `actor` (`id_actor`),
   CONSTRAINT `FK_casting_film` FOREIGN KEY (`film_id`) REFERENCES `film` (`id_film`),
   CONSTRAINT `FK_casting_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id_role`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -95,6 +96,26 @@ INSERT INTO `casting` (`film_id`, `acteur_id`, `role_id`) VALUES
 	(8, 19, 14),
 	(8, 20, 16);
 
+-- Listage de la structure de table cinema. director
+CREATE TABLE IF NOT EXISTS `director` (
+  `id_director` int NOT NULL AUTO_INCREMENT,
+  `nom` varchar(255) NOT NULL,
+  `prenom` varchar(255) NOT NULL,
+  `sexe` varchar(255) NOT NULL,
+  `dateDeNaissance` date NOT NULL,
+  `dateDeDeces` date DEFAULT NULL,
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'indisponible.jpg',
+  PRIMARY KEY (`id_director`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Listage des données de la table cinema.director : ~8 rows (environ)
+INSERT INTO `director` (`id_director`, `nom`, `prenom`, `sexe`, `dateDeNaissance`, `dateDeDeces`, `image`) VALUES
+	(1, 'Lucas', 'George', 'Homme', '1944-05-14', NULL, 'GeorgeLucas6540fff495c71.jpg'),
+	(2, 'Nolan', 'Christopher', 'Homme', '1970-06-30', NULL, 'indisponible'),
+	(3, 'del Toro', 'Guillermo', 'Homme', '1964-10-09', NULL, 'indisponible'),
+	(4, 'Tarantino', 'Quentin', 'Homme', '1963-03-27', NULL, 'indisponible'),
+	(5, 'Schumacher', 'Joel', 'Homme', '1939-08-29', '2020-06-22', 'indisponible');
+
 -- Listage de la structure de table cinema. film
 CREATE TABLE IF NOT EXISTS `film` (
   `id_film` int NOT NULL AUTO_INCREMENT,
@@ -105,8 +126,8 @@ CREATE TABLE IF NOT EXISTS `film` (
   `affiche` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'indisponible.jpg',
   PRIMARY KEY (`id_film`),
   KEY `FK__realisateur` (`realisateur_id`),
-  CONSTRAINT `FK__realisateur` FOREIGN KEY (`realisateur_id`) REFERENCES `realisateur` (`id_realisateur`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `FK__realisateur` FOREIGN KEY (`realisateur_id`) REFERENCES `director` (`id_director`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Listage des données de la table cinema.film : ~8 rows (environ)
 INSERT INTO `film` (`id_film`, `titre`, `dateDeSortie`, `duree`, `realisateur_id`, `affiche`) VALUES
@@ -124,11 +145,11 @@ CREATE TABLE IF NOT EXISTS `genre` (
   `id_genre` int NOT NULL AUTO_INCREMENT,
   `libelle` varchar(255) NOT NULL,
   PRIMARY KEY (`id_genre`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Listage des données de la table cinema.genre : ~8 rows (environ)
 INSERT INTO `genre` (`id_genre`, `libelle`) VALUES
-	(1, 'Super-h&eacute;ros'),
+	(1, 'Super-heros'),
 	(2, 'Science-fiction'),
 	(3, 'Action'),
 	(4, 'Horreur'),
@@ -148,10 +169,9 @@ CREATE TABLE IF NOT EXISTS `genre_film` (
   CONSTRAINT `FK__genre` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`id_genre`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table cinema.genre_film : ~14 rows (environ)
+-- Listage des données de la table cinema.genre_film : ~15 rows (environ)
 INSERT INTO `genre_film` (`film_id`, `genre_id`) VALUES
 	(1, 1),
-	(1, 2),
 	(1, 3),
 	(2, 2),
 	(2, 7),
@@ -165,31 +185,12 @@ INSERT INTO `genre_film` (`film_id`, `genre_id`) VALUES
 	(8, 3),
 	(8, 5);
 
--- Listage de la structure de table cinema. realisateur
-CREATE TABLE IF NOT EXISTS `realisateur` (
-  `id_realisateur` int NOT NULL AUTO_INCREMENT,
-  `nom` varchar(255) NOT NULL,
-  `prenom` varchar(255) NOT NULL,
-  `sexe` varchar(255) NOT NULL,
-  `dateDeNaissance` date NOT NULL,
-  `dateDeDeces` date DEFAULT NULL,
-  PRIMARY KEY (`id_realisateur`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Listage des données de la table cinema.realisateur : ~5 rows (environ)
-INSERT INTO `realisateur` (`id_realisateur`, `nom`, `prenom`, `sexe`, `dateDeNaissance`, `dateDeDeces`) VALUES
-	(1, 'Lucas', 'George', 'Homme', '1944-05-14', NULL),
-	(2, 'Nolan', 'Christopher', 'Homme', '1970-06-30', NULL),
-	(3, 'del Toro', 'Guillermo', 'Homme', '1964-10-09', NULL),
-	(4, 'Tarantino', 'Quentin', 'Homme', '1963-03-27', NULL),
-	(5, 'Schumacher', 'Joel', 'Homme', '1939-08-29', '2020-06-22');
-
 -- Listage de la structure de table cinema. role
 CREATE TABLE IF NOT EXISTS `role` (
   `id_role` int NOT NULL AUTO_INCREMENT,
   `libelle` varchar(255) NOT NULL,
   PRIMARY KEY (`id_role`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Listage des données de la table cinema.role : ~23 rows (environ)
 INSERT INTO `role` (`id_role`, `libelle`) VALUES
