@@ -30,39 +30,43 @@ while ($director = $detailsDirector->fetch()) {
             <p>Update</p>
         </a>
     </div>
-   <div class='blocDetailsDirector'>
-            <h3><?=$director["prenom"]?> <?=$director["nom"]?></h3>
-            <ul>
-              <li><?=$director["sexe"]?></li>
-              <li><span>Date de naissance</span> : <?=$director["formatedDateDeNaissance"]?></li>
-<?php
-                if($director["formatedDateDeDeces"]) {
-?>
-                    <li><span>Date de décès</span> : <?=$director["formatedDateDeDeces"]?> (<?=showAge($director["dateDeNaissance"], $director["dateDeDeces"])?>) </li>
-<?php
-                } else {
-?>
-                    <li><span>Age</span> : <?=showAge($director["dateDeNaissance"])?></li>   
-<?php
-                }
-?>
-                <li>film(s) réalisé(s) : 
-<?php
-                while ($film = $films->fetch()) {
-                    if ($count == $nbRow) {
-                        $separator = "";
-                    }
-?>
-                    <a href="index.php?action=detailsFilm&id=<?=$film["id_film"]?>"><?=$film["titre"]?><a><?=  $separator ?>
-<?php
-                    $count++;
-                }
-?>
-                </li>
-                    
-          </ul>
-      </div>
 
+   <div class='blocDetailsDirector'>
+        <figure class="portraitPerson">
+            <img src="./public/img/uploads/<?= $director["image"] ?>" alt="<?= $director["prenom"] ?> <?= $director["nom"] ?>">
+        </figure>
+
+        <h3><?=$director["prenom"]?> <?=$director["nom"]?></h3>
+
+        <ul>
+            <li><?=$director["sexe"]?></li>
+            <li><span>Date de naissance</span> : <?=$director["formatedDateDeNaissance"]?></li>
+<?php
+            if($director["formatedDateDeDeces"]) {
+?>
+                <li><span>Date de décès</span> : <?=$director["formatedDateDeDeces"]?> (<?=showAge($director["dateDeNaissance"], $director["dateDeDeces"])?>) </li>
+<?php
+            } else {
+?>
+                <li><span>Age</span> : <?=showAge($director["dateDeNaissance"])?></li>   
+<?php
+            }
+?>
+            <li>film(s) réalisé(s) : 
+<?php
+            while ($film = $films->fetch()) {
+                if ($count == $nbRow) {
+                    $separator = "";
+                }
+?>
+                <a href="index.php?action=detailsFilm&id=<?=$film["id_film"]?>"><?=$film["titre"]?><a><?= $separator ?>
+<?php
+                $count++;
+            }
+?>
+            </li>    
+        </ul>
+    </div>
 <?php
 
 }

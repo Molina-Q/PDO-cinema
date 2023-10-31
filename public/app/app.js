@@ -111,12 +111,16 @@ for (let i = 0; i < customSelectLength; i++) {
 // appel la function pour tout fermer lors d'un clic dans la fenetre
 window.addEventListener("click", closeAllSelect); 
 
+/////////////////////////////////////// function delete on click ///////////////////////////////////////
 if (document.getElementById("updateGenre")) {
     const updateGenre = document.getElementById("updateGenre");
-    updateGenre.addEventListener("click", updateGenreOnClick);
+    updateGenre.addEventListener("click", deleteGenreOnClick);
 }
 
-function updateGenreOnClick() {
+// cette fonction a pour but de supprimer le genre_film du film qui est cliqué 
+// les genres deviennent rouge quelques secondes durant l'effet de la fonction
+// lorsqu'il redeviennent bleu après 3 sec, ils ne se delete plus sur un clic 
+function deleteGenreOnClick() {
     const genresFilm = document.getElementsByClassName("genreFilm");
     for (let i = 0; i < genresFilm.length; i++) {
         const openGenreFilm = genresFilm[i];
@@ -155,6 +159,7 @@ async function showHint(srch) {
         textHint.classList.remove("dropDownMenuHint");
         
     } else {
+        // supprime tous les enfants de la bar de recherche pour que les anciens resultats de recherche disparaisse 
         while(textHint.childNodes.length > 0) {
             textHint.removeChild(child[0]);
         }  
@@ -167,7 +172,6 @@ async function showHint(srch) {
         const data = await response.json();
 
         if(data) {
-
             // boucle sur les arrays de data
             data.forEach((info) => {
                 // prépare 3 elements pour afficher le résultats en html
@@ -187,8 +191,8 @@ async function showHint(srch) {
                 newValueResult.prepend(newCategoryResult); // prepend car je veux qu'il soit au début de la liste d'enfant et non à la fin 
             });
                 
+            // si textHint n'as pas d'enfant c'est qu'il n'y a aucun resultat et donc aucune suggestion
             if (textHint.childElementCount == 0) {
-                // si textHint n'as pas d'enfant c'est qu'il n'y a aucun resultat et donc aucune suggestion
                 const newValueResult = valueResult.cloneNode(); // <a>
                 const newLinkResult = linkResult.cloneNode(); // <p>
     

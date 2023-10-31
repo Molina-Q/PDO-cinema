@@ -23,17 +23,19 @@ function showAge($dateTimeNaissance,  $dateTimeDeces = null) {
 
 
 if ($actor = $detailsActor->fetch()) {
-    ?>          
+?>          
     <div class="interactUpdate">
         <a href="index.php?action=updateActorForm&id=<?= $actor["id_actor"] ?>">
             <p>Update</p>
         </a>
     </div>
-    <figure>
-        <img src="./public/img/uploads/<?= $actor["image"] ?>" alt="<?= $actor["image"] ?>">
-    </figure>
 
     <div class='blocDetailsActor'>
+            
+        <figure class="portraitPerson">
+            <img src="./public/img/uploads/<?= $actor["image"] ?>" alt="<?= $actor["prenom"].$actor["nom"] ?>">
+        </figure>
+
         <h3><?= $actor["prenom"] ?> <?= $actor["nom"] ?></h3>
 
         <ul>

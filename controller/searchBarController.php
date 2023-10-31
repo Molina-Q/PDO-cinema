@@ -24,8 +24,8 @@ class SearchBarController{
         $sql = "";
         $isFirstEntity = true;
 
+        
         foreach ($sqlBuilderCategoryField as $category => $field) {
-
             // ajoute "UNION" à la requête uniquement à partir de la deuxieme boucle du foreach
             if ($isFirstEntity) {
                 $isFirstEntity = false;

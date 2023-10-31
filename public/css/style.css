@@ -361,6 +361,15 @@ nav ul li a:hover {
     color: rgb(0, 0, 145);
 }
 
+.portraitPerson { /* figure */
+    width: 200px;
+}
+
+.portraitPerson img {
+    width: 100%;
+    /* height: 100%; */
+}
+
 span {
     color: gray;
 }
@@ -537,6 +546,13 @@ span {
     font-size: 1.3em;
 }
 
+.div-label-input #image { /* input file */
+    width: initial;
+    height: initial;
+    border-radius: initial;
+    text-align: center;
+}
+
 #bloc-form select{  /* select > option */
     font-size: 1em;
     border-radius: 5px;
@@ -570,6 +586,8 @@ span {
 .radio-form label {
     flex: 2;
 }
+
+
 
 /*************** footer ***************/
 footer {

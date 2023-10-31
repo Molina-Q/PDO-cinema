@@ -36,7 +36,8 @@ class DirectorController {
             r.dateDeNaissance, 
             DATE_FORMAT(r.dateDeNaissance, '%d/%m/%Y') AS formatedDateDeNaissance,
             r.dateDeDeces,
-            DATE_FORMAT(r.dateDeDeces, '%d/%m/%Y') AS formatedDateDeDeces
+            DATE_FORMAT(r.dateDeDeces, '%d/%m/%Y') AS formatedDateDeDeces,
+            image
         FROM
             director r
         WHERE 
@@ -61,7 +62,7 @@ class DirectorController {
 
     // function qui me permet d'afficher les infos nécessaires pour créer un realisateur dans la bdd
     function addDirectorForm($formData = [], $globalErrorMessage = null, $formErrors = []) {
-        $fieldNames = ["nom", "prenom", "sexe", "dateDeNaissance", "dateDeDeces"];
+        $fieldNames = ["nom", "prenom", "sexe", "dateDeNaissance", "dateDeDeces", "image"];
 
         $titrePage = "Add Director";
         $tableToFocus = "Director";
@@ -81,6 +82,15 @@ class DirectorController {
         $dateDeNaissance = filter_input(INPUT_POST, "dateDeNaissance", FILTER_SANITIZE_NUMBER_INT);
         $dateDeDeces = filter_input(INPUT_POST, "dateDeDeces", FILTER_SANITIZE_NUMBER_INT);
 
+        // filter le nom du file upload
+        $_FILES["image"]["name"] = filter_var($_FILES["image"]["name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $_FILES["image"]["tmp_name"] = filter_var($_FILES["image"]["tmp_name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        //indique le directory ou il se sera envoyé
+        $uploadDir = "./public/img/uploads/"; // l'endroit ou je veux upload l'img
+        $uploadFile = $uploadDir . basename($_FILES["image"]["name"]); // le chemin final de l'img
+
+        $newFileName = "";
 
         // init vars
         $formErrors = [];
@@ -92,24 +102,59 @@ class DirectorController {
 
         // le champ libelle est obligatoire
         if (empty($nom)) {
-            $formErrors["error"][] = "This field is mandatory";
+            $formErrors["nom"] = "This field is mandatory";
         }
 
         if (empty($prenom)) {
-            $formErrors["error"][] = "This field is mandatory";
+            $formErrors["prenom"] = "This field is mandatory";
         }
 
         if (empty($sexe)) {
-            $formErrors["error"][] = "This field is mandatory";
+            $formErrors["sexe"] = "This field is mandatory";
         }
 
         if (empty($dateDeNaissance)) {
-            $formErrors["error"][] = "This field is mandatory";
+            $formErrors["dateDeNaissance"] = "This field is mandatory";
         } 
-        
+
+        // différent car cette var est optionnel, et donc NULL si elle n'est pas entré
         if (empty($dateDeDeces)) {
             $dateDeDeces = null;
         }  
+
+        // faille upload - faire attention à la taille et l'extension du fichiers
+        if ($_FILES["image"]["size"] > 1000000 ) {
+            $formErrors["image"] = "File is too big";
+        }
+
+        if ($_FILES["image"]["type"] != "image/webp" && $_FILES["image"]["type"] != "image/jpeg" && $_FILES["image"]["type"] != "image/png") {
+            $formErrors["image"] = "Wrong image format";
+        }
+
+        if(empty($formErrors["image"])) {
+
+            // array avec les MIME types que j'accepte et leurs extensions
+            $imageTypes = [
+                "image/png" => ".png",
+                "image/webp" => ".webp",
+                "image/jpeg" => ".jpg"
+            ];
+
+            foreach($imageTypes as $mime => $ext) {
+
+                if ($_FILES["image"]["type"] == $mime) {
+                    $newFileName = uniqid().$ext;
+                }
+            }
+
+            $_FILES["image"]["name"] = $newFileName;
+
+            $uploadFile = $uploadDir . basename($_FILES["image"]["name"]); // le chemin final de l'img
+
+            if(!move_uploaded_file($_FILES["image"]["tmp_name"], $uploadFile)) {
+                $formErrors["image"] = "Error";
+            }
+        }
 
         // autre règle métier / de validation du formulaire
         // if
@@ -120,8 +165,8 @@ class DirectorController {
             $dao = new DAO();
     
             $sql =
-            "INSERT INTO director (nom, prenom, sexe, dateDeNaissance, dateDeDeces)
-            VALUES (:nom,:prenom,:sexe,:dateDeNaissance,:dateDeDeces)
+            "INSERT INTO director (nom, prenom, sexe, dateDeNaissance, dateDeDeces, image)
+            VALUES (:nom,:prenom,:sexe,:dateDeNaissance,:dateDeDeces,:image)
             ";
     
             $params = [
@@ -129,7 +174,8 @@ class DirectorController {
                 "prenom" => $prenom,
                 "sexe" => $sexe,
                 "dateDeNaissance" => $dateDeNaissance,
-                "dateDeDeces" => $dateDeDeces
+                "dateDeDeces" => $dateDeDeces,
+                "image" => $_FILES["image"]["name"]
             ];
     
             try {
@@ -173,7 +219,7 @@ class DirectorController {
     }
 
     function updateDirectorForm($idDirector, $formData = [], $globalErrorMessage = null, $formErrors = []) {
-        $fieldNames = ["nom", "prenom", "sexe", "dateDeNaissance", "dateDeDeces"];
+        $fieldNames = ["nom", "prenom", "sexe", "dateDeNaissance", "dateDeDeces", "image"];
         $dao = new DAO();
 
         $titrePage = "Update Director";
@@ -188,7 +234,8 @@ class DirectorController {
             prenom,
             sexe,
             dateDeNaissance,
-            dateDeDeces
+            dateDeDeces,
+            image
         FROM 
             director
         WHERE
@@ -203,7 +250,7 @@ class DirectorController {
         $entity = $dao->executerRequete($sql, $params);
         require "./view/commonForm.php";
     }
-
+    // ajoute un real à la base de données, cette function est appelé après avoir submit toutes les informations demandées par function précédantes
     function updateDirector($idDirector) {
         
         // filtrer / nettoyer les données reçues en POST
@@ -213,6 +260,15 @@ class DirectorController {
         $dateDeNaissance = filter_input(INPUT_POST, "dateDeNaissance", FILTER_SANITIZE_NUMBER_INT);
         $dateDeDeces = filter_input(INPUT_POST, "dateDeDeces", FILTER_SANITIZE_NUMBER_INT);
 
+        // filter le nom du file upload
+        $_FILES["image"]["name"] = filter_var($_FILES["image"]["name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $_FILES["image"]["tmp_name"] = filter_var($_FILES["image"]["tmp_name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        //indique le directory ou il se sera envoyé
+        $uploadDir = "./public/img/uploads/"; // l'endroit ou je veux upload l'img
+        $uploadFile = $uploadDir . basename($_FILES["image"]["name"]); // le chemin final de l'img
+
+        $newFileName = "";
 
         // init vars
         $formErrors = [];
@@ -245,6 +301,42 @@ class DirectorController {
         // autre règle métier / de validation du formulaire
         // if
 
+        // faille upload - faire attention à la taille et l'extension du fichiers
+        if ($_FILES["image"]["size"] > 1000000 ) {
+            $formErrors["image"] = "File is too big";
+        }
+
+        if ($_FILES["image"]["type"] != "image/webp" && $_FILES["image"]["type"] != "image/jpeg" && $_FILES["image"]["type"] != "image/png") {
+            $formErrors["image"] = "Wrong image format";
+        }
+
+        if(empty($formErrors["image"])) {
+
+            // array avec les MIME types que j'accepte et leurs extensions
+            $imageTypes = [
+                "image/png" => ".png",
+                "image/webp" => ".webp",
+                "image/jpeg" => ".jpg"
+            ];
+
+            foreach($imageTypes as $mime => $ext) {
+
+                if ($_FILES["image"]["type"] == $mime) {
+                    $newFileName = uniqid().$ext;
+                }
+            }
+
+            $_FILES["image"]["name"] = $newFileName;
+
+            // rename("./public/img/uploads/".$_FILES["image"]["name"], "./public/img/uploads/".$newFileName);
+
+            $uploadFile = $uploadDir . basename($_FILES["image"]["name"]); // le chemin final de l'img
+
+            if(!move_uploaded_file($_FILES["image"]["tmp_name"], $uploadFile)) {
+                $formErrors["image"] = "Error";
+            }
+        }
+
         // si le formulaire est valide
         if (empty($formErrors)) {
 
@@ -258,7 +350,8 @@ class DirectorController {
                 prenom = :prenom,
                 sexe = :sexe,
                 dateDeNaissance = :dateDeNaissance,
-                dateDeDeces = :dateDeDeces
+                dateDeDeces = :dateDeDeces,
+                image = :image
             WHERE 
                 id_director = :idDirector
             ";
@@ -269,7 +362,8 @@ class DirectorController {
                 "sexe" => $sexe,
                 "dateDeNaissance" => $dateDeNaissance,
                 "dateDeDeces" => $dateDeDeces,
-                "idDirector" => $idDirector
+                "idDirector" => $idDirector,
+                "image" => $_FILES["image"]["name"]
             ];
 
             try {
@@ -301,7 +395,8 @@ class DirectorController {
                 "prenom" => $prenom,
                 "sexe" => $sexe,
                 "dateDeNaissance" => $dateDeNaissance,
-                "dateDeDeces" => $dateDeDeces
+                "dateDeDeces" => $dateDeDeces,
+                "image" => $_FILES["image"]["name"]
             ];
             // on renvoie vers le même formulaire, en donnant les infos nécessaires à l'affichage
             $this->updateDirectorForm($idDirector, $formData, $sqlError, $formErrors);

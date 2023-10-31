@@ -85,7 +85,6 @@ class ActorController {
         $tableToFocus = "Actor";
         $actionForm = "addActor";
 
-
         // entity n'est pas nécessaire lors de l'ajout mais elle doit quand même exister donc je l'initie en NULL
         $entity = null;
         // le tout sera demandé par commonForm, "require" spécifiquement car aucune autre page ne peut l'appeler ne même temps
@@ -101,17 +100,16 @@ class ActorController {
         $sexe = filter_input(INPUT_POST, "sexe", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $dateDeNaissance = filter_input(INPUT_POST, "dateDeNaissance", FILTER_SANITIZE_NUMBER_INT);
         $dateDeDeces = filter_input(INPUT_POST, "dateDeDeces", FILTER_SANITIZE_NUMBER_INT);
-        
+
+        // filter le nom du file upload
         $_FILES["image"]["name"] = filter_var($_FILES["image"]["name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $_FILES["image"]["tmp_name"] = filter_var($_FILES["image"]["tmp_name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
+        //indique le directory ou il se sera envoyé
         $uploadDir = "./public/img/uploads/"; // l'endroit ou je veux upload l'img
         $uploadFile = $uploadDir . basename($_FILES["image"]["name"]); // le chemin final de l'img
-        
-        var_dump($_FILES["image"]["tmp_name"]);
-        // var_dump($_FILES['image']);
-        // // var_dump($_POST);
-        die();
+
+        $newFileName = "";
 
         // init vars
         $formErrors = [];
@@ -143,18 +141,39 @@ class ActorController {
             $dateDeDeces = null;
         }  
 
-        if ($_FILES["image"]["type"] != "image/webp"||$_FILES["image"]["type"] != "image/jpeg"||$_FILES["image"]["type"] != "image/png") {
+        // faille upload - faire attention à la taille et l'extension du fichiers
+        if ($_FILES["image"]["size"] > 1000000 ) {
+            $formErrors["image"] = "File is too big";
+        }
+
+        if ($_FILES["image"]["type"] != "image/webp" && $_FILES["image"]["type"] != "image/jpeg" && $_FILES["image"]["type"] != "image/png") {
             $formErrors["image"] = "Wrong image format";
         }
 
         if(empty($formErrors["image"])) {
 
+            // array avec les MIME types que j'accepte et leurs extensions
+            $imageTypes = [
+                "image/png" => ".png",
+                "image/webp" => ".webp",
+                "image/jpeg" => ".jpg"
+            ];
+
+            foreach($imageTypes as $mime => $ext) {
+
+                if ($_FILES["image"]["type"] == $mime) {
+                    $newFileName = uniqid().$ext;
+                }
+            }
+
+            $_FILES["image"]["name"] = $newFileName;
+
+            $uploadFile = $uploadDir . basename($_FILES["image"]["name"]); // le chemin final de l'img
+
             if(!move_uploaded_file($_FILES["image"]["tmp_name"], $uploadFile)) {
                 $formErrors["image"] = "Error";
             }
         }
-
-        
 
         // autre règle métier / de validation du formulaire
         // if
@@ -166,9 +185,9 @@ class ActorController {
             // aucune erreur n'est detecté, je peux donc ajouter toutes mes valeurs dans la bdd
             $sql =
             "INSERT INTO 
-                actor (nom, prenom, sexe, dateDeNaissance, dateDeDeces)
+                actor (nom, prenom, sexe, dateDeNaissance, dateDeDeces, image)
             VALUES 
-                (:nom,:prenom,:sexe,:dateDeNaissance,:dateDeDeces)
+                (:nom,:prenom,:sexe,:dateDeNaissance,:dateDeDeces,:image)
             ";
             
             // je reprends mes var filtrés plus haut car je sais qu'elles sont safe
@@ -177,7 +196,8 @@ class ActorController {
                 "prenom" => $prenom,
                 "sexe" => $sexe,
                 "dateDeNaissance" => $dateDeNaissance,
-                "dateDeDeces" => $dateDeDeces
+                "dateDeDeces" => $dateDeDeces,
+                "image" => $_FILES["image"]["name"]
             ];
     
             // try catch me permet d'attraper les erreurs et de ne pas complètement bloquer le site si le user reçoit une erreur
@@ -222,7 +242,7 @@ class ActorController {
 
     // étant donné que cette function fait une update j'ai besoin de l'id de l'entité à update et les erreurs pour la même raison qu'au dessus
     function updateActorForm($idActor, $formData = [], $globalErrorMessage = null, $formErrors = []) {
-        $fieldNames = ["nom", "prenom", "sexe", "dateDeNaissance", "dateDeDeces"];
+        $fieldNames = ["nom", "prenom", "sexe", "dateDeNaissance", "dateDeDeces", "image"];
         $dao = new DAO();
 
         $titrePage = "Update Actor";
@@ -237,7 +257,8 @@ class ActorController {
             prenom,
             sexe,
             dateDeNaissance,
-            dateDeDeces
+            dateDeDeces, 
+            image
         FROM 
             actor
         WHERE
@@ -262,6 +283,17 @@ class ActorController {
         $sexe = filter_input(INPUT_POST, "sexe", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $dateDeNaissance = filter_input(INPUT_POST, "dateDeNaissance", FILTER_SANITIZE_NUMBER_INT);
         $dateDeDeces = filter_input(INPUT_POST, "dateDeDeces", FILTER_SANITIZE_NUMBER_INT);
+
+        // filter le nom du file upload
+        $_FILES["image"]["name"] = filter_var($_FILES["image"]["name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $_FILES["image"]["tmp_name"] = filter_var($_FILES["image"]["tmp_name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        //indique le directory ou il se sera envoyé
+        $uploadDir = "./public/img/uploads/"; // l'endroit ou je veux upload l'img
+        $uploadFile = $uploadDir . basename($_FILES["image"]["name"]); // le chemin final de l'img
+
+        $newFileName = "";
+
 
 
         // init vars
@@ -295,6 +327,42 @@ class ActorController {
         // autre règle métier / de validation du formulaire
         // if
 
+        // faille upload - faire attention à la taille et l'extension du fichiers
+        if ($_FILES["image"]["size"] > 1000000 ) {
+            $formErrors["image"] = "File is too big";
+        }
+
+        if ($_FILES["image"]["type"] != "image/webp" && $_FILES["image"]["type"] != "image/jpeg" && $_FILES["image"]["type"] != "image/png") {
+            $formErrors["image"] = "Wrong image format";
+        }
+
+        if(empty($formErrors["image"])) {
+
+            // array avec les MIME types que j'accepte et leurs extensions
+            $imageTypes = [
+                "image/png" => ".png",
+                "image/webp" => ".webp",
+                "image/jpeg" => ".jpg"
+            ];
+
+            foreach($imageTypes as $mime => $ext) {
+
+                if ($_FILES["image"]["type"] == $mime) {
+                    $newFileName = uniqid().$ext;
+                }
+            }
+
+            $_FILES["image"]["name"] = $newFileName;
+
+            // rename("./public/img/uploads/".$_FILES["image"]["name"], "./public/img/uploads/".$newFileName);
+
+            $uploadFile = $uploadDir . basename($_FILES["image"]["name"]); // le chemin final de l'img
+
+            if(!move_uploaded_file($_FILES["image"]["tmp_name"], $uploadFile)) {
+                $formErrors["image"] = "Error";
+            }
+        }
+
         // si le formulaire est valide
         if (empty($formErrors)) {
 
@@ -308,7 +376,8 @@ class ActorController {
                 prenom = :prenom,
                 sexe = :sexe,
                 dateDeNaissance = :dateDeNaissance,
-                dateDeDeces = :dateDeDeces
+                dateDeDeces = :dateDeDeces,
+                image = :image
             WHERE 
                 id_actor = :idActor
             ";
@@ -320,7 +389,8 @@ class ActorController {
                 "sexe" => $sexe,
                 "dateDeNaissance" => $dateDeNaissance,
                 "dateDeDeces" => $dateDeDeces,
-                "idActor" => $idActor
+                "idActor" => $idActor,
+                "image" => $_FILES["image"]["name"]
             ];
 
             try {
@@ -352,7 +422,8 @@ class ActorController {
                 "prenom" => $prenom,
                 "sexe" => $sexe,
                 "dateDeNaissance" => $dateDeNaissance,
-                "dateDeDeces" => $dateDeDeces
+                "dateDeDeces" => $dateDeDeces,
+                "image" => $_FILES["image"]["name"]
             ];
 
             // on renvoie vers le même formulaire, en donnant les infos nécessaires à l'affichage

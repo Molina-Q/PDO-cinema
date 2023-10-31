@@ -34,7 +34,6 @@ function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entit
     </div> <!--End here (div-label-input) -->
 
 <?php
- 
         } else if ($inputType == "select") {
 ?>
             <div class="custom-select">
@@ -77,7 +76,7 @@ function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entit
 <?php
         }
 }
-
+// permet d'afficher les messages d'erreur des input (field vide, etc...)
 function messageErrors($formErrors, $columnName) {
     if (isset($formErrors[$columnName])) {
         ?>
@@ -89,6 +88,7 @@ function messageErrors($formErrors, $columnName) {
 ?>
 <h2 class="titrePage"><?=$titrePage?></h2>
 <div>
+    <!-- Start form -->
     <form id="bloc-form" action="index.php?action=<?= $actionForm ?>" enctype="multipart/form-data" method="post">
 <?php
             if ($globalErrorMessage) {
@@ -99,7 +99,9 @@ function messageErrors($formErrors, $columnName) {
 
             /***** genre, role *****/
             if (in_array("libelle", $fieldNames)) { // mon entité a un fields libelle
-                makeHtmlGroup("Label", "text", "libelle", $placeholder, $entity); // le field "libelle" : a un label "Label"(un nom pour décrire l'input), un input de type text, le nom de la colonne de la bdd que je veux modifier/ajouter, name et dataForm l'utilise, placeholder, entity contient l'id et le nom de la colonne de l'entity que je veux modifier(entity est utilisé uniquement pour une update) 
+                makeHtmlGroup("Label", "text", "libelle", $placeholder, $entity); 
+                // le field "libelle" : a un label "Label"(un nom pour décrire l'input), un input de type text, le nom de la colonne de la bdd que je veux modifier/ajouter, 
+                // name et dataForm l'utilise, entity contient l'id et le nom de la colonne de l'entity que je veux modifier(entity est utilisé uniquement pour une update) 
                 messageErrors($formErrors, "libelle");  
             }            
             
