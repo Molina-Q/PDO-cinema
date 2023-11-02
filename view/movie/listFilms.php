@@ -42,8 +42,6 @@ ob_start();
             </div>
 
         </div>       
-        
-
 <?php
     }
 ?>

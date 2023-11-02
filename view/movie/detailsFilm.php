@@ -24,12 +24,8 @@ $separator = ", ";
                 <p>Update Movie</p>
             </a>
 
-            <a href="#" id="updateGenre">
-                <p>Delete Genre</p>
-            </a>
-
-            <a href="index.php?action=DeleteCastingForm&id=<?= $film["id_film"] ?>">
-                <p><s>Update Casting</s></p>
+            <a href="#" id="deleteGenre">
+                <p>Remove Genre</p>
             </a>
         </div>
 
@@ -59,8 +55,6 @@ $separator = ", ";
 ?>
                     <li><span>Réalisé par </span><a href='index.php?action=detailsDirector&id=<?=$film["id_director"]?>'><?= $film["prenom"]?> <?=$film["nom"]?></a></li>
                     
-                    </li>
-                    
                     <li><span>Avec</span> :
 <?php
                     $separator = ", ";
@@ -78,8 +72,6 @@ $separator = ", ";
                 </ul>
             </div>
         </div>
-
-</div>
 
 <?php 
 

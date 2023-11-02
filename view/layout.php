@@ -12,7 +12,7 @@
 <body>
     <header>
         <nav>
-            <?php require_once "./view/searchBar.php" ?>
+            <?php require_once "./view/searchBar.php" ?> <!-- ma search bar -->
             <ul>
                 <li><a href="index.php?action=homePage">Home</a></li>
                 <li><a href="index.php?action=listFilms">Movies</a></li>
@@ -25,7 +25,7 @@
     </header>
 
     <main>
-        <?= $content ?>
+        <?= $content ?> <!-- le contenu de ma page -->
         <script src="./public/app/app.js"></script>
     </main>
 

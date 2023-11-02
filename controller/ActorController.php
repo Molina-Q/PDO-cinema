@@ -281,8 +281,8 @@ class ActorController {
         $nom = filter_input(INPUT_POST, "nom", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $prenom = filter_input(INPUT_POST, "prenom", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $sexe = filter_input(INPUT_POST, "sexe", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $dateDeNaissance = filter_input(INPUT_POST, "dateDeNaissance", FILTER_SANITIZE_NUMBER_INT);
-        $dateDeDeces = filter_input(INPUT_POST, "dateDeDeces", FILTER_SANITIZE_NUMBER_INT);
+        $dateDeNaissance = filter_input(INPUT_POST, "dateDeNaissance", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $dateDeDeces = filter_input(INPUT_POST, "dateDeDeces", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
         // filter le nom du file upload
         $_FILES["image"]["name"] = filter_var($_FILES["image"]["name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -293,8 +293,6 @@ class ActorController {
         $uploadFile = $uploadDir . basename($_FILES["image"]["name"]); // le chemin final de l'img
 
         $newFileName = "";
-
-
 
         // init vars
         $formErrors = [];
@@ -350,6 +348,7 @@ class ActorController {
                 if ($_FILES["image"]["type"] == $mime) {
                     $newFileName = uniqid().$ext;
                 }
+
             }
 
             $_FILES["image"]["name"] = $newFileName;

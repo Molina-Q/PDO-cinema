@@ -1,15 +1,14 @@
 <?php
 // démarre la temporisation
 ob_start();
+// mes variables, count et nb row sont utilisés pour avoir le bon nombre de virgules quand il y a plusieurs élements à nommer (films réalisés,etc...)
 $count = 1;
 $nbRow = $films->rowCount();
 $separator = ", ";
 ?>
-
 <h2 class="titrePage">Details du réalisateur</h2>
-
-
 <?php
+// calcul l'age avec la date de naissance et la date de decès si elle existe
 function showAge($dateTimeNaissance,  $dateTimeDeces = null) {
     if(isset($dateTimeDeces)) {
         $dateTimeInterval = new \DateTime($dateTimeDeces);
@@ -21,7 +20,6 @@ function showAge($dateTimeNaissance,  $dateTimeDeces = null) {
     $agePersonne = date_diff($newTimeNaissance, $dateTimeInterval)->format("%Y ans");
     return $agePersonne;
 }
-
 
 while ($director = $detailsDirector->fetch()) {
 ?>

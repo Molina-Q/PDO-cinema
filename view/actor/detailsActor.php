@@ -1,14 +1,14 @@
 <?php
 // démarre la temporisation
 ob_start();
+// mes variables, count et nb row sont utilisés pour avoir le bon nombre de virgules quand il y a plusieurs élements à nommer (roles,etc...)
 $count = 1;
 $nbRow = $castings->rowCount();
 $separator = ", ";
-
 ?>
 <h2 class="titrePage">Details de l'actor</h2>
 <?php
-
+// calcul l'age avec la date de naissance et la date de decès si elle existe
 function showAge($dateTimeNaissance,  $dateTimeDeces = null) {
     if(isset($dateTimeDeces)) {
         $dateTimeInterval = new \DateTime($dateTimeDeces);
@@ -21,40 +21,39 @@ function showAge($dateTimeNaissance,  $dateTimeDeces = null) {
     return $agePersonne;
 }
 
-
-if ($actor = $detailsActor->fetch()) {
+    if ($actor = $detailsActor->fetch()) {
 ?>          
-    <div class="interactUpdate">
-        <a href="index.php?action=updateActorForm&id=<?= $actor["id_actor"] ?>">
-            <p>Update</p>
-        </a>
-    </div>
+        <div class="interactUpdate">
+            <a href="index.php?action=updateActorForm&id=<?= $actor["id_actor"] ?>">
+                <p>Update</p>
+            </a>
+        </div>
 
-    <div class='blocDetailsActor'>
-            
-        <figure class="portraitPerson">
-            <img src="./public/img/uploads/<?= $actor["image"] ?>" alt="<?= $actor["prenom"].$actor["nom"] ?>">
-        </figure>
+        <div class='blocDetailsActor'>
+                
+            <figure class="portraitPerson">
+                <img src="./public/img/uploads/<?= $actor["image"] ?>" alt="<?= $actor["prenom"].$actor["nom"] ?>">
+            </figure>
 
-        <h3><?= $actor["prenom"] ?> <?= $actor["nom"] ?></h3>
+            <h3><?= $actor["prenom"] ?> <?= $actor["nom"] ?></h3>
 
-        <ul>
-            <li><?= $actor["sexe"] ?></li>
-            <li><span>Date de naissance</span> : <?=$actor["formatedDateDeNaissance"]?></li>
+            <ul>
+                <li><?= $actor["sexe"] ?></li>
+                <li><span>Date de naissance</span> : <?=$actor["formatedDateDeNaissance"]?></li>
 <?php
-            if($actor["formatedDateDeDeces"]) { /* check si la personne à une date de decès et ensuite afficher le nécessaire */
+                if($actor["formatedDateDeDeces"]) { /* check si la personne à une date de decès et ensuite afficher le nécessaire */
 ?>
-                <li><span>Date de décès</span> : <?=$actor["formatedDateDeDeces"]?> (<?=showAge($actor["dateDeNaissance"], $actor["dateDeDeces"])?>) </li>
+                    <li><span>Date de décès</span> : <?=$actor["formatedDateDeDeces"]?> (<?=showAge($actor["dateDeNaissance"], $actor["dateDeDeces"])?>) </li>
 <?php
-            } else {
+                } else {
 ?>
-                <li><span>Age</span> : <?=showAge($actor["dateDeNaissance"])?></li>   
+                    <li><span>Age</span> : <?=showAge($actor["dateDeNaissance"])?></li>   
 <?php
-            }
+                }
 ?>
-            <li><span>Rôle(s)</span> : 
+                <li><span>Rôle(s)</span> : 
 <?php
-}
+    }
         while ($casting = $castings->fetch()) {
             if ($count == $nbRow) {
                 $separator = "";
@@ -65,9 +64,9 @@ if ($actor = $detailsActor->fetch()) {
             $count++;
         }
 ?>
-            </li>
-        </ul>
-    </div>
+                </li>
+            </ul>
+        </div>
 
 <?php 
 // termine la temporisation, et initie les variables title et content, content qui aura tous le contenu de cette page

@@ -1,9 +1,6 @@
 <?php
-/* porte d'entrée application
-
-
-On fait appel aux fichiers physiques */
-
+// porte d'entrée application
+// On fait appel aux fichiers physiques
     require_once "./controller/ActorController.php"; 
     require_once "./controller/MovieController.php"; 
     require_once "./controller/DirectorController.php"; 
@@ -12,7 +9,7 @@ On fait appel aux fichiers physiques */
     require_once "./controller/HomeController.php"; 
     require_once "./controller/searchBarController.php"; 
    
-    // instancier tous nos controller
+    // tous nos controller
     $actorController = new ActorController();
     $movieController = new MovieController();
     $directorController = new DirectorController();
@@ -21,7 +18,7 @@ On fait appel aux fichiers physiques */
     $homeController = new HomeController();
     $searchController = new SearchBarController();
 
-    // si j'ai une "action "dans l'URL, cette action donnera accès à un controlleur et à la fonction demandée (si elle existe)
+    // si j'ai une "action dans l'URL, cette action donnera accès à un controlleur et à la fonction demandée (si elle existe)
     if(isset($_GET['action'])){
     
         $id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT); // car possible d'injecter du code malveillant dans l'URL
@@ -46,8 +43,6 @@ On fait appel aux fichiers physiques */
             case "deleteGenreFilm" : $movieController->deleteGenreFilm($id, $idSec); break;
             case "updateGenreFilmForm" : $movieController->updateGenreFilmForm($id, $idSec); break;
             case "updateGenreFilm" : $movieController->updateGenreFilm($id, $idSec); break;
-            // case "updateCastingFilmForm" : $movieController->updateCastingFilmForm($id); break;
-            // case "updateCastingFilm" : $movieController->updateCastingFilm($id); break;
 
             // cases en lien avec actor
             case "listActors" : $actorController->listActors(); break;
@@ -66,7 +61,6 @@ On fait appel aux fichiers physiques */
             case "updateDirectorForm" : $directorController->updateDirectorForm($id); break;
             case "updateDirector" : $directorController->updateDirector($id); break;
             case "deleteDirector" : $directorController->deleteDirector($id); break;
-
 
             // cases role
             case "listRoles" : $roleController->listRoles(); break;

@@ -122,7 +122,7 @@ class DirectorController {
             $dateDeDeces = null;
         }  
 
-        // faille upload - faire attention à la taille et l'extension du fichiers
+        // faille upload - faire attention à la taille et le MIME type du fichier
         if ($_FILES["image"]["size"] > 1000000 ) {
             $formErrors["image"] = "File is too big";
         }

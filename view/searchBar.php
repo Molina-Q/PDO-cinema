@@ -2,7 +2,7 @@
 <div id="searchBar">
     <form>
 
-        <input id="searchInput" type="search" placeholder="Rechercher un film, un actor, etc...">
+        <input id="searchInput" type="search" placeholder="Looking for a film, actor, director, etc...">
 
         <div id="textHint"></div>
 

@@ -112,9 +112,9 @@ for (let i = 0; i < customSelectLength; i++) {
 window.addEventListener("click", closeAllSelect); 
 
 /////////////////////////////////////// function delete on click ///////////////////////////////////////
-if (document.getElementById("updateGenre")) {
-    const updateGenre = document.getElementById("updateGenre");
-    updateGenre.addEventListener("click", deleteGenreOnClick);
+if (document.getElementById("deleteGenre")) {
+    const deleteGenre = document.getElementById("deleteGenre");
+    deleteGenre.addEventListener("click", deleteGenreOnClick);
 }
 
 // cette fonction a pour but de supprimer le genre_film du film qui est cliqué 
@@ -128,14 +128,14 @@ function deleteGenreOnClick() {
 
         function removeEventListener() {
             openGenreFilm.style.color = "var(--primary-font-color)"; 
-            document.getElementById("updateGenre").style.backgroundColor = "var(--primary-background-color)";
+            document.getElementById("deleteGenre").style.backgroundColor = "var(--primary-background-color)";
             openGenreFilm.href = hrefTarget;
         } 
 
         openGenreFilm.href = hrefTarget.replace("detailsGenre", "deleteGenreFilm");
 
         openGenreFilm.style.color = "red";
-        document.getElementById("updateGenre").style.backgroundColor = "red";
+        document.getElementById("deleteGenre").style.backgroundColor = "red";
         
         setTimeout(removeEventListener, 3000);
     }
@@ -143,7 +143,6 @@ function deleteGenreOnClick() {
 
 /////////////////////////////////////// search bar dynamique (AJAX) ///////////////////////////////////////
 
-// la function est appelé avec comme parametre le contenu de la search bar
 const textHint = document.getElementById("textHint"); // id de la search bar
 
 // future balises <a><p><span></span></p></a> du bloc resultat de la recherche

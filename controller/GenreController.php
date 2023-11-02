@@ -1,5 +1,4 @@
 <?php
-
 require_once "./bdd/DAO.php";
 
 class GenreController {

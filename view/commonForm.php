@@ -54,7 +54,7 @@ function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entit
                 </select>
             </div>
 
-    </div> <!-- OR can End here (div-label-input) -->
+    </div> <!-- OR End here (div-label-input) -->
 
 <?php
     // si l'input est un radio
@@ -69,7 +69,7 @@ function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entit
             }
         } else if($inputType == "file") {
 ?>
-            <!-- MAX_FILE_SIZE must precede the file input field -->
+            <!-- file upload -->
             <label for="<?= $columnName ?>"></label>
             <input type="hidden" name="MAX_FILE_SIZE" value="1000000"/>
             <input type="file" name="<?= $columnName ?>" id="<?= $columnName ?>"/>
@@ -79,9 +79,9 @@ function makeHTMLGroup($labelName, $inputType, $columnName, $placeholder, $entit
 // permet d'afficher les messages d'erreur des input (field vide, etc...)
 function messageErrors($formErrors, $columnName) {
     if (isset($formErrors[$columnName])) {
-        ?>
-            <p class="error"><?= $formErrors[$columnName] ?></p>
-        <?php
+?>
+        <p class="error"><?= $formErrors[$columnName] ?></p>
+<?php
     }
 }
 
@@ -131,7 +131,7 @@ function messageErrors($formErrors, $columnName) {
                 messageErrors($formErrors, "dateDeDeces");  
             }
 
-            if (in_array("image", $fieldNames)) { // mon entité a un fields upload
+            if (in_array("image", $fieldNames)) { // mon entité a un fields image
                 makeHtmlGroup("Picture", "file", "image", "", $entity); 
                 messageErrors($formErrors, "image");  
             }
