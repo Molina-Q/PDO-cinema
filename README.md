@@ -7,6 +7,8 @@
 ![MySQL](https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white)
 
 <h1>Simulate a movie theater's website.</h1>
-<p>You can browse throughout lists of every movies, actors, directors, present in the database, or see them in details.</p>
-<p>It is also possible to modify the content of the database directly using the app.</p>
-<p>I added a dynamic search bar and the capacity to upload pictures.</p>
+<ul>
+  <li>You can browse throughout lists of every movies, actors, directors, present in the database, or see them in details.</li>
+  <li>It is also possible to modify the content of the database directly using the app.</li>
+  <li>I added a dynamic search bar and the capacity to upload pictures.</li>
+</ul>
