@@ -6,7 +6,7 @@
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white)
 
-<h1>Simulate a movie theater's website.</h1>
+<h1>Simulate a movie theater's website</h1>
 <ul>
   <li>You can browse throughout lists of every movies, actors, directors, present in the database, or see them in details.</li>
   <li>It is also possible to modify the content of the database directly using the app.</li>
